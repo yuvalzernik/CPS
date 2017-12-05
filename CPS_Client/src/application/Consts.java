@@ -1,6 +1,6 @@
 package application;
 
-
+//hashi
 public class Consts
 {
     public static final String KioskEntryFxmlPath = "Fxmls/KioskEntry.fxml";
