@@ -19,6 +19,8 @@ public class ControllersManager
     
     private HashMap<String, Scene> sceneMap = new HashMap<>();
     
+    private HashMap<String, BaseController> controllerMap = new HashMap<>();
+    
     public ControllersManager(List<Pair<String, URL>> fxmlNamePathList, Stage stage) throws IOException
     {
 	myStage = stage;
@@ -33,13 +35,29 @@ public class ControllersManager
 	    
 	    controller.SetControllerManager(this);
 	    
+	    controllerMap.put(fxmlNamePath.getKey(), controller);
 	    sceneMap.put(fxmlNamePath.getKey(), scene);
 	}
     }
     
-    public void SetScene(String sceneName)
+    private void MySetScene(String sceneName)
     {
 	myStage.setScene(sceneMap.get(sceneName));
+	
+	myStage.setTitle(sceneName);
+		
 	myStage.show();
+    }
+    
+    public void SetScene(String sceneName, String PreviousScene)
+    {
+	controllerMap.get(sceneName).SetPreviousScene(PreviousScene);
+	
+	MySetScene(sceneName);
+    }
+    
+    public void Back(String sceneName)
+    {
+	MySetScene(sceneName);
     }
 }

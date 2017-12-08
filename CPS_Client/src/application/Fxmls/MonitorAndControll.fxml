@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane prefHeight="438.0" prefWidth="573.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="application.Controllers.MonitorAndControllController">
+   <children>
+      <Button layoutX="87.0" layoutY="200.0" mnemonicParsing="false" onAction="#OnMember" text="Member" />
+      <Button layoutX="362.0" layoutY="200.0" mnemonicParsing="false" onAction="#OnNotAMember" text="Not a member" />
+      <Button layoutX="36.0" layoutY="39.0" mnemonicParsing="false" onAction="#OnBack" text="Back" />
+   </children>
+</AnchorPane>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane prefHeight="456.0" prefWidth="528.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="application.Controllers.KioskExitController">
+   <children>
+      <Button layoutX="369.0" layoutY="266.0" mnemonicParsing="false" onAction="#OnMemberExit" text="Member exit" />
+      <Button layoutX="369.0" layoutY="130.0" mnemonicParsing="false" onAction="#OnGuestExit" text="Guest exit" />
+      <Button layoutX="41.0" layoutY="39.0" mnemonicParsing="false" onAction="#OnBack" text="Back" />
+   </children>
+</AnchorPane>

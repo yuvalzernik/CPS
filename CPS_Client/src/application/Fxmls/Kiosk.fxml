@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="444.0" prefWidth="427.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Controllers.KioskController">
+   <children>
+      <Button layoutX="23.0" layoutY="34.0" mnemonicParsing="false" onAction="#OnEnter" prefHeight="39.0" prefWidth="72.0" text="Enter" />
+      <Button layoutX="23.0" layoutY="102.0" mnemonicParsing="false" onAction="#OnExit" prefHeight="39.0" prefWidth="72.0" text="Exit" />
+      <Button layoutX="26.0" layoutY="175.0" mnemonicParsing="false" onAction="#OnRegister" prefHeight="39.0" prefWidth="110.0" text="Register" />
+      <Button layoutX="26.0" layoutY="246.0" mnemonicParsing="false" onAction="#OnMonitorAndControll" prefHeight="39.0" prefWidth="189.0" text="Monitor and controll" />
+   </children>
+</AnchorPane>
