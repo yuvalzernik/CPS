@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane prefHeight="528.0" prefWidth="476.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="application.Controllers.GuestEntryController">
+   <children>
+      <Button layoutX="48.0" layoutY="47.0" mnemonicParsing="false" onAction="#OnBack" text="Back" />
+      <Button layoutX="362.0" layoutY="379.0" mnemonicParsing="false" onAction="#OnSubmit" text="Submit" />
+      <TextField fx:id="id" layoutX="177.0" layoutY="105.0" />
+      <TextField fx:id="carNumber" layoutX="177.0" layoutY="169.0" />
+      <TextField fx:id="departureTime" layoutX="177.0" layoutY="232.0" />
+      <TextField fx:id="email" layoutX="177.0" layoutY="293.0" />
+      <Label layoutX="48.0" layoutY="175.0" text="Car number" />
+      <Label layoutX="35.0" layoutY="238.0" text="Departure time" />
+      <Label layoutX="66.0" layoutY="299.0" text="Email" />
+      <Label layoutX="66.0" layoutY="111.0" text="Id" />
+   </children>
+</AnchorPane>

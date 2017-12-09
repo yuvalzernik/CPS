@@ -1,9 +1,10 @@
-package application;
+package application.Controllers;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Consumer;
 
-import application.Controllers.BaseController;
+import application.Consts;
 
 import java.io.IOException;
 import java.net.URL;
@@ -42,6 +43,8 @@ public class ControllersManager
     
     private void MySetScene(String sceneName)
     {
+	controllerMap.get(sceneName).ClearTextFields();
+	
 	myStage.setScene(sceneMap.get(sceneName));
 	
 	myStage.setTitle(sceneName);
@@ -56,8 +59,16 @@ public class ControllersManager
 	MySetScene(sceneName);
     }
     
-    public void Back(String sceneName)
+    public void Back(String sceneName) 
     {
 	MySetScene(sceneName);
+    }
+    
+    public void Payment(float amountToPay, Consumer<Void> afterPaymentDetailsCheck, String PreviousScene)
+    {
+	((PaymentController)controllerMap.get(Consts.Payment)).setPaymentAmount(amountToPay);
+	((PaymentController)controllerMap.get(Consts.Payment)).SetOnSubmit(afterPaymentDetailsCheck);
+	
+	SetScene(Consts.Payment, PreviousScene);
     }
 }
