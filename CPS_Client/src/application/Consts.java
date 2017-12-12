@@ -39,4 +39,5 @@ public class Consts
     public static final String PartialMembershipRegisterFxmlPath ="Fxmls/PartialMembershipRegister.fxml";
     
     public static final String PartialMembershipRegister ="Partial Membership Register";
+    
 }
