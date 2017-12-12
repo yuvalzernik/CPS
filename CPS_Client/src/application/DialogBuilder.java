@@ -76,8 +76,6 @@ public class DialogBuilder
     {
 	Alert alert = new Alert(alertType);
 	
-	//alert.getButtonTypes().setAll();
-	
 	alert.setTitle(title);
 	alert.setHeaderText(header);
 	
@@ -95,7 +93,14 @@ public class DialogBuilder
 	
 	Optional<ButtonType> result = alert.showAndWait();
 	
-	return result.get().getText();
+	if (result.isPresent())
+	{
+	    return result.get().getText();
+	}
+	else
+	{
+	    return null;
+	}
     }
     
 }

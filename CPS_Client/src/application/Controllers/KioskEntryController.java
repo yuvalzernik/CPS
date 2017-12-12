@@ -1,9 +1,12 @@
 package application.Controllers;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import application.Consts;
 import application.DialogBuilder;
 import application.GuestIdentifyingInformation;
@@ -18,8 +21,6 @@ public class KioskEntryController extends BaseController
     private ArrayList<String> PreOrderInputs = new ArrayList<>();
     
     private ArrayList<String> MemberInputs = new ArrayList<>();
-    
-    //private ArrayList<String> 
     
     private MemberIdentifyingInformation memberIdentifyingInformation;
     
@@ -37,9 +38,16 @@ public class KioskEntryController extends BaseController
     }
     
     @FXML
-    void OnGuestEntry(ActionEvent event)
+    void OnGuestEntry(ActionEvent event) throws IOException, URISyntaxException
     {
-	System.out.println("test");
+	if (!IsParkinglotFull())
+	{
+	    myControllersManager.SetScene(Consts.GuestEntry, Consts.KioskEntry);
+	}
+	else
+	{
+	    DialogBuilder.AlertDialog(AlertType.ERROR, "error", "We are sorry, the parkinglot is full.", null, false);
+	}
     }
     
     @FXML
@@ -54,16 +62,15 @@ public class KioskEntryController extends BaseController
 	    guestIdentifyingInformation = new GuestIdentifyingInformation(inputs.get(0), inputs.get(1));
 	    
 	    boolean isOrderExist = CheckAndSubmitPreOrder(guestIdentifyingInformation);
+	    
+	    if (isOrderExist)
+	    {
+		DialogBuilder.AlertDialog(AlertType.INFORMATION, Consts.Approved, Consts.LeaveTheCarMessage, null,
+			false);
 		
-		if (isOrderExist)
-		{
-		    DialogBuilder.AlertDialog(AlertType.INFORMATION, Consts.Approved, Consts.LeaveTheCarMessage, null, false);
-		    
-		    myControllersManager.SetScene(Consts.Kiosk, null);
-		}
+		myControllersManager.SetScene(Consts.Kiosk, null);
+	    }
 	});
-	
-	
     }
     
     @FXML
@@ -78,13 +85,14 @@ public class KioskEntryController extends BaseController
 	    memberIdentifyingInformation = new MemberIdentifyingInformation(inputs.get(0), inputs.get(1));
 	    
 	    boolean isMemberLegal = CheckAndSubmitMember(memberIdentifyingInformation);
+	    
+	    if (isMemberLegal)
+	    {
+		DialogBuilder.AlertDialog(AlertType.INFORMATION, Consts.Approved, Consts.LeaveTheCarMessage, null,
+			false);
 		
-		if (isMemberLegal)
-		{
-		    DialogBuilder.AlertDialog(AlertType.INFORMATION, Consts.Approved, Consts.LeaveTheCarMessage, null, false);
-		    
-		    myControllersManager.SetScene(Consts.Kiosk, null);
-		}
+		myControllersManager.SetScene(Consts.Kiosk, null);
+	    }
 	});
     }
     
@@ -108,5 +116,16 @@ public class KioskEntryController extends BaseController
 	// Send the obj to the server..
 	
 	return true;
+    }
+    
+    private boolean IsParkinglotFull() throws IOException, URISyntaxException
+    {
+	// Todo:
+	// check if parking is full
+	
+	String myParkinglotName = new String(
+		Files.readAllBytes(Paths.get(getClass().getResource(Consts.ParkinglotNamePathFromController).toURI())));
+	
+	return false;
     }
 }

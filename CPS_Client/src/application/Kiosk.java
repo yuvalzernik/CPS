@@ -2,6 +2,8 @@ package application;
 
 import java.net.URL;
 import java.util.LinkedList;
+
+import application.Controllers.ControllersManager;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.util.Pair;
@@ -9,7 +11,7 @@ import javafx.util.Pair;
 public class Kiosk extends Application
 {
     @Override
-    public void start(Stage primaryStage)
+    public void start(Stage primaryStage) throws Exception
     {
 	try
 	{
@@ -23,6 +25,8 @@ public class Kiosk extends Application
 	    list.add(new Pair<String, URL>(Consts.KioskExit, myClass.getResource(Consts.KioskExitFxmlPath)));
 	    list.add(new Pair<String, URL>(Consts.FullMembershipRegister, myClass.getResource(Consts.FullMembershipRegisterFxmlPath)));
 	    list.add(new Pair<String, URL>(Consts.PartialMembershipRegister, myClass.getResource(Consts.PartialMembershipRegisterFxmlPath)));
+	    list.add(new Pair<String, URL>(Consts.GuestEntry, myClass.getResource(Consts.GuestEntryFxmlPath)));
+	    list.add(new Pair<String, URL>(Consts.Payment, myClass.getResource(Consts.PaymentFxmlPath)));
 
 	    ControllersManager controllersManager = new ControllersManager(list, primaryStage);
 	    
@@ -31,6 +35,7 @@ public class Kiosk extends Application
 	catch (Exception e)
 	{
 	    e.printStackTrace();
+	    throw e;
 	}
     }
     
