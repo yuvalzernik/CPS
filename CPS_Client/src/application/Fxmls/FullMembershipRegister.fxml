@@ -12,7 +12,7 @@
       <TextField fx:id="id" layoutX="59.0" layoutY="137.0" prefHeight="25.0" prefWidth="144.0" />
       <Label layoutX="14.0" layoutY="137.0" prefHeight="25.0" prefWidth="31.0" text="ID:" />
       <Label layoutX="5.0" layoutY="181.0" prefHeight="34.0" prefWidth="70.0" text="Statring Date:" />
-      <DatePicker fx:id="startingDate" layoutX="81.0" layoutY="186.0" />
+      <DatePicker fx:id="startingDatePicker" layoutX="81.0" layoutY="186.0" />
       <Label layoutX="5.0" layoutY="232.0" prefHeight="25.0" prefWidth="52.0" text="Car No." />
       <TextField fx:id="carNumber" layoutX="59.0" layoutY="232.0" prefHeight="25.0" prefWidth="144.0" />
       <Label layoutX="5.0" layoutY="277.0" prefHeight="25.0" prefWidth="52.0" text="Email:" />

@@ -1,5 +1,6 @@
 package application.Controllers;
 
+import java.time.LocalDate;
 import java.util.function.Consumer;
 
 import application.Consts;
@@ -34,14 +35,17 @@ public class PartialMembershipRegisterController extends BaseController
     private TextField id;
     
     @FXML
-    private DatePicker startingDate;
+    private DatePicker startingDatePicker;
     
     @FXML
     private TextField email;
     
+    @FXML
     void initialize() 
     {
 	carListView.setEditable(true);
+	startingDatePicker.setEditable(true); 
+	startingDatePicker.setValue(LocalDate.now());
     }
     
     @FXML
