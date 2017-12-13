@@ -1,52 +1,48 @@
 package CPS_Server;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
 
-import application.ClientServerCPS.ClientRequest;
+import application.Consts;
 
 public class ServerController
 {
-    private ServerSocket serverSocket = null;
-    private Socket socket = null;
-    private ObjectInputStream inStream = null;
+    private ServerRequestHandler myRequestHandler;
     
-    public void communicate()
+    public ServerController()
     {
-	try
+	myRequestHandler = new ServerRequestHandler();
+    }
+    
+    private void ListenAndResponse()
+    {
+	try (ServerSocket serverSocket = new ServerSocket(Consts.PORT))
 	{
-	    serverSocket = new ServerSocket(5555);
-	    socket = serverSocket.accept();
-	    System.out.println("Connected");
-	    inStream = new ObjectInputStream(socket.getInputStream());
-	    
-	    ClientRequest clientRequest = (ClientRequest) inStream.readObject();
-	    System.out.println("Object received = " + clientRequest.serverDestination);
-	    socket.close();
-	    
-	    inStream.close();
-	    
+	    while (true)
+	    {
+		try
+		{
+		    Socket socket = serverSocket.accept();
+		    
+		    myRequestHandler.HandleRequestAsync(socket);
+		}
+		catch (Exception e)
+		{
+		    e.printStackTrace();
+		    // Socked will be closed and the client will return
+		    // ServerResult with Failed result
+		}
+	    }
 	}
-	catch (SocketException se)
-	{
-	    System.exit(0);
-	}
-	catch (IOException e)
+	catch (Exception e)
 	{
 	    e.printStackTrace();
-	}
-	catch (ClassNotFoundException cn)
-	{
-	    cn.printStackTrace();
+	    // Server will shut down.
 	}
     }
     
     public static void main(String[] args)
     {
-	ServerController server = new ServerController();
-	server.communicate();
+	new ServerController().ListenAndResponse();
     }
 }

@@ -1,9 +1,12 @@
 package application.Models;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public abstract class MembershipBase
+public abstract class MembershipBase implements Serializable
 {
+    private static final long serialVersionUID = 1L;
+
     protected String id;
     
     protected LocalDate startingDate;

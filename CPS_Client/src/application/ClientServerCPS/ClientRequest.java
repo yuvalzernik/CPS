@@ -1,12 +1,20 @@
 package application.ClientServerCPS;
 
-import java.io.Serializable;
-
-public class ClientRequest<T> implements Serializable
-{
+public class ClientRequest<T> extends ClientRequestBase
+{    
     private static final long serialVersionUID = 1L;
     
-    T sentObject;
+    private T sentObject;
+            
+    public ClientRequest(T sentObject, String serverDestination)
+    {
+	super(serverDestination);
+	
+	this.sentObject = sentObject;
+    }
     
-    public String serverDestination = "test";
+    public T GetSentObject()
+    {
+	return sentObject;
+    }
 }

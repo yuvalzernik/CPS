@@ -1,14 +1,12 @@
 package application.Controllers;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.function.Consumer;
-
-import javax.xml.bind.Validator;
-
 import application.Consts;
 import application.DialogBuilder;
 import application.InputValidator;
+import application.ClientServerCPS.RequestsSender;
+import application.ClientServerCPS.ServerResponse;
 import application.Models.Customer;
 import application.Models.FullMembership;
 import javafx.event.ActionEvent;
@@ -61,6 +59,10 @@ public class FullMembershipRegisterController extends BaseController
 	
 	Consumer<Void> afterPayment = Void ->
 	{
+	    ServerResponse<FullMembership> serverResponse = RequestsSender.RegisterFullMembership(fullMembership);
+	    
+	    // Todo - check server response.
+	    
 	    DialogBuilder.AlertDialog(AlertType.INFORMATION, Consts.Approved, Consts.ThankYouForRegistering, null,
 		    false);
 	    

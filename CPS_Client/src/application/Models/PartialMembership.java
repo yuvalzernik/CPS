@@ -6,6 +6,8 @@ import java.util.ArrayList;
 
 public class PartialMembership extends MembershipBase
 {
+    private static final long serialVersionUID = 1L;
+
     String parkinglot;
     
     ArrayList<String> carList;

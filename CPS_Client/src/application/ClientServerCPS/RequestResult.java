@@ -1,6 +1,8 @@
 package application.ClientServerCPS;
 
-public class RequestResult
+public enum RequestResult
 {
-    
+    None,
+    Succeed,
+    Failed
 }

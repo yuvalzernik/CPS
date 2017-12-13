@@ -4,6 +4,8 @@ import java.time.LocalDate;
 
 public class FullMembership extends MembershipBase
 {
+    private static final long serialVersionUID = 1L;
+    
     private String carNumber;
     
     public FullMembership(String id, LocalDate startingDate, LocalDate endingDate, String carNumber)
