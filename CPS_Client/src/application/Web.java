@@ -2,6 +2,8 @@ package application;
 
 import java.net.URL;
 import java.util.LinkedList;
+
+import application.Controllers.ControllersManager;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.util.Pair;
