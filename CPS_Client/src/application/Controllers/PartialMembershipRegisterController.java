@@ -3,8 +3,8 @@ package application.Controllers;
 import java.time.LocalDate;
 import java.util.function.Consumer;
 
-import application.Consts;
-import application.DialogBuilder;
+import CPS_Utilities.Consts;
+import CPS_Utilities.DialogBuilder;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;

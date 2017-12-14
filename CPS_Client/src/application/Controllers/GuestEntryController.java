@@ -1,7 +1,7 @@
 package application.Controllers;
 
-import application.Consts;
-import application.DialogBuilder;
+import CPS_Utilities.Consts;
+import CPS_Utilities.DialogBuilder;
 import javafx.event.ActionEvent;
 
 //package application;

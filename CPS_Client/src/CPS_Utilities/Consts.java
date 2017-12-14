@@ -1,8 +1,10 @@
-package application;
+package CPS_Utilities;
 
 public class Consts
 {
     public static final int PORT = 5555;
+    
+    public static final String ServerProblemMessage = "We are sorry but we had a problem with the server. \nPlease try again or come back later.";
     
     public static final String InputsAreIncorrect = "Please fill in all fields as required";
     

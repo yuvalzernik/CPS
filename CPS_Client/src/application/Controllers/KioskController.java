@@ -2,8 +2,8 @@ package application.Controllers;
 
 import java.util.ArrayList;
 
-import application.Consts;
-import application.DialogBuilder;
+import CPS_Utilities.Consts;
+import CPS_Utilities.DialogBuilder;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert.AlertType;

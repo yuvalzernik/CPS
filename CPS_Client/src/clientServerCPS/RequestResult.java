@@ -1,4 +1,4 @@
-package application.ClientServerCPS;
+package clientServerCPS;
 
 public enum RequestResult
 {

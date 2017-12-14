@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import application.Consts;
-import application.DialogBuilder;
-import application.GuestIdentifyingInformation;
-import application.MemberIdentifyingInformation;
+import CPS_Utilities.Consts;
+import CPS_Utilities.DialogBuilder;
+import CPS_Utilities.GuestIdentifyingInformation;
+import CPS_Utilities.MemberIdentifyingInformation;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Dialog;

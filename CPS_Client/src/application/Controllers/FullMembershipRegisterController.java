@@ -2,13 +2,15 @@ package application.Controllers;
 
 import java.time.LocalDate;
 import java.util.function.Consumer;
-import application.Consts;
-import application.DialogBuilder;
-import application.InputValidator;
-import application.ClientServerCPS.RequestsSender;
-import application.ClientServerCPS.ServerResponse;
+
+import CPS_Utilities.Consts;
+import CPS_Utilities.DialogBuilder;
+import CPS_Utilities.InputValidator;
 import application.Models.Customer;
 import application.Models.FullMembership;
+import clientServerCPS.RequestResult;
+import clientServerCPS.RequestsSender;
+import clientServerCPS.ServerResponse;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.DatePicker;
@@ -61,7 +63,12 @@ public class FullMembershipRegisterController extends BaseController
 	{
 	    ServerResponse<FullMembership> serverResponse = RequestsSender.RegisterFullMembership(fullMembership);
 	    
-	    // Todo - check server response.
+	    if (serverResponse.GetRequestResult().equals(RequestResult.Failed))
+	    {
+		DialogBuilder.AlertDialog(AlertType.ERROR, null, Consts.ServerProblemMessage, null, false);
+		
+		return;
+	    }
 	    
 	    DialogBuilder.AlertDialog(AlertType.INFORMATION, Consts.Approved, Consts.ThankYouForRegistering, null,
 		    false);
@@ -79,10 +86,9 @@ public class FullMembershipRegisterController extends BaseController
 	
 	customer = new Customer(id.getText(), email.getText(), 0);
 	
-	if(!InputValidator.FullMembership(fullMembership) || !InputValidator.Customer(customer))
+	if (!InputValidator.FullMembership(fullMembership) || !InputValidator.Customer(customer))
 	{
-	    DialogBuilder.AlertDialog(AlertType.ERROR, null, Consts.InputsAreIncorrect, null,
-		    false);
+	    DialogBuilder.AlertDialog(AlertType.ERROR, null, Consts.InputsAreIncorrect, null, false);
 	    
 	    return false;
 	}

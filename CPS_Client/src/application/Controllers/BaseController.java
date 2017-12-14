@@ -2,7 +2,7 @@ package application.Controllers;
 
 import java.lang.reflect.Field;
 
-import application.DialogBuilder;
+import CPS_Utilities.DialogBuilder;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TextField;
 

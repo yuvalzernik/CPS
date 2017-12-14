@@ -1,4 +1,4 @@
-package application;
+package CPS_Utilities;
 
 public class GuestIdentifyingInformation
 {

@@ -1,14 +1,16 @@
 package CPS_Server;
 
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import application.ClientServerCPS.ClientRequest;
-import application.ClientServerCPS.ClientRequestBase;
-import application.ClientServerCPS.ClientServerConsts;
-import application.ClientServerCPS.ServerResponse;
+
 import application.Models.FullMembership;
+import clientServerCPS.ClientRequest;
+import clientServerCPS.ClientRequestBase;
+import clientServerCPS.ClientServerConsts;
+import clientServerCPS.RequestResult;
+import clientServerCPS.ServerResponse;
+
 import java.util.concurrent.CompletableFuture;
 
 
@@ -18,10 +20,10 @@ public class ServerRequestHandler
     {
 	CompletableFuture.runAsync(() ->
 	{
-	    try (ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
-		    ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream()))
+	    try (Socket mySocket = socket;
+		    ObjectInputStream inputStream = new ObjectInputStream(mySocket.getInputStream());
+		    ObjectOutputStream outputStream = new ObjectOutputStream(mySocket.getOutputStream()))
 	    {
-		
 		ClientRequestBase clientRequest = (ClientRequestBase) inputStream.readObject();
 		
 		outputStream.writeObject(ExtractAndApplyRequest(clientRequest));
@@ -29,18 +31,6 @@ public class ServerRequestHandler
 	    catch (Exception e)
 	    {
 		e.printStackTrace();
-	    }
-	    finally
-	    {
-		try
-		{
-		    socket.close();
-		}
-		catch (IOException e)
-		{
-		    // Probably socket was broke, the client will get exception.
-		    e.printStackTrace();
-		}
 	    }
 	});
     }
@@ -54,12 +44,14 @@ public class ServerRequestHandler
 	    return RegisterFullMembership(((ClientRequest<FullMembership>) clientRequestBase).GetSentObject());
 	
 	default:
-	    return null;  // Todo - return server response
+	    return null;  // Todo - return server response somehow
 	}
     }
     
     private ServerResponse<FullMembership> RegisterFullMembership(FullMembership fullMembership)
     {
-	return null; // Todo - send to DB
+	// Todo - send to DB
+	
+	return new ServerResponse<FullMembership>(RequestResult.Succeed, null, null);
     }
 }

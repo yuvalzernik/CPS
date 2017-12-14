@@ -3,7 +3,7 @@ package CPS_Server;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import application.Consts;
+import CPS_Utilities.Consts;
 
 public class ServerController
 {

@@ -1,4 +1,4 @@
-package application.ClientServerCPS;
+package clientServerCPS;
 
 import java.io.Serializable;
 
