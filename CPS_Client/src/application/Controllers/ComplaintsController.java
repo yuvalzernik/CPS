@@ -4,9 +4,9 @@
 
 package application.Controllers;
 
-import application.Consts;
+import CPS_Utilities.Consts;
+import CPS_Utilities.DialogBuilder;
 import application.ConstsWeb;
-import application.DialogBuilder;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;

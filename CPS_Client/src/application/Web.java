@@ -3,6 +3,7 @@ package application;
 import java.net.URL;
 import java.util.LinkedList;
 
+import CPS_Utilities.Consts;
 import application.Controllers.ControllersManager;
 import javafx.application.Application;
 import javafx.stage.Stage;
