@@ -69,7 +69,7 @@ public class PartialMembershipRegisterController extends BaseController
 	    DialogBuilder.AlertDialog(AlertType.INFORMATION, Consts.Approved, Consts.ThankYouForRegistering, null,
 		    false);
 	    
-	    myControllersManager.SetScene(Consts.Kiosk, null);
+	    myControllersManager.GoToHomePage();
 	};
 	
 	myControllersManager.Payment(paymentAmount, afterPayment, Consts.PartialMembershipRegister);

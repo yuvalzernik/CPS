@@ -16,14 +16,18 @@ import javafx.util.Pair;
 
 public class ControllersManager
 {
+	private String homePage;
+	
     private Stage myStage;
     
     private HashMap<String, Scene> sceneMap = new HashMap<>();
     
     private HashMap<String, BaseController> controllerMap = new HashMap<>();
     
-    public ControllersManager(List<Pair<String, URL>> fxmlNamePathList, Stage stage) throws IOException
+    public ControllersManager(List<Pair<String, URL>> fxmlNamePathList, Stage stage, String homepage) throws IOException
     {
+    this.homePage=homepage;
+    
 	myStage = stage;
 	
 	for(Pair<String, URL> fxmlNamePath : fxmlNamePathList )
@@ -63,6 +67,10 @@ public class ControllersManager
     {
 	MySetScene(sceneName);
     }
+    public void GoToHomePage() {
+    MySetScene(homePage);
+    }
+    
     
     public void Payment(float amountToPay, Consumer<Void> afterPaymentDetailsCheck, String PreviousScene)
     {

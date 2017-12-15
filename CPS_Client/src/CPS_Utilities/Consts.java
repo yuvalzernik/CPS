@@ -58,4 +58,12 @@ public class Consts
     
     public static final String Payment = "Payment";
     
+    public static final String MonitorAndControllMember ="Monitor And Controll Member";
+    
+    public static final String MonitorAndControllMemberFxmlPath ="Fxmls/MonitorAndControllMember.fxml";
+    
+    public static final String MonitorAndControllNotMember ="Monitor And Controll Not Member";
+    
+    public static final String MonitorAndControllNotMemberFxmlPath ="Fxmls/MonitorAndControllNotMember.fxml";    
+    
 }
