@@ -26,10 +26,14 @@ public class Web extends Application
 	    list.add(new Pair<String, URL>(Consts.PartialMembershipRegister, myClass.getResource(Consts.PartialMembershipRegisterFxmlPath)));
 	    list.add(new Pair<String, URL>(ConstsWeb.Complaints, myClass.getResource(ConstsWeb.ComplaintsFxmlPath)));
 	    list.add(new Pair<String, URL>(ConstsWeb.OrderInAdvance, myClass.getResource(ConstsWeb.OrderInAdvanceFxmlPath)));
+	    list.add(new Pair<String, URL>(Consts.Payment, myClass.getResource(Consts.PaymentFxmlPath)));
+	    list.add(new Pair<String, URL>(Consts.MonitorAndControllNotMember, myClass.getResource(Consts.MonitorAndControllNotMemberFxmlPath)));
+	    list.add(new Pair<String, URL>(Consts.MonitorAndControllMember, myClass.getResource(Consts.MonitorAndControllMemberFxmlPath)));
 
-	    ControllersManager controllersManager = new ControllersManager(list, primaryStage);
+
+	    ControllersManager controllersManager = new ControllersManager(list, primaryStage,ConstsWeb.Web);
 	    
-	    controllersManager.SetScene(ConstsWeb.Web, null);
+	    controllersManager.GoToHomePage();
 	}
 	catch (Exception e)
 	{

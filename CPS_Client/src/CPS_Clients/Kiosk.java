@@ -29,9 +29,9 @@ public class Kiosk extends Application
 	    list.add(new Pair<String, URL>(Consts.GuestEntry, myClass.getResource(Consts.GuestEntryFxmlPath)));
 	    list.add(new Pair<String, URL>(Consts.Payment, myClass.getResource(Consts.PaymentFxmlPath)));
 
-	    ControllersManager controllersManager = new ControllersManager(list, primaryStage);
+	    ControllersManager controllersManager = new ControllersManager(list, primaryStage,Consts.Kiosk);
 	    
-	    controllersManager.SetScene(Consts.Kiosk, null);
+	    controllersManager.GoToHomePage();
 	}
 	catch (Exception e)
 	{

@@ -1,5 +1,6 @@
 package CPS_Clients.Controllers;
 
+import CPS_Utilities.Consts;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
@@ -8,13 +9,14 @@ public class MonitorAndControllController extends BaseController
     @FXML
     void OnMember(ActionEvent event)
     {
-	System.out.println("test");
+    	myControllersManager.SetScene(Consts.MonitorAndControllMember, Consts.MonitorAndControll);
     }
     
     @FXML
     void OnNotAMember(ActionEvent event)
     {
-	System.out.println("test");
+    	myControllersManager.SetScene(Consts.MonitorAndControllNotMember, Consts.MonitorAndControll);
+
     }
     
     @FXML
