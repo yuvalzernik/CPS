@@ -1,10 +1,10 @@
-package application;
+package CPS_Clients;
 
 import java.net.URL;
 import java.util.LinkedList;
 
+import CPS_Clients.Controllers.ControllersManager;
 import CPS_Utilities.Consts;
-import application.Controllers.ControllersManager;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.util.Pair;

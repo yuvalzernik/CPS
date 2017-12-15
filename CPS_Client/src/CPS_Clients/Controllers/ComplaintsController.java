@@ -2,11 +2,11 @@
  * Sample Skeleton for 'Complaints.fxml' Controller Class
  */
 
-package application.Controllers;
+package CPS_Clients.Controllers;
 
+import CPS_Clients.ConstsWeb;
 import CPS_Utilities.Consts;
 import CPS_Utilities.DialogBuilder;
-import application.ConstsWeb;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;

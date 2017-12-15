@@ -4,5 +4,7 @@ public enum RequestResult
 {
     None,
     Succeed,
-    Failed
+    Failed,
+    NotFound,
+    AlredyExist
 }

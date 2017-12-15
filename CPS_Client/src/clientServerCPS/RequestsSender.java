@@ -3,16 +3,15 @@ package clientServerCPS;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-
-import CPS_Utilities.Consts;
-import application.Models.FullMembership;
+import entities.Customer;
+import entities.FullMembership;
 
 public class RequestsSender
 {
     @SuppressWarnings("unchecked")
     private static <T> ServerResponse<T> SendRequest(T sentObject, String serverDestination)
     {
-	try (Socket socket = new Socket("localHost", Consts.PORT);
+	try (Socket socket = new Socket("localHost", ClientServerConsts.PORT);
 		ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
 		ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream()))
 	{
@@ -36,5 +35,10 @@ public class RequestsSender
     public static ServerResponse<FullMembership> RegisterFullMembership(FullMembership fullMembership)
     {
 	return SendRequest(fullMembership, ClientServerConsts.RegisterFullMembership);
+    }
+    
+    public static ServerResponse<Customer> AddCustomerIfNotExist(Customer customer)
+    {
+	return SendRequest(customer, ClientServerConsts.AddCustomerIfNotExist);
     }
 }

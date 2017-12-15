@@ -1,8 +1,8 @@
-package application.Controllers;
+package CPS_Clients.Controllers;
 import java.util.ArrayList;
 
+import CPS_Clients.ConstsWeb;
 import CPS_Utilities.Consts;
-import application.ConstsWeb;
 import CPS_Utilities.DialogBuilder;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

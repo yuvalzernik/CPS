@@ -6,5 +6,9 @@ package clientServerCPS;
 
 public class ClientServerConsts
 {
+    public static final int PORT = 5555;
+    
     public static final String RegisterFullMembership = "RegisterFullMembership";
+    
+    public static final String AddCustomerIfNotExist = "AddCustomerIfNotExist";
 }

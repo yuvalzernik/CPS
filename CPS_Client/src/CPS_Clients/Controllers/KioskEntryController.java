@@ -1,4 +1,4 @@
-package application.Controllers;
+package CPS_Clients.Controllers;
 
 import java.io.IOException;
 import java.net.URISyntaxException;

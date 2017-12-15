@@ -1,4 +1,4 @@
-package application.Controllers;
+package CPS_Clients.Controllers;
 
 import CPS_Utilities.Consts;
 import CPS_Utilities.DialogBuilder;

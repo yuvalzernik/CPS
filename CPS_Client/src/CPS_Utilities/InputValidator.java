@@ -3,8 +3,8 @@ package CPS_Utilities;
 import java.time.LocalDate;
 import java.util.regex.Pattern;
 
-import application.Models.FullMembership;
-import application.Models.Customer;;
+import entities.Customer;
+import entities.FullMembership;;
 
 public class InputValidator
 {

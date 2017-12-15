@@ -1,4 +1,4 @@
-package application;
+package CPS_Clients;
 
 public class ConstsWeb {
 	public static final String  SumbitComplaint= "Are you sure you want to sumbit your complaint?";

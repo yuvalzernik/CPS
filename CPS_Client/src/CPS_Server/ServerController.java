@@ -1,9 +1,10 @@
 package CPS_Server;
 
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-
-import CPS_Utilities.Consts;
+import CPS_Utilities.CPS_Tracer;
+import clientServerCPS.ClientServerConsts;
 
 public class ServerController
 {
@@ -16,8 +17,11 @@ public class ServerController
     
     private void ListenAndResponse()
     {
-	try (ServerSocket serverSocket = new ServerSocket(Consts.PORT))
+	try (ServerSocket serverSocket = new ServerSocket(ClientServerConsts.PORT))
 	{
+	    CPS_Tracer.TraceInformation("Server has started to listen on IP "
+		    + InetAddress.getLocalHost().getHostAddress() + " Port " + ClientServerConsts.PORT);
+	    
 	    while (true)
 	    {
 		try
@@ -28,17 +32,18 @@ public class ServerController
 		}
 		catch (Exception e)
 		{
-		    e.printStackTrace();
-		    // Socked will be closed and the client will return
-		    // ServerResult with Failed result
+		    CPS_Tracer.TraceError(e.toString());
+		    // Socked will be closed and the client will get
+		    // ServerResponse with Failed result
 		}
 	    }
 	}
 	catch (Exception e)
 	{
-	    e.printStackTrace();
-	    // Server will shut down.
+	    CPS_Tracer.TraceError(e.toString());
 	}
+	
+	CPS_Tracer.TraceInformation("Server is shutting down.");
     }
     
     public static void main(String[] args)

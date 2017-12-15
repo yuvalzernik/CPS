@@ -1,6 +1,6 @@
-/application/
-/Models/
-/ClientServerCPS/
-/CPS_Server/
-/clientServerCPS/
 /CPS_Utilities/
+/application/
+/clientServerCPS/
+/entities/
+/CPS_Clients/
+/CPS_Fxmls/

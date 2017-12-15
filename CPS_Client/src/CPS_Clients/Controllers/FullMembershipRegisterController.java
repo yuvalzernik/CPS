@@ -1,4 +1,4 @@
-package application.Controllers;
+package CPS_Clients.Controllers;
 
 import java.time.LocalDate;
 import java.util.function.Consumer;
@@ -6,11 +6,11 @@ import java.util.function.Consumer;
 import CPS_Utilities.Consts;
 import CPS_Utilities.DialogBuilder;
 import CPS_Utilities.InputValidator;
-import application.Models.Customer;
-import application.Models.FullMembership;
 import clientServerCPS.RequestResult;
 import clientServerCPS.RequestsSender;
 import clientServerCPS.ServerResponse;
+import entities.Customer;
+import entities.FullMembership;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.DatePicker;
@@ -61,9 +61,16 @@ public class FullMembershipRegisterController extends BaseController
 	
 	Consumer<Void> afterPayment = Void ->
 	{
-	    ServerResponse<FullMembership> serverResponse = RequestsSender.RegisterFullMembership(fullMembership);
+	    // Todo : consider sending these requests in parallel.
+	    // + what if register succeed but add customer failed ? 
 	    
-	    if (serverResponse.GetRequestResult().equals(RequestResult.Failed))
+	    ServerResponse<FullMembership> registerFullMembershipResponse = RequestsSender
+		    .RegisterFullMembership(fullMembership);
+	    
+	    ServerResponse<Customer> AddCustomerIfNotExist = RequestsSender.AddCustomerIfNotExist(customer);
+	    
+	    if (registerFullMembershipResponse.GetRequestResult().equals(RequestResult.Failed)
+		    || AddCustomerIfNotExist.GetRequestResult().equals(RequestResult.Failed))
 	    {
 		DialogBuilder.AlertDialog(AlertType.ERROR, null, Consts.ServerProblemMessage, null, false);
 		
