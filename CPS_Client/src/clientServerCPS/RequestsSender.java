@@ -37,8 +37,8 @@ public class RequestsSender
 	return SendRequest(fullMembership, ClientServerConsts.RegisterFullMembership);
     }
     
-    public static ServerResponse<Customer> AddCustomerIfNotExist(Customer customer)
+    public static ServerResponse<Customer> AddCustomerIfNotExists(Customer customer)
     {
-	return SendRequest(customer, ClientServerConsts.AddCustomerIfNotExist);
+	return SendRequest(customer, ClientServerConsts.AddCustomerIfNotExists);
     }
 }

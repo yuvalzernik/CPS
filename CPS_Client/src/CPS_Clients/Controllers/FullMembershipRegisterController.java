@@ -67,7 +67,7 @@ public class FullMembershipRegisterController extends BaseController
 	    ServerResponse<FullMembership> registerFullMembershipResponse = RequestsSender
 		    .RegisterFullMembership(fullMembership);
 	    
-	    ServerResponse<Customer> AddCustomerIfNotExist = RequestsSender.AddCustomerIfNotExist(customer);
+	    ServerResponse<Customer> AddCustomerIfNotExist = RequestsSender.AddCustomerIfNotExists(customer);
 	    
 	    if (registerFullMembershipResponse.GetRequestResult().equals(RequestResult.Failed)
 		    || AddCustomerIfNotExist.GetRequestResult().equals(RequestResult.Failed))

@@ -6,8 +6,10 @@ import java.time.LocalDate;
 public abstract class MembershipBase implements Serializable
 {
     private static final long serialVersionUID = 1L;
+    
+    String subscriptionId;
 
-    protected String id;
+    protected String customerId;
     
     protected LocalDate startingDate;
     
@@ -15,20 +17,22 @@ public abstract class MembershipBase implements Serializable
     
     public MembershipBase(String id, LocalDate startingDate, LocalDate endingDate)
     {
-	this.id = id;
+	this.customerId = id;
 	this.startingDate = startingDate;
 	this.endingDate = endingDate;
+	
+	subscriptionId = "Not yet initialized";
     }
     
     @Override
     public String toString()
     {
-	return "Id: " + id + "\nStaring date: " + startingDate + "\nEnding date: " + endingDate + "\n";
+	return "subscriptionId: " + subscriptionId + "\nCustomer ID: " + customerId + "\nStaring date: " + startingDate + "\nEnding date: " + endingDate + "\n";
     }
     
-    public String GetId()
+    public String GetCustomerId()
     {
-	return id;
+	return customerId;
     }
     
     public LocalDate GetStartingDate()
@@ -39,6 +43,16 @@ public abstract class MembershipBase implements Serializable
     public LocalDate GetEndingDate()
     {
 	return endingDate;
+    }
+    
+    public String GetSubscriptionId()
+    {
+	return subscriptionId;
+    }
+    
+    public void SetSubscriptionId(String subscriptionId)
+    {
+	this.subscriptionId = subscriptionId;
     }
     
 }
