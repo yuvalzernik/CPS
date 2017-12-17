@@ -37,7 +37,7 @@ public class ComplaintsController extends BaseController {
 
 	@FXML
 	void OnBack(ActionEvent event) {
-		myControllersManager.Back(PreviousScene);
+		myControllersManager.Back(PreviousScene, ConstsWeb.Complaints);
 	}
 
 }

@@ -23,7 +23,7 @@ public class Employees extends Application
 	    list.add(new Pair<String, URL>(ConstsEmployees.EmployeesLogin, myClass.getResource(ConstsEmployees.EmployeesLoginFxmlPath)));
 	    ControllersManager controllersManager = new ControllersManager(list, primaryStage,ConstsEmployees.EmployeesLogin);
 	    
-	    controllersManager.GoToHomePage();
+	    controllersManager.GoToHomePage(null);
 	}
 	catch (Exception e)
 	{

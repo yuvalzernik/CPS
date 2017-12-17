@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 
 import CPS_Utilities.DialogBuilder;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
 public abstract class BaseController
@@ -23,6 +24,9 @@ public abstract class BaseController
 		if (f.getType().equals(TextField.class))
 		{
 		    ((TextField) f.get(this)).clear();
+		}
+		else if(f.getType().equals(TextArea.class)) {
+			 ((TextArea) f.get(this)).clear();
 		}
 	    }
 	}

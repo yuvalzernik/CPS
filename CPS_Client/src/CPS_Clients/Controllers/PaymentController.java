@@ -1,6 +1,8 @@
 package CPS_Clients.Controllers;
 
 import java.util.function.Consumer;
+
+import CPS_Utilities.Consts;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -36,10 +38,15 @@ public class PaymentController extends BaseController
 	this.afterPaymentDetailsCheck = afterPaymentDetailsCheck;
     }
     
+    void SetOrderDetails(String order)
+    {
+    	orderDetails.setText(order);
+    }
+    
     @FXML
     void OnBack(ActionEvent event)
     {
-	myControllersManager.Back(PreviousScene);
+	myControllersManager.Back(PreviousScene,Consts.Payment);
     }
     
     @FXML

@@ -3,8 +3,10 @@ package CPS_Clients.Controllers;
 import java.time.LocalDate;
 import java.util.function.Consumer;
 
+import CPS_Clients.ConstsWeb;
 import CPS_Utilities.Consts;
 import CPS_Utilities.DialogBuilder;
+import entities.PartialMembership;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -22,6 +24,7 @@ public class PartialMembershipRegisterController extends BaseController
     
     @FXML
     private MenuButton parkingLot;
+    //TODO take from DB update list of parkinglot.
     
     @FXML
     private TextField exitHour;
@@ -51,7 +54,7 @@ public class PartialMembershipRegisterController extends BaseController
     @FXML
     void OnBack(ActionEvent event)
     {
-	myControllersManager.Back(PreviousScene);
+	myControllersManager.Back(PreviousScene,Consts.PartialMembership);
 	
 	carListView.setItems(null);
 	cars.clear();
@@ -69,10 +72,10 @@ public class PartialMembershipRegisterController extends BaseController
 	    DialogBuilder.AlertDialog(AlertType.INFORMATION, Consts.Approved, Consts.ThankYouForRegistering, null,
 		    false);
 	    
-	    myControllersManager.GoToHomePage();
+	    myControllersManager.GoToHomePage(Consts.Payment);
 	};
 	
-	myControllersManager.Payment(paymentAmount, afterPayment, Consts.PartialMembershipRegister);
+	myControllersManager.Payment("test", paymentAmount, afterPayment, Consts.PartialMembershipRegister);
 	
 	carListView.setItems(null);
 	cars.clear();

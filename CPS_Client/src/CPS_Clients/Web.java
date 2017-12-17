@@ -33,7 +33,7 @@ public class Web extends Application
 
 	    ControllersManager controllersManager = new ControllersManager(list, primaryStage,ConstsWeb.Web);
 	    
-	    controllersManager.GoToHomePage();
+	    controllersManager.GoToHomePage(null);
 	}
 	catch (Exception e)
 	{

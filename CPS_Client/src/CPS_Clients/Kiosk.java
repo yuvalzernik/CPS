@@ -28,10 +28,12 @@ public class Kiosk extends Application
 	    list.add(new Pair<String, URL>(Consts.PartialMembershipRegister, myClass.getResource(Consts.PartialMembershipRegisterFxmlPath)));
 	    list.add(new Pair<String, URL>(Consts.GuestEntry, myClass.getResource(Consts.GuestEntryFxmlPath)));
 	    list.add(new Pair<String, URL>(Consts.Payment, myClass.getResource(Consts.PaymentFxmlPath)));
+	    list.add(new Pair<String, URL>(Consts.MonitorAndControllNotMember, myClass.getResource(Consts.MonitorAndControllNotMemberFxmlPath)));
+	    list.add(new Pair<String, URL>(Consts.MonitorAndControllMember, myClass.getResource(Consts.MonitorAndControllMemberFxmlPath)));
 
 	    ControllersManager controllersManager = new ControllersManager(list, primaryStage,Consts.Kiosk);
 	    
-	    controllersManager.GoToHomePage();
+	    controllersManager.GoToHomePage(null);
 	}
 	catch (Exception e)
 	{

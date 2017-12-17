@@ -28,7 +28,7 @@ public class GuestEntryController extends BaseController
     @FXML
     void OnBack(ActionEvent event)
     {
-	myControllersManager.Back(PreviousScene);
+	myControllersManager.Back(PreviousScene, Consts.GuestEntry);
     }
     
     @FXML
