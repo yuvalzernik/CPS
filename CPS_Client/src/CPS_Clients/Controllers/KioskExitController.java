@@ -85,7 +85,7 @@ public class KioskExitController extends BaseController
 		    myControllersManager.SetScene(Consts.Kiosk, null);
 		};
 		
-		myControllersManager.Payment(paymentAmount, afterPayment, Consts.KioskExit);
+		//myControllersManager.Payment(paymentAmount, afterPayment, Consts.KioskExit);
 	    }
 	    
 	    // Else todo
@@ -95,7 +95,7 @@ public class KioskExitController extends BaseController
     @FXML
     void OnBack(ActionEvent event)
     {
-	myControllersManager.Back(PreviousScene);
+	myControllersManager.Back(PreviousScene, Consts.KioskExit);
     }
     
     private boolean CheckAndExitOrder(GuestIdentifyingInformation guestIdentifyingInformation)

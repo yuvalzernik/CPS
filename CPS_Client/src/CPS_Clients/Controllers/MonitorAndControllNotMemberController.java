@@ -4,6 +4,7 @@
 
 package CPS_Clients.Controllers;
 
+import CPS_Utilities.Consts;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
@@ -24,7 +25,7 @@ public class MonitorAndControllNotMemberController extends BaseController{
 
     @FXML
     void OnBack(ActionEvent event) {
-    	myControllersManager.Back(PreviousScene);
+    	myControllersManager.Back(PreviousScene,Consts.MonitorAndControllNotMember);
     }
 
 }

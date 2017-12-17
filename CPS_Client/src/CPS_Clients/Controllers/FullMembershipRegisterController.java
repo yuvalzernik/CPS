@@ -3,6 +3,7 @@ package CPS_Clients.Controllers;
 import java.time.LocalDate;
 import java.util.function.Consumer;
 
+import CPS_Clients.ConstsWeb;
 import CPS_Utilities.Consts;
 import CPS_Utilities.DialogBuilder;
 import CPS_Utilities.InputValidator;
@@ -45,7 +46,8 @@ public class FullMembershipRegisterController extends BaseController
     @FXML
     void OnBack(ActionEvent event)
     {
-	myControllersManager.Back(PreviousScene);
+	myControllersManager.Back(PreviousScene, Consts.FullMembershipRegister);
+	
     }
     
     @FXML
@@ -80,10 +82,10 @@ public class FullMembershipRegisterController extends BaseController
 	    DialogBuilder.AlertDialog(AlertType.INFORMATION, Consts.Approved, Consts.ThankYouForRegistering, null,
 		    false);
 	    
-	    myControllersManager.GoToHomePage();
+	    myControllersManager.GoToHomePage(Consts.Payment);
 	};
 	
-	myControllersManager.Payment(paymentAmount, afterPayment, Consts.FullMembershipRegister);
+	myControllersManager.Payment(fullMembership, paymentAmount, afterPayment, Consts.FullMembershipRegister);
     }
     
     private boolean TryConstructFullMembership()

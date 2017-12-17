@@ -100,7 +100,7 @@ public class KioskEntryController extends BaseController
     @FXML
     void OnBack(ActionEvent event)
     {
-	myControllersManager.Back(PreviousScene);
+	myControllersManager.Back(PreviousScene, Consts.KioskEntry);
     }
     
     private boolean CheckAndSubmitPreOrder(GuestIdentifyingInformation guestIdentifyingInformation)
