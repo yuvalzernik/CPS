@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane prefHeight="386.0" prefWidth="611.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="CPS_Clients.Controllers.ParkingLotWorkerEnteryController">
+   <children>
+      <Button layoutX="46.0" layoutY="70.0" mnemonicParsing="false" onAction="#OnInitializeParkingLot" text="Initialize ParkingLot" />
+      <Button layoutX="277.0" layoutY="222.0" mnemonicParsing="false" onAction="#OnRegisterDisabeledParkingLot" text="Register Disabeled ParkingLot" />
+      <Button layoutX="48.0" layoutY="222.0" mnemonicParsing="false" onAction="#OnReserveParkingLot" text="Reserve ParkingLot" />
+      <Button layoutX="271.0" layoutY="70.0" mnemonicParsing="false" onAction="#OnRegisterDisabeledParkingSpot" text="Register Disabeled ParkingSpot" />
+      <Button layoutX="500.0" layoutY="307.0" mnemonicParsing="false" onAction="#onBack" prefHeight="39.0" prefWidth="88.0" text="Back" />
+   </children>
+</AnchorPane>
