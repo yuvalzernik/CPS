@@ -3,6 +3,7 @@ package CPS_Server;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+
 import CPS_Utilities.CPS_Tracer;
 import clientServerCPS.ClientServerConsts;
 
@@ -10,7 +11,7 @@ public class ServerController
 {
     private ServerRequestHandler myRequestHandler;
     
-    public ServerController()
+    public ServerController() throws Exception
     {
 	myRequestHandler = new ServerRequestHandler();
     }
@@ -46,7 +47,7 @@ public class ServerController
 	CPS_Tracer.TraceInformation("Server is shutting down.");
     }
     
-    public static void main(String[] args)
+    public static void main(String[] args) throws Exception
     {
 	new ServerController().ListenAndResponse();
     }

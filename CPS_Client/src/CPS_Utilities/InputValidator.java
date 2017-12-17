@@ -47,7 +47,7 @@ public class InputValidator
     public static boolean FullMembership(FullMembership fullMembership)
     {
 	if (CarNumber(fullMembership.GetCarNumber()) && StartingDate(fullMembership.GetStartingDate())
-		&& Id(fullMembership.GetId()))
+		&& Id(fullMembership.GetCustomerId()))
 	{
 	    return true;
 	}

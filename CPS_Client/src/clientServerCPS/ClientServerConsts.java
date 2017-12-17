@@ -10,5 +10,5 @@ public class ClientServerConsts
     
     public static final String RegisterFullMembership = "RegisterFullMembership";
     
-    public static final String AddCustomerIfNotExist = "AddCustomerIfNotExist";
+    public static final String AddCustomerIfNotExists = "AddCustomerIfNotExists";
 }
