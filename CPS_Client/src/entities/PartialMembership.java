@@ -42,14 +42,26 @@ public class PartialMembership extends MembershipBase
     @Override
     public String toString()
     {
+	return super.toString() + "Parkinglot: " + parkinglot + "\nExit time: "
+		+ exitTime + "\n" + CarListString();
+    }
+    
+    public String CarListString()
+    {
 	String carListString = "";
-	
-	for (String car : carList)
+	for(String  car : carList)
 	{
-	    carListString += ("\n" + car);
+	    carListString += (car +" ,");
 	}
 	
-	return super.toString() + "Parkinglot: " + parkinglot + "\nExit time: "
-		+ exitTime + carListString;
+	// trick : 
+	
+	if(carListString != "")
+	{
+	    carListString += '$';
+	    carListString = carListString.replace(" ,$", "");
+	}
+	
+	return carListString;
     }
 }

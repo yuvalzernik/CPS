@@ -8,22 +8,26 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import clientServerCPS.ClientRequest;
-import clientServerCPS.ClientRequestBase;
 import clientServerCPS.ClientServerConsts;
 import clientServerCPS.RequestResult;
 import clientServerCPS.ServerResponse;
 import entities.Customer;
 import entities.FullMembership;
+import entities.PartialMembership;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 
 import CPS_Utilities.CPS_Tracer;
 
-public class ServerRequestHandler
+public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
+
 {
     Connection mySqlConnection;
     
@@ -52,7 +56,7 @@ public class ServerRequestHandler
 		    ObjectInputStream inputStream = new ObjectInputStream(mySocket.getInputStream());
 		    ObjectOutputStream outputStream = new ObjectOutputStream(mySocket.getOutputStream()))
 	    {
-		ClientRequestBase clientRequest = (ClientRequestBase) inputStream.readObject();
+		ClientRequest clientRequest = (ClientRequest) inputStream.readObject();
 		
 		outputStream.writeObject(ExtractAndApplyRequest(clientRequest));
 	    }
@@ -63,22 +67,39 @@ public class ServerRequestHandler
 	});
     }
     
-    @SuppressWarnings("unchecked")
-    private Object ExtractAndApplyRequest(ClientRequestBase clientRequestBase)
+    private Object ExtractAndApplyRequest(ClientRequest clientRequest)
     {
-	switch (clientRequestBase.getServerDestination())
+	switch (clientRequest.getServerDestination())
 	{
 	case ClientServerConsts.RegisterFullMembership:
-	    return RegisterFullMembership(((ClientRequest<FullMembership>) clientRequestBase).GetSentObject());
+	    return RegisterFullMembership((FullMembership) clientRequest.GetSentObject());
+	
+	case ClientServerConsts.RegisterPartialMembership:
+	    return RegisterPartialMembership((PartialMembership) clientRequest.GetSentObject());
 	
 	case ClientServerConsts.AddCustomerIfNotExists:
-	    return AddCustomerIfNotExists(((ClientRequest<Customer>) clientRequestBase).GetSentObject());
+	    return AddCustomerIfNotExists((Customer) clientRequest.GetSentObject());
+	
+	case ClientServerConsts.GetFullMembership:
+	    return GetFullMembership((String) clientRequest.GetSentObject());
+	
+	case ClientServerConsts.GetPartialMembership:
+	    return GetPartialMembership((String) clientRequest.GetSentObject());
+	
+	case ClientServerConsts.GetCustomer:
+	    return GetCustomer((String) clientRequest.GetSentObject());
 	
 	default:
 	    CPS_Tracer.TraceError(
-		    "Server recived unknown destination. \nDestination: " + clientRequestBase.getServerDestination());
-	    return null; // Todo - return server response somehow
+		    "Server recived unknown destination. \nDestination: " + clientRequest.getServerDestination());
+	    
+	    throw new IllegalArgumentException(clientRequest.getServerDestination());
 	}
+    }
+    
+    private ArrayList<String> ConvertToCarList(String carListString)
+    {
+	return new ArrayList<>(Arrays.asList(carListString.split(" ,")));
     }
     
     private String GenerateSubscriptionId(String preparedStatementString, int offset) throws Exception
@@ -134,10 +155,10 @@ public class ServerRequestHandler
     
     private ServerResponse<FullMembership> RegisterFullMembership(FullMembership fullMembership)
     {
+	CPS_Tracer.TraceInformation("Registering full membership: \n" + fullMembership);
+	
 	try
 	{
-	    CPS_Tracer.TraceInformation("Registering full membership: \n" + fullMembership);
-	    
 	    String preparedStatementString = "INSERT INTO FullMemberships(subscriptionId, customerId, startingDate, endingDate, carNumber) VALUES(?, ?, ?, ?, ?)";
 	    
 	    ArrayList<String> values = new ArrayList<>();
@@ -173,13 +194,56 @@ public class ServerRequestHandler
 	}
     }
     
+    private ServerResponse<PartialMembership> RegisterPartialMembership(PartialMembership partialMembership)
+    {
+	CPS_Tracer.TraceInformation("Registering partial membership: \n" + partialMembership);
+	
+	try
+	{
+	    String preparedStatementString = "INSERT INTO PartialMemberships(subscriptionId, customerId, startingDate, endingDate, parkinglot, carList, exitTime) VALUES(?, ?, ?, ?, ?, ?, ?)";
+	    
+	    ArrayList<String> values = new ArrayList<>();
+	    
+	    String subscriptionId = GenerateSubscriptionId(
+		    "SELECT subscriptionId FROM PartialMemberships WHERE subscriptionId = ?", 2000000);
+	    
+	    values.add(subscriptionId);
+	    values.add(partialMembership.GetCustomerId());
+	    values.add(partialMembership.GetStartingDate().toString());
+	    values.add(partialMembership.GetEndingDate().toString());
+	    values.add(partialMembership.GetParkinglot());
+	    values.add(partialMembership.CarListString());
+	    values.add(partialMembership.GetExitTime().toString());
+	    
+	    AddRowToTable(preparedStatementString, values);
+	    
+	    partialMembership.SetSubscriptionId(subscriptionId);
+	    
+	    ServerResponse<PartialMembership> serverResponse = new ServerResponse<>(RequestResult.Succeed,
+		    partialMembership, null);
+	    
+	    CPS_Tracer.TraceInformation("Server response to client after register: \n" + serverResponse);
+	    
+	    return serverResponse;
+	}
+	catch (Exception e)
+	{
+	    ServerResponse<PartialMembership> serverResponse = new ServerResponse<>(RequestResult.Failed,
+		    partialMembership, "Failed to add fullMembership to the table");
+	    
+	    CPS_Tracer.TraceError("Failed to add row to FullMemberships", e);
+	    
+	    return serverResponse;
+	}
+    }
+    
     private ServerResponse<Customer> AddCustomerIfNotExists(Customer customer)
-    {	
+    {
+	CPS_Tracer.TraceInformation("Trying to add customer: \n" + customer);
+	
 	try
 	{
 	    ServerResponse<Customer> serverResponse;
-	    
-	    CPS_Tracer.TraceInformation("Trying to add customer: \n" + customer);
 	    
 	    // Check if customer doesn't exists:
 	    
@@ -190,7 +254,7 @@ public class ServerRequestHandler
 	    preparedStatement.setString(1, customer.GetId());
 	    
 	    ResultSet resultSet = preparedStatement.executeQuery();
-	    	    
+	    
 	    if (resultSet.isBeforeFirst())
 	    {
 		serverResponse = new ServerResponse<>(RequestResult.AlredyExist, customer, null);
@@ -224,8 +288,140 @@ public class ServerRequestHandler
 		    "Failed to add customer to the table");
 	    
 	    CPS_Tracer.TraceError("Failed to add row to Customers", e);
-	    	    
+	    
 	    return serverResponse;
+	}
+    }
+    
+    private ServerResponse<FullMembership> GetFullMembership(String subscriptionId)
+    {
+	CPS_Tracer.TraceInformation("Get full membership: \n" + subscriptionId);
+	
+	try (PreparedStatement preparedStatement = mySqlConnection
+		.prepareStatement("SELECT * FROM FullMemberships WHERE subscriptionId = ?"))
+	{
+	    ServerResponse<FullMembership> serverResponse;
+	    
+	    FullMembership fullMembership;
+	    
+	    preparedStatement.setString(1, subscriptionId);
+	    
+	    ResultSet resultSet = preparedStatement.executeQuery();
+	    
+	    if (!resultSet.isBeforeFirst())
+	    {
+		serverResponse = new ServerResponse<>(RequestResult.NotFound, null, subscriptionId + "Not Found");
+	    }
+	    else
+	    {
+		resultSet.next();
+		
+		fullMembership = new FullMembership(resultSet.getString(2), LocalDate.parse(resultSet.getString(3)),
+			LocalDate.parse(resultSet.getString(4)), resultSet.getString(5));
+		
+		fullMembership.SetSubscriptionId(resultSet.getString(1));
+		
+		serverResponse = new ServerResponse<>(RequestResult.Succeed, fullMembership, "Found");
+	    }
+	    
+	    CPS_Tracer.TraceInformation(
+		    "Server response to client after trying to get full membership: \n" + serverResponse);
+	    
+	    return serverResponse;
+	}
+	catch (Exception e)
+	{
+	    CPS_Tracer.TraceError("Failed in getting full membership.\nSubscription Id: " + subscriptionId, e);
+	    
+	    return new ServerResponse<>(RequestResult.Failed, null, "Failed to get full membership");
+	}
+    }
+    
+    private ServerResponse<PartialMembership> GetPartialMembership(String subscriptionId)
+    {
+	CPS_Tracer.TraceInformation("Get partial membership: \n" + subscriptionId);
+	
+	try (PreparedStatement preparedStatement = mySqlConnection
+		.prepareStatement("SELECT * FROM PartialMemberships WHERE subscriptionId = ?"))
+	{
+	    ServerResponse<PartialMembership> serverResponse;
+	    
+	    PartialMembership partialMembership;
+	    
+	    preparedStatement.setString(1, subscriptionId);
+	    
+	    ResultSet resultSet = preparedStatement.executeQuery();
+	    
+	    if (!resultSet.isBeforeFirst())
+	    {
+		serverResponse = new ServerResponse<>(RequestResult.NotFound, null, subscriptionId + "Not Found");
+	    }
+	    else
+	    {
+		resultSet.next();
+		
+		partialMembership = new PartialMembership(resultSet.getString(2),
+			LocalDate.parse(resultSet.getString(3)), LocalDate.parse(resultSet.getString(4)),
+			resultSet.getString(5), ConvertToCarList(resultSet.getString(6)),
+			LocalTime.parse(resultSet.getString(7)));
+		
+		partialMembership.SetSubscriptionId(resultSet.getString(1));
+		
+		serverResponse = new ServerResponse<>(RequestResult.Succeed, partialMembership, "Found");
+	    }
+	    
+	    CPS_Tracer.TraceInformation(
+		    "Server response to client after trying to get partial membership: \n" + serverResponse);
+	    
+	    return serverResponse;
+	}
+	catch (Exception e)
+	{
+	    CPS_Tracer.TraceError("Failed in getting partial membership.\nSubscription Id: " + subscriptionId, e);
+	    
+	    return new ServerResponse<>(RequestResult.Failed, null, "Failed to get partial membership");
+	}
+    }
+    
+    private ServerResponse<Customer> GetCustomer(String customerId)
+    {
+	CPS_Tracer.TraceInformation("Get customer: \n" + customerId);
+	
+	try (PreparedStatement preparedStatement = mySqlConnection
+		.prepareStatement("SELECT * FROM Customers WHERE customerId = ?"))
+	{
+	    ServerResponse<Customer> serverResponse;
+	    
+	    Customer customer;
+	    
+	    preparedStatement.setString(1, customerId);
+	    
+	    ResultSet resultSet = preparedStatement.executeQuery();
+	    
+	    if (!resultSet.isBeforeFirst())
+	    {
+		serverResponse = new ServerResponse<>(RequestResult.NotFound, null, customerId + "Not Found");
+	    }
+	    else
+	    {
+		resultSet.next();
+		
+		customer = new Customer(resultSet.getString(1), resultSet.getString(2),
+			Float.parseFloat(resultSet.getString(3)));
+		
+		serverResponse = new ServerResponse<>(RequestResult.Succeed, customer, "Found");
+	    }
+	    
+	    CPS_Tracer.TraceInformation(
+		    "Server response to client after trying to get customer: \n" + serverResponse);
+	    
+	    return serverResponse;
+	}
+	catch (Exception e)
+	{
+	    CPS_Tracer.TraceError("Failed in getting customer.\nSubscription Id: " + customerId, e);
+	    
+	    return new ServerResponse<>(RequestResult.Failed, null, "Failed to get customer");
 	}
     }
 }

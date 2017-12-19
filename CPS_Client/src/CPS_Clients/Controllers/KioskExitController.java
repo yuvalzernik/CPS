@@ -39,7 +39,7 @@ public class KioskExitController extends BaseController
     
     @FXML
     void OnMemberExit(ActionEvent event)
-    {	
+    {
 	Dialog<List<String>> dialog = DialogBuilder.InputsDialog(Consts.FillRequest, MemberInputs, Consts.Submit);
 	
 	Optional<List<String>> result = dialog.showAndWait();
@@ -72,20 +72,24 @@ public class KioskExitController extends BaseController
 	result.ifPresent(inputs ->
 	{
 	    memberIdentifyingInformation = new MemberIdentifyingInformation(inputs.get(0), inputs.get(1));
-	    	    
+	    
 	    boolean isCarExist = CheckAndExitOrder(guestIdentifyingInformation);
+	    
+	    // Todo : create the partial membership object and send it to db +
+	    // add it to Payment parameters.
 	    
 	    if (isCarExist)
 	    {
 		Consumer<Void> afterPayment = Void ->
-		{    
+		{
 		    DialogBuilder.AlertDialog(AlertType.INFORMATION, Consts.Approved, Consts.LeaveTheParkinglotMessage,
-				null, false);		    
+			    null, false);
 		    
 		    myControllersManager.SetScene(Consts.Kiosk, null);
 		};
 		
-		//myControllersManager.Payment(paymentAmount, afterPayment, Consts.KioskExit);
+		// myControllersManager.Payment(paymentAmount, afterPayment,
+		// Consts.KioskExit);
 	    }
 	    
 	    // Else todo
