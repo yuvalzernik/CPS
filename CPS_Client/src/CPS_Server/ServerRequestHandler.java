@@ -17,6 +17,7 @@ import clientServerCPS.RequestResult;
 import clientServerCPS.ServerResponse;
 import entities.Customer;
 import entities.FullMembership;
+import entities.OrderInAdvance;
 import entities.PartialMembership;
 
 import java.util.ArrayList;
@@ -88,6 +89,12 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	
 	case ClientServerConsts.GetCustomer:
 	    return GetCustomer((String) clientRequest.GetSentObject());
+	    
+	case ClientServerConsts.OrderInAdvance:
+		return OrderInAdvance((OrderInAdvance) clientRequest.GetSentObject());///////what????
+	
+	case ClientServerConsts.GetOrderInAdvance:
+		return GetOrderInAdvance((String) clientRequest.GetSentObject());
 	
 	default:
 	    CPS_Tracer.TraceError(
@@ -232,6 +239,52 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 		    partialMembership, "Failed to add fullMembership to the table");
 	    
 	    CPS_Tracer.TraceError("Failed to add row to FullMemberships", e);
+	    
+	    return serverResponse;
+	}
+    }
+    
+    private ServerResponse<OrderInAdvance> OrderInAdvance (OrderInAdvance orderInAdvance )
+    {
+	CPS_Tracer.TraceInformation("Adding Order In Advance: \n" + orderInAdvance);
+	
+	try
+	{
+	    String preparedStatementString = "INSERT INTO OrderInAdvance(orderId, customerId, parkingLot, carNumber, email, startingDate, endingDate, startHour, endHour) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	    
+	    ArrayList<String> values = new ArrayList<>();
+	    
+	    String orderId = GenerateSubscriptionId(
+		    "SELECT orderId FROM OrderInAdvance WHERE orderId = ?",3000000);
+	    
+	    values.add(orderId);
+	    values.add(orderInAdvance.getCustomerId());
+	    values.add(orderInAdvance.getParkinglot());
+	    values.add(orderInAdvance.getCarNumber());
+	    values.add(orderInAdvance.getEmail());
+	    values.add(orderInAdvance.getArrivalDate().toString());
+	    values.add(orderInAdvance.getLeavingDate().toString());
+	    values.add(orderInAdvance.getArrivalHour().toString());
+	    values.add(orderInAdvance.getArrivalHour().toString());
+	    
+	    
+	    AddRowToTable(preparedStatementString, values);
+	    
+	    orderInAdvance.setOrderId(orderId);
+	    
+	    ServerResponse<OrderInAdvance> serverResponse = new ServerResponse<>(RequestResult.Succeed, orderInAdvance,
+		    null);
+	    
+	    CPS_Tracer.TraceInformation("Server response to client after adding order: \n" + serverResponse);
+	    
+	    return serverResponse;
+	}
+	catch (Exception e)
+	{
+	    ServerResponse<OrderInAdvance> serverResponse = new ServerResponse<>(RequestResult.Failed, orderInAdvance,
+		    "Failed to add Order to the table");
+	    
+	    CPS_Tracer.TraceError("Failed to add row to OrderInAdvance", e);
 	    
 	    return serverResponse;
 	}
@@ -422,6 +475,50 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	    CPS_Tracer.TraceError("Failed in getting customer.\nSubscription Id: " + customerId, e);
 	    
 	    return new ServerResponse<>(RequestResult.Failed, null, "Failed to get customer");
+	}
+    }
+    
+    private ServerResponse<OrderInAdvance> GetOrderInAdvance(String orderId)
+    {
+	CPS_Tracer.TraceInformation("Get Order Id: \n" + orderId);
+	
+	try (PreparedStatement preparedStatement = mySqlConnection
+		.prepareStatement("SELECT * FROM OrderInAdvance WHERE orderId = ?"))
+	{
+	    ServerResponse<OrderInAdvance> serverResponse;
+	    
+	    OrderInAdvance orderInAdvance;
+	    
+	    preparedStatement.setString(1, orderId);
+	    
+	    ResultSet resultSet = preparedStatement.executeQuery();
+	    
+	    if (!resultSet.isBeforeFirst())
+	    {
+		serverResponse = new ServerResponse<>(RequestResult.NotFound, null, orderId + "Not Found");
+	    }
+	    else
+	    {
+		resultSet.next();
+		
+		orderInAdvance = new OrderInAdvance(resultSet.getString(2), resultSet.getString(3), resultSet.getString(4), resultSet.getString(5), LocalDate.parse(resultSet.getString(6)),
+			LocalDate.parse(resultSet.getString(7)),LocalTime.parse(resultSet.getString(8)),LocalTime.parse(resultSet.getString(9)));
+		
+		orderInAdvance.setOrderId(resultSet.getString(1));
+		
+		serverResponse = new ServerResponse<>(RequestResult.Succeed, orderInAdvance, "Found");
+	    }
+	    
+	    CPS_Tracer.TraceInformation(
+		    "Server response to client after trying to get order in advance: \n" + serverResponse);
+	    
+	    return serverResponse;
+	}
+	catch (Exception e)
+	{
+	    CPS_Tracer.TraceError("Failed in getting order.\nOrder Id: " + orderId, e);
+	    
+	    return new ServerResponse<>(RequestResult.Failed, null, "Failed to get order ");
 	}
     }
 }

@@ -30,14 +30,14 @@
             <Image url="@../../../../../../Desktop/לימודים/סמסטר%20ה/פרויקט/לוגו/3.gif" />
          </image>
       </ImageView>
-      <TextField layoutX="139.0" layoutY="116.0" />
-      <TextField layoutX="139.0" layoutY="156.0" />
-      <TextField layoutX="139.0" layoutY="196.0" />
-      <TextField layoutX="139.0" layoutY="236.0" />
-      <TextField layoutX="139.0" layoutY="276.0" />
-      <TextField layoutX="139.0" layoutY="316.0" />
-      <TextField layoutX="139.0" layoutY="356.0" />
-      <TextField layoutX="139.0" layoutY="86.0" />
+      <TextField fx:id="carNumber" layoutX="139.0" layoutY="116.0" />
+      <TextField fx:id="parkingLot" layoutX="139.0" layoutY="156.0" />
+      <TextField fx:id="arrivalHour" layoutX="139.0" layoutY="236.0" promptText="HH:MM" />
+      <TextField fx:id="leavingHour" layoutX="139.0" layoutY="316.0" promptText="HH:MM" />
+      <TextField fx:id="email" layoutX="139.0" layoutY="356.0" />
+      <TextField fx:id="customerId" layoutX="139.0" layoutY="86.0" />
       <Button layoutX="16.0" layoutY="408.0" mnemonicParsing="false" onAction="#OnBack" text="Back" />
+      <DatePicker fx:id="arrivalDate" layoutX="138.0" layoutY="196.0" prefHeight="25.0" prefWidth="149.0" />
+      <DatePicker fx:id="leavingDate" layoutX="139.0" layoutY="276.0" prefHeight="25.0" prefWidth="149.0" />
    </children>
 </AnchorPane>
