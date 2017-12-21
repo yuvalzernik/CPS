@@ -7,7 +7,7 @@ public abstract class MembershipBase implements Serializable
 {
     private static final long serialVersionUID = 1L;
     
-    String subscriptionId;
+    protected String subscriptionId;
 
     protected String customerId;
     

@@ -90,7 +90,7 @@ public class FullMembershipRegisterController extends BaseController
     private boolean TryConstructFullMembership()
     {
 	fullMembership = new FullMembership(id.getText(), startingDatePicker.getValue(),
-		startingDatePicker.getValue().plusDays(21), carNumber.getText());
+		startingDatePicker.getValue().plusDays(28), carNumber.getText());
 	
 	customer = new Customer(id.getText(), email.getText(), 0);
 	

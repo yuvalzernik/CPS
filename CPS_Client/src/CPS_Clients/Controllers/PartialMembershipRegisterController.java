@@ -52,7 +52,7 @@ public class PartialMembershipRegisterController extends BaseController
     @FXML
     void OnBack(ActionEvent event)
     {
-	myControllersManager.Back(PreviousScene,Consts.PartialMembership);
+	myControllersManager.Back(PreviousScene,Consts.PartialMembershipRegister);
 	
 	carListView.setItems(null);
 	cars.clear();
