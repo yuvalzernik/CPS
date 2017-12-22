@@ -20,6 +20,8 @@ public class Tests
     {
 	try
 	{
+	    new RequestsSender();
+	    
 	    // FullMembershipTest() && PartialMembershipTest() && CustomerTest() && ReservationTest()
 	    
 	    if (ReservationTest())
