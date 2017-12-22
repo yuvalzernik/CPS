@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane prefHeight="398.0" prefWidth="575.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="CPS_Clients.Controllers.ManagerLoginController">
+   <children>
+      <Button layoutX="51.0" layoutY="49.0" mnemonicParsing="false" onAction="#OnInitializeParkingLot" prefHeight="83.0" prefWidth="212.0" text="Initialize Parking Lot" />
+      <Button layoutX="288.0" layoutY="49.0" mnemonicParsing="false" onAction="#OnRigisterDisabledParkingLot" prefHeight="83.0" prefWidth="233.0" text="Register disabled Parking Spot" />
+      <Button layoutX="51.0" layoutY="145.0" mnemonicParsing="false" onAction="#OnReserveParkingSpot" prefHeight="83.0" prefWidth="212.0" text="Reserve Parking spot" />
+      <Button layoutX="288.0" layoutY="145.0" mnemonicParsing="false" onAction="#OnDisabeledParkingLot" prefHeight="83.0" prefWidth="233.0" text="Register Disabeled Parking Lot" />
+      <Button layoutX="51.0" layoutY="244.0" mnemonicParsing="false" onAction="#OnUpdatePrices" prefHeight="83.0" prefWidth="212.0" text="Update Prices" />
+      <Button layoutX="289.0" layoutY="243.0" mnemonicParsing="false" onAction="#OnProduceReport" prefHeight="83.0" prefWidth="233.0" text="Produce report" />
+      <Button layoutX="433.0" layoutY="342.0" mnemonicParsing="false" onAction="#OnBack" prefHeight="36.0" prefWidth="128.0" text="back" />
+   </children>
+</AnchorPane>

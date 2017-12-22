@@ -1,17 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
-<AnchorPane prefHeight="299.0" prefWidth="508.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="CPS_Clients.Controllers.EmployeesLoginController">
+<AnchorPane prefHeight="197.0" prefWidth="478.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CPS_Clients.Controllers.EmployeesLoginController">
    <children>
-      <Label layoutX="37.0" layoutY="83.0" text="UserName" />
-      <Label layoutX="37.0" layoutY="183.0" text="Password" />
-      <TextField fx:id="userName" layoutX="165.0" layoutY="77.0" />
-      <TextField fx:id="password" layoutX="165.0" layoutY="177.0" />
-      <Button layoutX="397.0" layoutY="231.0" mnemonicParsing="false" onAction="#OnLogin" text="Login" />
+      <Label layoutX="37.0" layoutY="50.0" text="Username">
+         <font>
+            <Font size="19.0" />
+         </font></Label>
+      <Label layoutX="41.0" layoutY="102.0" text="Password">
+         <font>
+            <Font size="19.0" />
+         </font></Label>
+      <TextField fx:id="userName" layoutX="171.0" layoutY="45.0" />
+      <TextField fx:id="password" layoutX="171.0" layoutY="97.0" />
+      <Button layoutX="386.0" layoutY="134.0" mnemonicParsing="false" onAction="#OnLogin" text="Login" />
    </children>
 </AnchorPane>
