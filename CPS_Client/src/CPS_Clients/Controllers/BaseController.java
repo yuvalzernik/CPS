@@ -10,7 +10,6 @@ import javafx.scene.control.TextField;
 public abstract class BaseController
 {
     protected ControllersManager myControllersManager;
-    
     protected String PreviousScene;
     
     void ClearTextFields()
