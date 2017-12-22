@@ -5,7 +5,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import entities.Customer;
 import entities.FullMembership;
-import entities.OrderInAdvance;
+import entities.Reservation;
 import entities.PartialMembership;
 
 public class RequestsSender
@@ -64,14 +64,14 @@ public class RequestsSender
 	return SendRequest(customerId, ClientServerConsts.GetCustomer);
     }
     
-    public static ServerResponse<OrderInAdvance> OrderInAdvance(OrderInAdvance orderInAdvance)
+    public static ServerResponse<Reservation> Reservation(Reservation reservation)
     {
-	return SendRequest(orderInAdvance, ClientServerConsts.OrderInAdvance);
+	return SendRequest(reservation, ClientServerConsts.Reservation);
     }
     
-    public static ServerResponse<OrderInAdvance> GetOrderInAdvance(String orderId)
+    public static ServerResponse<Reservation> GetReservation(String orderId)
     {
-	return SendRequest(orderId, ClientServerConsts.GetOrderInAdvance);
+	return SendRequest(orderId, ClientServerConsts.GetReservation);
     } 
     
 }

@@ -20,7 +20,7 @@ public class ClientServerConsts
     
     public static final String GetPartialMembership = "GetPartialMembership";
     
-    public static final String GetOrderInAdvance = "GetOrderInAdvance";
+    public static final String GetReservation = "GetReservation";
     
-    public static final String OrderInAdvance = "OrderInAdvance";
+    public static final String Reservation = "Reservation";
 }

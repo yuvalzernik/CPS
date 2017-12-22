@@ -17,7 +17,9 @@ import clientServerCPS.RequestResult;
 import clientServerCPS.ServerResponse;
 import entities.Customer;
 import entities.FullMembership;
-import entities.OrderInAdvance;
+import entities.Reservation;
+import entities.enums.ReservationStatus;
+import entities.enums.ReservationType;
 import entities.PartialMembership;
 
 import java.util.ArrayList;
@@ -89,12 +91,12 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	
 	case ClientServerConsts.GetCustomer:
 	    return GetCustomer((String) clientRequest.GetSentObject());
-	    
-	case ClientServerConsts.OrderInAdvance:
-		return OrderInAdvance((OrderInAdvance) clientRequest.GetSentObject());///////what????
 	
-	case ClientServerConsts.GetOrderInAdvance:
-		return GetOrderInAdvance((String) clientRequest.GetSentObject());
+	case ClientServerConsts.Reservation:
+	    return Reservation((Reservation) clientRequest.GetSentObject());/////// what????
+	    
+	case ClientServerConsts.GetReservation:
+	    return GetReservation((String) clientRequest.GetSentObject());
 	
 	default:
 	    CPS_Tracer.TraceError(
@@ -166,7 +168,7 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	
 	try
 	{
-	    String preparedStatementString = "INSERT INTO FullMemberships(subscriptionId, customerId, startingDate, endingDate, carNumber) VALUES(?, ?, ?, ?, ?)";
+	    String preparedStatementString = "INSERT INTO FullMemberships(subscriptionId, customerId, startDate, expiryDate, carNumber) VALUES(?, ?, ?, ?, ?)";
 	    
 	    ArrayList<String> values = new ArrayList<>();
 	    
@@ -175,8 +177,8 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	    
 	    values.add(subscriptionId);
 	    values.add(fullMembership.GetCustomerId());
-	    values.add(fullMembership.GetStartingDate().toString());
-	    values.add(fullMembership.GetEndingDate().toString());
+	    values.add(fullMembership.GetStartDate().toString());
+	    values.add(fullMembership.getExpiryDate().toString());
 	    values.add(fullMembership.GetCarNumber());
 	    
 	    AddRowToTable(preparedStatementString, values);
@@ -207,7 +209,7 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	
 	try
 	{
-	    String preparedStatementString = "INSERT INTO PartialMemberships(subscriptionId, customerId, startingDate, endingDate, parkinglot, carList, exitTime) VALUES(?, ?, ?, ?, ?, ?, ?)";
+	    String preparedStatementString = "INSERT INTO PartialMemberships(subscriptionId, customerId, startDate, expiryDate, parkinglot, carList, exitTime) VALUES(?, ?, ?, ?, ?, ?, ?)";
 	    
 	    ArrayList<String> values = new ArrayList<>();
 	    
@@ -216,8 +218,8 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	    
 	    values.add(subscriptionId);
 	    values.add(partialMembership.GetCustomerId());
-	    values.add(partialMembership.GetStartingDate().toString());
-	    values.add(partialMembership.GetEndingDate().toString());
+	    values.add(partialMembership.GetStartDate().toString());
+	    values.add(partialMembership.getExpiryDate().toString());
 	    values.add(partialMembership.GetParkinglot());
 	    values.add(partialMembership.CarListString());
 	    values.add(partialMembership.GetExitTime().toString());
@@ -244,36 +246,34 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	}
     }
     
-    private ServerResponse<OrderInAdvance> OrderInAdvance (OrderInAdvance orderInAdvance )
+    private ServerResponse<Reservation> Reservation(Reservation reservation)
     {
-	CPS_Tracer.TraceInformation("Adding Order In Advance: \n" + orderInAdvance);
+	CPS_Tracer.TraceInformation("Adding Reservation: \n" + reservation);
 	
 	try
 	{
-	    String preparedStatementString = "INSERT INTO OrderInAdvance(orderId, customerId, parkingLot, carNumber, email, startingDate, endingDate, startHour, endHour) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	    String preparedStatementString = "INSERT INTO Reservations(orderId, type, customerId, parkingLot, carNumber, startingDate, endingDate, startHour, endHour, status) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	    
 	    ArrayList<String> values = new ArrayList<>();
 	    
-	    String orderId = GenerateSubscriptionId(
-		    "SELECT orderId FROM OrderInAdvance WHERE orderId = ?",3000000);
+	    String orderId = GenerateSubscriptionId("SELECT orderId FROM Reservations WHERE orderId = ?", 3000000);
 	    
 	    values.add(orderId);
-	    values.add(orderInAdvance.getCustomerId());
-	    values.add(orderInAdvance.getParkinglot());
-	    values.add(orderInAdvance.getCarNumber());
-	    values.add(orderInAdvance.getEmail());
-	    values.add(orderInAdvance.getArrivalDate().toString());
-	    values.add(orderInAdvance.getLeavingDate().toString());
-	    values.add(orderInAdvance.getArrivalHour().toString());
-	    values.add(orderInAdvance.getArrivalHour().toString());
-	    
+	    values.add(reservation.getReservationType().toString());
+	    values.add(reservation.getCustomerId());
+	    values.add(reservation.getParkinglot());
+	    values.add(reservation.getCarNumber());
+	    values.add(reservation.getArrivalDate().toString());
+	    values.add(reservation.getLeavingDate().toString());
+	    values.add(reservation.getArrivalHour().toString());
+	    values.add(reservation.getLeavingHour().toString());
+	    values.add(reservation.getReservationStatus().toString());
 	    
 	    AddRowToTable(preparedStatementString, values);
 	    
-	    orderInAdvance.setOrderId(orderId);
+	    reservation.setOrderId(orderId);
 	    
-	    ServerResponse<OrderInAdvance> serverResponse = new ServerResponse<>(RequestResult.Succeed, orderInAdvance,
-		    null);
+	    ServerResponse<Reservation> serverResponse = new ServerResponse<>(RequestResult.Succeed, reservation, null);
 	    
 	    CPS_Tracer.TraceInformation("Server response to client after adding order: \n" + serverResponse);
 	    
@@ -281,10 +281,10 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	}
 	catch (Exception e)
 	{
-	    ServerResponse<OrderInAdvance> serverResponse = new ServerResponse<>(RequestResult.Failed, orderInAdvance,
-		    "Failed to add Order to the table");
+	    ServerResponse<Reservation> serverResponse = new ServerResponse<>(RequestResult.Failed, reservation,
+		    "Failed to add Reservation to the table");
 	    
-	    CPS_Tracer.TraceError("Failed to add row to OrderInAdvance", e);
+	    CPS_Tracer.TraceError("Failed to add row to Reservations", e);
 	    
 	    return serverResponse;
 	}
@@ -465,8 +465,7 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 		serverResponse = new ServerResponse<>(RequestResult.Succeed, customer, "Found");
 	    }
 	    
-	    CPS_Tracer.TraceInformation(
-		    "Server response to client after trying to get customer: \n" + serverResponse);
+	    CPS_Tracer.TraceInformation("Server response to client after trying to get customer: \n" + serverResponse);
 	    
 	    return serverResponse;
 	}
@@ -478,16 +477,16 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	}
     }
     
-    private ServerResponse<OrderInAdvance> GetOrderInAdvance(String orderId)
+    private ServerResponse<Reservation> GetReservation(String orderId)
     {
-	CPS_Tracer.TraceInformation("Get Order Id: \n" + orderId);
+	CPS_Tracer.TraceInformation("Get Reservation with Id:" + orderId);
 	
 	try (PreparedStatement preparedStatement = mySqlConnection
-		.prepareStatement("SELECT * FROM OrderInAdvance WHERE orderId = ?"))
+		.prepareStatement("SELECT * FROM Reservations WHERE orderId = ?"))
 	{
-	    ServerResponse<OrderInAdvance> serverResponse;
+	    ServerResponse<Reservation> serverResponse;
 	    
-	    OrderInAdvance orderInAdvance;
+	    Reservation reservation;
 	    
 	    preparedStatement.setString(1, orderId);
 	    
@@ -501,24 +500,26 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	    {
 		resultSet.next();
 		
-		orderInAdvance = new OrderInAdvance(resultSet.getString(2), resultSet.getString(3), resultSet.getString(4), resultSet.getString(5), LocalDate.parse(resultSet.getString(6)),
-			LocalDate.parse(resultSet.getString(7)),LocalTime.parse(resultSet.getString(8)),LocalTime.parse(resultSet.getString(9)));
+		reservation = new Reservation(ReservationType.valueOf(resultSet.getString(2)), resultSet.getString(3),
+			resultSet.getString(4), resultSet.getString(5), LocalDate.parse(resultSet.getString(6)),
+			LocalDate.parse(resultSet.getString(7)), LocalTime.parse(resultSet.getString(8)),
+			LocalTime.parse(resultSet.getString(9)), ReservationStatus.valueOf(resultSet.getString(10)));
 		
-		orderInAdvance.setOrderId(resultSet.getString(1));
+		reservation.setOrderId(resultSet.getString(1));
 		
-		serverResponse = new ServerResponse<>(RequestResult.Succeed, orderInAdvance, "Found");
+		serverResponse = new ServerResponse<>(RequestResult.Succeed, reservation, "Found");
 	    }
 	    
 	    CPS_Tracer.TraceInformation(
-		    "Server response to client after trying to get order in advance: \n" + serverResponse);
+		    "Server response to client after trying to get reservation: \n" + serverResponse);
 	    
 	    return serverResponse;
 	}
 	catch (Exception e)
 	{
-	    CPS_Tracer.TraceError("Failed in getting order.\nOrder Id: " + orderId, e);
+	    CPS_Tracer.TraceError("Failed in getting reservation.\nReservation Id: " + orderId, e);
 	    
-	    return new ServerResponse<>(RequestResult.Failed, null, "Failed to get order ");
+	    return new ServerResponse<>(RequestResult.Failed, null, "Failed to get Reservation ");
 	}
     }
 }

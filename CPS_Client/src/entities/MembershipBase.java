@@ -11,15 +11,15 @@ public abstract class MembershipBase implements Serializable
 
     protected String customerId;
     
-    protected LocalDate startingDate;
+    protected LocalDate startDate;
     
-    protected LocalDate endingDate;
+    protected LocalDate expiryDate;
     
     public MembershipBase(String id, LocalDate startingDate, LocalDate endingDate)
     {
 	this.customerId = id;
-	this.startingDate = startingDate;
-	this.endingDate = endingDate;
+	this.startDate = startingDate;
+	this.expiryDate = endingDate;
 	
 	subscriptionId = "Not yet initialized";
     }
@@ -27,7 +27,7 @@ public abstract class MembershipBase implements Serializable
     @Override
     public String toString()
     {
-	return "subscriptionId: " + subscriptionId + "\nCustomer ID: " + customerId + "\nStaring date: " + startingDate + "\nEnding date: " + endingDate + "\n";
+	return "subscriptionId: " + subscriptionId + "\nCustomer ID: " + customerId + "\nStar date: " + startDate + "\nExpiry date: " + expiryDate + "\n";
     }
     
     public String GetCustomerId()
@@ -35,14 +35,14 @@ public abstract class MembershipBase implements Serializable
 	return customerId;
     }
     
-    public LocalDate GetStartingDate()
+    public LocalDate GetStartDate()
     {
-	return startingDate;
+	return startDate;
     }
     
-    public LocalDate GetEndingDate()
+    public LocalDate getExpiryDate()
     {
-	return endingDate;
+	return expiryDate;
     }
     
     public String GetSubscriptionId()

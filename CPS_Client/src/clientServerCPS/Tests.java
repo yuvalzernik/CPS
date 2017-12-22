@@ -4,11 +4,15 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.function.Function;
 
 import CPS_Utilities.CPS_Tracer;
 import entities.Customer;
 import entities.FullMembership;
 import entities.PartialMembership;
+import entities.Reservation;
+import entities.enums.ReservationStatus;
+import entities.enums.ReservationType;
 
 public class Tests
 {
@@ -16,7 +20,9 @@ public class Tests
     {
 	try
 	{
-	    if (FullMembershipTest() && PartialMembershipTest() && CustomerTest())
+	    // FullMembershipTest() && PartialMembershipTest() && CustomerTest() && ReservationTest()
+	    
+	    if (ReservationTest())
 	    {
 		System.out.println("Test Succeed");
 	    }
@@ -29,6 +35,29 @@ public class Tests
 	{
 	    System.out.println("Failed with exception: " + e);
 	}
+    }
+    
+    private static boolean ReservationTest()
+    {
+	String id = Integer.toString(new Random().nextInt(1000000) + 3000000);
+	
+	Reservation reservation = new Reservation(ReservationType.InAdvance, id, "Testlot", "333333", LocalDate.now(),
+		LocalDate.now(), LocalTime.parse("11:11"), LocalTime.parse("11:11"), ReservationStatus.NotStarted);
+	
+	ServerResponse<Reservation> serverResponse = RequestsSender.Reservation(reservation);
+	
+	CPS_Tracer.TraceInformation(serverResponse.toString());
+	
+	ServerResponse<Reservation> serverGetResponse = RequestsSender.GetReservation(serverResponse.GetResponseObject().getOrderId());
+	
+	CPS_Tracer.TraceInformation(serverResponse.toString());
+	
+	if (!serverGetResponse.GetRequestResult().equals(RequestResult.Succeed))
+	{
+	    return false;
+	}
+	
+	return true;
     }
     
     private static boolean FullMembershipTest()
