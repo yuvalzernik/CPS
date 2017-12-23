@@ -6,11 +6,11 @@ public class Customer implements Serializable
 {
     private static final long serialVersionUID = 1L;
 
-    String id;
+    private String id;
     
-    String email;
+    private String email;
     
-    float balance;
+    private float balance;
     
     public Customer(String id, String email, float balance)
     {

@@ -6,5 +6,6 @@ public enum RequestResult
     Succeed,
     Failed,
     NotFound,
-    AlredyExist
+    AlredyExist,
+    WrongCredentials
 }

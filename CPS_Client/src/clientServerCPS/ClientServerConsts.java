@@ -23,4 +23,16 @@ public class ClientServerConsts
     public static final String GetReservation = "GetReservation";
     
     public static final String Reservation = "Reservation";
+    
+    public static final String GetEmployee = "GetEmployee";
+    
+    public static final String AddParkinglot = "AddParkinglot";
+    
+    public static final String GetAllParkinglots = "GetAllParkinglots";
+    
+    public static final String AddComplaint = "AddComplaint";
+    
+    public static final String GetAllActiveComplaints = "GetAllActiveComplaints";
+    
+    public static final String CloseComplaint = "CloseComplaint";
 }

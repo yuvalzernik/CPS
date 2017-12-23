@@ -8,11 +8,11 @@ public class PartialMembership extends MembershipBase
 {
     private static final long serialVersionUID = 1L;
 
-    String parkinglot;
+    private String parkinglot;
     
-    ArrayList<String> carList;
+    private ArrayList<String> carList;
     
-    LocalTime exitTime;
+    private LocalTime exitTime;
     
     public PartialMembership(String id, LocalDate startingDate, LocalDate endingDate, String parkinglot,
 	    ArrayList<String> carList, LocalTime exitTime)

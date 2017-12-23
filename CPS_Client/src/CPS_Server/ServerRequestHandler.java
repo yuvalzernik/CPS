@@ -9,15 +9,22 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import clientServerCPS.ClientRequest;
 import clientServerCPS.ClientServerConsts;
 import clientServerCPS.RequestResult;
 import clientServerCPS.ServerResponse;
+import entities.Complaint;
 import entities.Customer;
+import entities.Employee;
 import entities.FullMembership;
+import entities.Parkinglot;
 import entities.Reservation;
+import entities.enums.ComplaintStatus;
+import entities.enums.EmployeeType;
+import entities.enums.ParkinglotStatus;
 import entities.enums.ReservationStatus;
 import entities.enums.ReservationType;
 import entities.PartialMembership;
@@ -28,6 +35,8 @@ import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 
 import CPS_Utilities.CPS_Tracer;
+import CPS_Utilities.CloseComplaintRequest;
+import CPS_Utilities.LoginIdentification;
 
 public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 
@@ -93,10 +102,28 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	    return GetCustomer((String) clientRequest.GetSentObject());
 	
 	case ClientServerConsts.Reservation:
-	    return Reservation((Reservation) clientRequest.GetSentObject());/////// what????
+	    return Reservation((Reservation) clientRequest.GetSentObject());/////// what????   <--> what what?
 	    
 	case ClientServerConsts.GetReservation:
 	    return GetReservation((String) clientRequest.GetSentObject());
+	
+	case ClientServerConsts.GetEmployee:
+	    return GetEmployee((LoginIdentification) clientRequest.GetSentObject());
+	
+	case ClientServerConsts.AddParkinglot:
+	    return AddParkinglot((Parkinglot) clientRequest.GetSentObject());
+	
+	case ClientServerConsts.GetAllParkinglots:
+	    return GetAllParkinglots();
+	
+	case ClientServerConsts.AddComplaint:
+	    return AddComplaint((Complaint) clientRequest.GetSentObject());
+	
+	case ClientServerConsts.GetAllActiveComplaints:
+	    return GetAllActiveComplaints();
+	    
+	case ClientServerConsts.CloseComplaint:
+	    return CloseComplaint((CloseComplaintRequest) clientRequest.GetSentObject());
 	
 	default:
 	    CPS_Tracer.TraceError(
@@ -111,28 +138,28 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	return new ArrayList<>(Arrays.asList(carListString.split(" ,")));
     }
     
-    private String GenerateSubscriptionId(String preparedStatementString, int offset) throws Exception
+    private String GenerateUniqueId(String preparedStatementString, int offset) throws Exception
     {
-	boolean subscriptionIdFound = false;
+	boolean uniqueIdFound = false;
 	
-	String subscriptionId;
+	String uniqueId;
 	
 	try (PreparedStatement preparedStatement = mySqlConnection.prepareStatement(preparedStatementString))
 	{
 	    do
 	    {
-		subscriptionId = Integer.toString(new Random().nextInt(1000000) + offset);
+		uniqueId = Integer.toString(new Random().nextInt(1000000) + offset);
 		
-		preparedStatement.setString(1, subscriptionId);
+		preparedStatement.setString(1, uniqueId);
 		
 		ResultSet resultSet = preparedStatement.executeQuery();
 		
 		if (!resultSet.isBeforeFirst())
 		{
-		    subscriptionIdFound = true;
+		    uniqueIdFound = true;
 		}
 	    }
-	    while (!subscriptionIdFound);
+	    while (!uniqueIdFound);
 	}
 	catch (Exception e)
 	{
@@ -140,7 +167,7 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	    throw e;
 	}
 	
-	return subscriptionId;
+	return uniqueId;
     }
     
     private void AddRowToTable(String preparedStatementString, ArrayList<String> values) throws Exception
@@ -162,6 +189,109 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	}
     }
     
+    private ServerResponse<CloseComplaintRequest> CloseComplaint(CloseComplaintRequest closeComplaintRequest)
+    {
+	CPS_Tracer.TraceInformation("Trying to close complaint: \n" + closeComplaintRequest.getComplaintId());
+	
+	try
+	{
+	    
+	    String preparedStatementString = "SELECT * FROM Complaints WHERE complaintId = ?";
+	    
+	    PreparedStatement preparedStatement = mySqlConnection.prepareStatement(preparedStatementString,
+		    ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+	    
+	    preparedStatement.setString(1, closeComplaintRequest.getComplaintId());
+	    
+	    ResultSet resultSet = preparedStatement.executeQuery();
+	    
+	    if (!resultSet.isBeforeFirst())
+	    {
+		return new ServerResponse<>(RequestResult.NotFound, closeComplaintRequest,
+			"Complaint id " + closeComplaintRequest.getComplaintId() + " not found");
+	    }
+	    
+	    resultSet.next();
+	    
+	    resultSet.updateString(5, ComplaintStatus.Closed.toString());
+	    resultSet.updateString(6, Float.toString(closeComplaintRequest.getCompensation()));
+	    resultSet.updateRow();
+	    
+	    ServerResponse<CloseComplaintRequest> serverResponse = new ServerResponse<>(RequestResult.Succeed,
+		    closeComplaintRequest, "Closed successfully");
+	    
+	    CPS_Tracer.TraceInformation("Server response to client after closing complaint: \n" + serverResponse);
+	    
+	    return serverResponse;
+	}
+	catch (Exception e)
+	{
+	    ServerResponse<CloseComplaintRequest> serverResponse = new ServerResponse<>(RequestResult.Failed, null,
+		    "Failed to close complaint " + closeComplaintRequest.getComplaintId());
+	    
+	    CPS_Tracer.TraceError("Failed to update row in Complaints", e);
+	    
+	    return serverResponse;
+	}
+    }
+    
+    private ServerResponse<Complaint> AddComplaint(Complaint complaint)
+    {
+	CPS_Tracer.TraceInformation("Trying to add complaint: \n" + complaint);
+	
+	try
+	{
+	    // Checking if customer exists first:
+	    
+	    PreparedStatement preparedStatement = mySqlConnection
+		    .prepareStatement("SELECT * FROM Customers WHERE customerId = ?");
+	    
+	    preparedStatement.setString(1, complaint.getCustomerId());
+	    
+	    ResultSet resultSet = preparedStatement.executeQuery();
+	    
+	    if (!resultSet.isBeforeFirst())
+	    {
+		CPS_Tracer.TraceError("Failed to add row to Complaints, customer not found");
+		
+		return new ServerResponse<>(RequestResult.NotFound, null,
+			"Customer: " + complaint.getCustomerId() + " not found.");
+	    }
+	    
+	    String preparedStatementString = "INSERT INTO Complaints(complaintId, customerId, fillingDateTime, complaintDetails, status, compensation) VALUES(?, ?, ?, ?, ?, ?)";
+	    
+	    ArrayList<String> values = new ArrayList<>();
+	    
+	    String complaintId = GenerateUniqueId("SELECT complaintId FROM Complaints WHERE complaintId = ?", 1000000);
+	    
+	    values.add(complaintId);
+	    values.add(complaint.getCustomerId());
+	    values.add(complaint.getFillingDateTime().toString());
+	    values.add(complaint.getComplaintDetails());
+	    values.add(complaint.getStatus().toString());
+	    values.add(Float.toString(complaint.getCompensation()));
+	    
+	    AddRowToTable(preparedStatementString, values);
+	    
+	    complaint.setComplaintId(complaintId);
+	    
+	    ServerResponse<Complaint> serverResponse = new ServerResponse<>(RequestResult.Succeed, complaint, null);
+	    
+	    CPS_Tracer.TraceInformation("Server response to client after register: \n" + serverResponse);
+	    
+	    return serverResponse;
+	}
+	catch (Exception e)
+	{
+	    ServerResponse<Complaint> serverResponse = new ServerResponse<>(RequestResult.Failed, complaint,
+		    "Failed to add complaint to the table");
+	    
+	    CPS_Tracer.TraceError("Failed to add row to Complaints", e);
+	    
+	    return serverResponse;
+	}
+    }
+    
     private ServerResponse<FullMembership> RegisterFullMembership(FullMembership fullMembership)
     {
 	CPS_Tracer.TraceInformation("Registering full membership: \n" + fullMembership);
@@ -172,7 +302,7 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	    
 	    ArrayList<String> values = new ArrayList<>();
 	    
-	    String subscriptionId = GenerateSubscriptionId(
+	    String subscriptionId = GenerateUniqueId(
 		    "SELECT subscriptionId FROM FullMemberships WHERE subscriptionId = ?", 1000000);
 	    
 	    values.add(subscriptionId);
@@ -213,7 +343,7 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	    
 	    ArrayList<String> values = new ArrayList<>();
 	    
-	    String subscriptionId = GenerateSubscriptionId(
+	    String subscriptionId = GenerateUniqueId(
 		    "SELECT subscriptionId FROM PartialMemberships WHERE subscriptionId = ?", 2000000);
 	    
 	    values.add(subscriptionId);
@@ -256,7 +386,7 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	    
 	    ArrayList<String> values = new ArrayList<>();
 	    
-	    String orderId = GenerateSubscriptionId("SELECT orderId FROM Reservations WHERE orderId = ?", 3000000);
+	    String orderId = GenerateUniqueId("SELECT orderId FROM Reservations WHERE orderId = ?", 3000000);
 	    
 	    values.add(orderId);
 	    values.add(reservation.getReservationType().toString());
@@ -287,6 +417,119 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	    CPS_Tracer.TraceError("Failed to add row to Reservations", e);
 	    
 	    return serverResponse;
+	}
+    }
+    
+    private ServerResponse<Parkinglot> AddParkinglot(Parkinglot parkinglot)
+    {
+	CPS_Tracer.TraceInformation("Adding Parkinglot: \n" + parkinglot);
+	
+	try
+	{
+	    String preparedStatementString = "INSERT INTO ParkingLots(parkinglotName, width, status, guestRate, inAdvanceRate, totalSpotsNumber) VALUES(?, ?, ?, ?, ?, ?)";
+	    
+	    ArrayList<String> values = new ArrayList<>();
+	    
+	    values.add(parkinglot.getParkinglotName());
+	    values.add(Integer.toString(parkinglot.getWidth()));
+	    values.add(parkinglot.getStatus().toString());
+	    values.add(Float.toString(parkinglot.getGuestRate()));
+	    values.add(Float.toString(parkinglot.getInAdvanceRate()));
+	    values.add(Integer.toString(parkinglot.getTotalSpotsNumber()));
+	    
+	    AddRowToTable(preparedStatementString, values);
+	    
+	    ServerResponse<Parkinglot> serverResponse = new ServerResponse<>(RequestResult.Succeed, parkinglot, null);
+	    
+	    CPS_Tracer.TraceInformation("Server response to client after adding order: \n" + serverResponse);
+	    
+	    return serverResponse;
+	}
+	catch (Exception e)
+	{
+	    ServerResponse<Parkinglot> serverResponse = new ServerResponse<>(RequestResult.Failed, parkinglot,
+		    "Failed to add parkinglot to the table");
+	    
+	    CPS_Tracer.TraceError("Failed to add row to Parkinglots", e);
+	    
+	    return serverResponse;
+	}
+    }
+    
+    private ServerResponse<ArrayList<Parkinglot>> GetAllParkinglots()
+    {
+	CPS_Tracer.TraceInformation("Trying to get all parkinglots.");
+	
+	try (PreparedStatement preparedStatement = mySqlConnection.prepareStatement("SELECT * FROM ParkingLots"))
+	{
+	    ServerResponse<ArrayList<Parkinglot>> serverResponse;
+	    
+	    ArrayList<Parkinglot> parkinglots = new ArrayList<>();
+	    
+	    ResultSet resultSet = preparedStatement.executeQuery();
+	    
+	    while (resultSet.next())
+	    {
+		Parkinglot parkinglot = new Parkinglot(resultSet.getString(1), Integer.parseInt(resultSet.getString(2)),
+			ParkinglotStatus.valueOf(resultSet.getString(3)), Float.parseFloat(resultSet.getString(4)),
+			Float.parseFloat(resultSet.getString(5)));
+		
+		parkinglots.add(parkinglot);
+	    }
+	    
+	    serverResponse = new ServerResponse<>(RequestResult.Succeed, parkinglots,
+		    "Found " + parkinglots.size() + " parkinglots.");
+	    
+	    CPS_Tracer.TraceInformation(
+		    "Server response to client after trying to get all parkinglots: \n" + serverResponse);
+	    
+	    return serverResponse;
+	}
+	catch (Exception e)
+	{
+	    CPS_Tracer.TraceError("Failed in getting parkinglots.", e);
+	    
+	    return new ServerResponse<>(RequestResult.Failed, null, "Failed to get parkinglots");
+	}
+    }
+    
+    private ServerResponse<ArrayList<Complaint>> GetAllActiveComplaints()
+    {
+	CPS_Tracer.TraceInformation("Trying to get all active complaints.");
+	
+	try (PreparedStatement preparedStatement = mySqlConnection
+		.prepareStatement("SELECT * FROM Complaints WHERE status = ?"))
+	{
+	    ServerResponse<ArrayList<Complaint>> serverResponse;
+	    
+	    ArrayList<Complaint> complaints = new ArrayList<>();
+	    
+	    preparedStatement.setString(1, ComplaintStatus.Active.toString());
+	    
+	    ResultSet resultSet = preparedStatement.executeQuery();
+	    
+	    while (resultSet.next())
+	    {
+		Complaint complaint = new Complaint(resultSet.getString(1), resultSet.getString(2),
+			LocalDateTime.parse(resultSet.getString(3)), resultSet.getString(4),
+			ComplaintStatus.valueOf(resultSet.getString(5)), Float.parseFloat(resultSet.getString(6)));
+		
+		complaints.add(complaint);
+	    }
+	    
+	    serverResponse = new ServerResponse<>(RequestResult.Succeed, complaints,
+		    "Found " + complaints.size() + " complaints.");
+	    
+	    CPS_Tracer.TraceInformation(
+		    "Server response to client after trying to get all active complaints: \n" + serverResponse);
+	    
+	    return serverResponse;
+	}
+	catch (Exception e)
+	{
+	    CPS_Tracer.TraceError("Failed in getting all active complaints.", e);
+	    
+	    return new ServerResponse<>(RequestResult.Failed, null, "Failed to get parkinglots");
 	}
     }
     
@@ -510,8 +753,8 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 		serverResponse = new ServerResponse<>(RequestResult.Succeed, reservation, "Found");
 	    }
 	    
-	    CPS_Tracer.TraceInformation(
-		    "Server response to client after trying to get reservation: \n" + serverResponse);
+	    CPS_Tracer
+		    .TraceInformation("Server response to client after trying to get reservation: \n" + serverResponse);
 	    
 	    return serverResponse;
 	}
@@ -520,6 +763,51 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	    CPS_Tracer.TraceError("Failed in getting reservation.\nReservation Id: " + orderId, e);
 	    
 	    return new ServerResponse<>(RequestResult.Failed, null, "Failed to get Reservation ");
+	}
+    }
+    
+    private ServerResponse<Employee> GetEmployee(LoginIdentification loginIdentification)
+    {
+	CPS_Tracer.TraceInformation("Trying to get Employee with username:" + loginIdentification.getUsername());
+	
+	try (PreparedStatement preparedStatement = mySqlConnection
+		.prepareStatement("SELECT * FROM Employees WHERE username = ?"))
+	{
+	    ServerResponse<Employee> serverResponse;
+	    
+	    preparedStatement.setString(1, loginIdentification.getUsername());
+	    
+	    ResultSet resultSet = preparedStatement.executeQuery();
+	    
+	    if (!resultSet.isBeforeFirst())
+	    {
+		serverResponse = new ServerResponse<>(RequestResult.WrongCredentials, null, "Not Found username");
+	    }
+	    else
+	    {
+		resultSet.next();
+		
+		if (resultSet.getString(7) != loginIdentification.getPassword())
+		{
+		    serverResponse = new ServerResponse<>(RequestResult.WrongCredentials, null, "Wrong password");
+		}
+		
+		Employee employee = new Employee(resultSet.getString(1), resultSet.getString(2), resultSet.getString(3),
+			resultSet.getString(4), resultSet.getString(5), resultSet.getString(6), resultSet.getString(7),
+			EmployeeType.valueOf(resultSet.getString(8)));
+		
+		serverResponse = new ServerResponse<>(RequestResult.Succeed, employee, "Found");
+	    }
+	    
+	    CPS_Tracer.TraceInformation("Server response to client after trying to get employee: \n" + serverResponse);
+	    
+	    return serverResponse;
+	}
+	catch (Exception e)
+	{
+	    CPS_Tracer.TraceError("Failed in getting emlpoyee.\nCredentials: " + loginIdentification, e);
+	    
+	    return new ServerResponse<>(RequestResult.Failed, null, "Failed to get emlpoyee ");
 	}
     }
 }
