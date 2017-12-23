@@ -1,7 +1,8 @@
 package clientServerCPS;
 
-import java.awt.List;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -19,9 +20,8 @@ import entities.Customer;
 import entities.Employee;
 import entities.FullMembership;
 import entities.Parkinglot;
-import entities.Reservation;
-import entities.enums.ParkinglotStatus;
 import entities.PartialMembership;
+import entities.Reservation;
 
 public class RequestsSender
 {
@@ -29,7 +29,10 @@ public class RequestsSender
     
     public RequestsSender() throws IOException, URISyntaxException
     {
-	serverIP = new String(Files.readAllBytes(Paths.get(getClass().getResource("ServerIP.txt").toURI())));
+	BufferedReader bufferedReader = new BufferedReader(
+		new InputStreamReader(getClass().getResourceAsStream("ServerIP.txt")));
+	
+	serverIP = bufferedReader.readLine();
     }
     
     @SuppressWarnings("unchecked")

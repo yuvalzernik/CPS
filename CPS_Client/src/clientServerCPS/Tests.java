@@ -34,7 +34,7 @@ public class Tests
 	    // CustomerTest() ReservationTest() ChangeRatesTest()
 	    // EmployeeTest() ParkinglotTest() 
 	    
-	    if (ChangeRatesTest())
+	    if (CustomerTest())
 	    {
 		System.out.println("Test Succeed");
 	    }
