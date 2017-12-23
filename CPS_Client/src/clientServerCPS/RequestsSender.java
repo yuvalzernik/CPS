@@ -12,6 +12,8 @@ import java.util.ArrayList;
 
 import CPS_Utilities.CloseComplaintRequest;
 import CPS_Utilities.LoginIdentification;
+import entities.ChangeRatesRequest;
+import entities.ChangeRatesResponse;
 import entities.Complaint;
 import entities.Customer;
 import entities.Employee;
@@ -122,5 +124,20 @@ public class RequestsSender
     public static ServerResponse<CloseComplaintRequest> CloseComplaint(CloseComplaintRequest closeComplaintRequest)
     {
 	return SendRequest(closeComplaintRequest, ClientServerConsts.CloseComplaint);
+    }
+    
+    public static ServerResponse<ChangeRatesRequest> AddChangeRatesRequest(ChangeRatesRequest changeRatesRequest)
+    {
+	return SendRequest(changeRatesRequest, ClientServerConsts.AddChangeRatesRequest);
+    }
+    
+    public static ServerResponse<ChangeRatesResponse> CloseChangeRatesRequest(ChangeRatesResponse changeRatesResponse)
+    {
+	return SendRequest(changeRatesResponse, ClientServerConsts.CloseChangeRatesRequest);
+    }
+    
+    public static ServerResponse<ArrayList<ChangeRatesRequest>> GetAllChangeRatesRequests()
+    {
+	return SendRequest(null, ClientServerConsts.GetAllChangeRatesRequests);
     }
 }

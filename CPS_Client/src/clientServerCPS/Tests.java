@@ -9,6 +9,7 @@ import java.util.function.Function;
 import CPS_Utilities.CPS_Tracer;
 import CPS_Utilities.CloseComplaintRequest;
 import CPS_Utilities.LoginIdentification;
+import entities.ChangeRatesResponse;
 import entities.Complaint;
 import entities.Customer;
 import entities.Employee;
@@ -30,10 +31,10 @@ public class Tests
 	    new RequestsSender();
 	    
 	    // FullMembershipTest() PartialMembershipTest() ComplaintTest()
-	    // CustomerTest() ReservationTest()
-	    // EmployeeTest() ParkinglotTest()
+	    // CustomerTest() ReservationTest() ChangeRatesTest()
+	    // EmployeeTest() ParkinglotTest() 
 	    
-	    if (ComplaintTest())
+	    if (ChangeRatesTest())
 	    {
 		System.out.println("Test Succeed");
 	    }
@@ -48,6 +49,21 @@ public class Tests
 	}
     }
     
+    private static boolean ChangeRatesTest()
+    {
+	ChangeRatesResponse changeRatesResponse = new ChangeRatesResponse("111", true);
+	
+	ServerResponse<ChangeRatesResponse> serverResponse = RequestsSender
+		.CloseChangeRatesRequest(changeRatesResponse);
+	
+	if (!serverResponse.GetRequestResult().equals(RequestResult.Succeed))
+	{
+	    return false;
+	}
+	
+	return true;
+    }
+    
     private static boolean ComplaintTest()
     {
 	Complaint complaint = new Complaint("301731469",
@@ -59,24 +75,25 @@ public class Tests
 	
 	boolean isMyComplaintThere = false;
 	
-	for(Complaint c : serverGetResponse.GetResponseObject())
+	for (Complaint c : serverGetResponse.GetResponseObject())
 	{
-	    if(c.getComplaintId().equals(serverResponse.GetResponseObject().getComplaintId()))
+	    if (c.getComplaintId().equals(serverResponse.GetResponseObject().getComplaintId()))
 	    {
 		isMyComplaintThere = true;
 	    }
 	}
 	
-	if(!isMyComplaintThere)
+	if (!isMyComplaintThere)
 	{
 	    return false;
 	}
 	
-	CloseComplaintRequest closeComplaintRequest = new CloseComplaintRequest(serverResponse.GetResponseObject().getComplaintId(), 1000);
+	CloseComplaintRequest closeComplaintRequest = new CloseComplaintRequest(
+		serverResponse.GetResponseObject().getComplaintId(), 1000);
 	
 	ServerResponse<CloseComplaintRequest> serverResponse2 = RequestsSender.CloseComplaint(closeComplaintRequest);
 	
-	if(!serverResponse2.GetRequestResult().equals(RequestResult.Succeed))
+	if (!serverResponse2.GetRequestResult().equals(RequestResult.Succeed))
 	{
 	    return false;
 	}

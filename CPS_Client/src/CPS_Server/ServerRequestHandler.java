@@ -16,6 +16,8 @@ import clientServerCPS.ClientRequest;
 import clientServerCPS.ClientServerConsts;
 import clientServerCPS.RequestResult;
 import clientServerCPS.ServerResponse;
+import entities.ChangeRatesRequest;
+import entities.ChangeRatesResponse;
 import entities.Complaint;
 import entities.Customer;
 import entities.Employee;
@@ -102,7 +104,10 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	    return GetCustomer((String) clientRequest.GetSentObject());
 	
 	case ClientServerConsts.Reservation:
-	    return Reservation((Reservation) clientRequest.GetSentObject());/////// what????   <--> what what?
+	    return Reservation((Reservation) clientRequest.GetSentObject());/////// what????
+									    /////// <-->
+									    /////// what
+									    /////// what?
 	    
 	case ClientServerConsts.GetReservation:
 	    return GetReservation((String) clientRequest.GetSentObject());
@@ -121,9 +126,18 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	
 	case ClientServerConsts.GetAllActiveComplaints:
 	    return GetAllActiveComplaints();
-	    
+	
 	case ClientServerConsts.CloseComplaint:
 	    return CloseComplaint((CloseComplaintRequest) clientRequest.GetSentObject());
+	    
+	case ClientServerConsts.AddChangeRatesRequest:
+	    return AddChangeRatesRequest((ChangeRatesRequest) clientRequest.GetSentObject());
+	
+	case ClientServerConsts.GetAllChangeRatesRequests:
+	    return GetAllChangeRatesRequests();
+	
+	case ClientServerConsts.CloseChangeRatesRequest:
+	    return CloseChangeRatesRequest((ChangeRatesResponse) clientRequest.GetSentObject());
 	
 	default:
 	    CPS_Tracer.TraceError(
@@ -289,6 +303,175 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	    CPS_Tracer.TraceError("Failed to add row to Complaints", e);
 	    
 	    return serverResponse;
+	}
+    }
+    
+    private ServerResponse<ChangeRatesResponse> CloseChangeRatesRequest(ChangeRatesResponse changeRatesResponse)
+    {
+	CPS_Tracer.TraceInformation("Trying to close ChangeRatesRequest: \n" + changeRatesResponse);
+	
+	try
+	{
+	    String preparedStatementString = "SELECT * FROM ChangeRatesRequests WHERE requestId = ?";
+	    
+	    PreparedStatement preparedStatement = mySqlConnection.prepareStatement(preparedStatementString,
+		    ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+	    
+	    preparedStatement.setString(1, changeRatesResponse.getRequestId());
+	    
+	    ResultSet resultSet = preparedStatement.executeQuery();
+	    
+	    if (!resultSet.isBeforeFirst())
+	    {
+		CPS_Tracer.TraceInformation("Change rate request not foud: " + changeRatesResponse.getRequestId());
+		
+		return new ServerResponse<>(RequestResult.NotFound, changeRatesResponse,
+			"Request id " + changeRatesResponse.getRequestId() + " not found");
+	    }
+	    
+	    resultSet.next();
+	    
+	    String test1 = resultSet.getString(3);
+	    String test2 = resultSet.getString(4);
+	    String test3 = resultSet.getString(2);
+	    
+	    resultSet.deleteRow();
+	    
+	    resultSet.close();
+	    
+	    preparedStatement.close();
+	    
+	    preparedStatementString = "SELECT * FROM ParkingLots WHERE parkinglotName = ?";
+	    
+	    PreparedStatement preparedStatement2 = mySqlConnection.prepareStatement(preparedStatementString,
+		    ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+	    
+	    preparedStatement2.setString(1, test3);
+	    
+	    ResultSet resultSet2 = preparedStatement2.executeQuery();
+	    
+	    resultSet2.next();
+	    
+	    // updates the parkinglot's row
+	    resultSet2.updateString(4, test1);
+	    resultSet2.updateString(5, test2);
+	    
+	    resultSet2.updateRow();
+	    
+	    ServerResponse<ChangeRatesResponse> serverResponse = new ServerResponse<>(RequestResult.Succeed,
+		    changeRatesResponse, null);
+	    
+	    CPS_Tracer.TraceInformation("Server response to client after changing rates: \n" + serverResponse);
+	    
+	    return serverResponse;
+	}
+	catch (Exception e)
+	{
+	    ServerResponse<ChangeRatesResponse> serverResponse = new ServerResponse<>(RequestResult.Failed,
+		    changeRatesResponse, "Failed to change rates.");
+	    
+	    CPS_Tracer.TraceError("Failed to change rates.", e);
+	    
+	    e.printStackTrace();
+	    
+	    return serverResponse;
+	}
+    }
+    
+    private ServerResponse<ChangeRatesRequest> AddChangeRatesRequest(ChangeRatesRequest changeRatesRequest)
+    {
+	CPS_Tracer.TraceInformation("Trying to add ChangeRatesRequest: \n" + changeRatesRequest);
+	
+	try
+	{
+	    // Checking if parkinglot exists first:
+	    
+	    PreparedStatement preparedStatement = mySqlConnection
+		    .prepareStatement("SELECT * FROM ParkingLots WHERE parkinglotName = ?");
+	    
+	    preparedStatement.setString(1, changeRatesRequest.getParkinglotName());
+	    
+	    ResultSet resultSet = preparedStatement.executeQuery();
+	    
+	    if (!resultSet.isBeforeFirst())
+	    {
+		CPS_Tracer.TraceError("Failed to add ChangeRatesRequest to ChangeRatesRequests, parkinglot not found");
+		
+		return new ServerResponse<>(RequestResult.NotFound, null,
+			"parkinglot: " + changeRatesRequest.getParkinglotName() + " not found.");
+	    }
+	    
+	    String preparedStatementString = "INSERT INTO ChangeRatesRequests(requestId, parkinglotName, newGuestRate, newInAdvanceRate) VALUES(?, ?, ?, ?)";
+	    
+	    ArrayList<String> values = new ArrayList<>();
+	    
+	    String requestId = GenerateUniqueId("SELECT requestId FROM ChangeRatesRequests WHERE requestId = ?",
+		    1000000);
+	    
+	    values.add(requestId);
+	    values.add(changeRatesRequest.getParkinglotName());
+	    values.add(Float.toString(changeRatesRequest.getNewGuestRate()));
+	    values.add(Float.toString(changeRatesRequest.getNewInAdvanceRate()));
+	    
+	    AddRowToTable(preparedStatementString, values);
+	    
+	    changeRatesRequest.setRequestId(requestId);
+	    
+	    ServerResponse<ChangeRatesRequest> serverResponse = new ServerResponse<>(RequestResult.Succeed,
+		    changeRatesRequest, null);
+	    
+	    CPS_Tracer
+		    .TraceInformation("Server response to client after adding ChangeRatesRequest: \n" + serverResponse);
+	    
+	    return serverResponse;
+	}
+	catch (Exception e)
+	{
+	    ServerResponse<ChangeRatesRequest> serverResponse = new ServerResponse<>(RequestResult.Failed,
+		    changeRatesRequest, "Failed to add ChangeRatesRequest to the table");
+	    
+	    CPS_Tracer.TraceError("Failed to add row to ChangeRatesRequests", e);
+	    
+	    return serverResponse;
+	}
+    }
+    
+    private ServerResponse<ArrayList<ChangeRatesRequest>> GetAllChangeRatesRequests()
+    {
+	CPS_Tracer.TraceInformation("Trying to get all ChangeRatesRequests.");
+	
+	try (PreparedStatement preparedStatement = mySqlConnection
+		.prepareStatement("SELECT * FROM ChangeRatesRequests"))
+	{
+	    ServerResponse<ArrayList<ChangeRatesRequest>> serverResponse;
+	    
+	    ArrayList<ChangeRatesRequest> changeRatesRequests = new ArrayList<>();
+	    
+	    ResultSet resultSet = preparedStatement.executeQuery();
+	    
+	    while (resultSet.next())
+	    {
+		ChangeRatesRequest changeRatesRequest = new ChangeRatesRequest(resultSet.getString(2),
+			Float.parseFloat(resultSet.getString(3)), Float.parseFloat(resultSet.getString(4)));
+		
+		changeRatesRequest.setRequestId(resultSet.getString(1));
+		
+		changeRatesRequests.add(changeRatesRequest);
+	    }
+	    
+	    serverResponse = new ServerResponse<>(RequestResult.Succeed, changeRatesRequests,
+		    "Found " + changeRatesRequests.size() + " parkinglots.");
+	    
+	    CPS_Tracer.TraceInformation(
+		    "Server response to client after trying to get all ChangeRatesRequests: \n" + serverResponse);
+	    
+	    return serverResponse;
+	}
+	catch (Exception e)
+	{
+	    CPS_Tracer.TraceError("Failed in getting ChangeRatesRequests.", e);
+	    
+	    return new ServerResponse<>(RequestResult.Failed, null, "Failed to get ChangeRatesRequests");
 	}
     }
     

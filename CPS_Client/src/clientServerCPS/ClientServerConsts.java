@@ -35,4 +35,10 @@ public class ClientServerConsts
     public static final String GetAllActiveComplaints = "GetAllActiveComplaints";
     
     public static final String CloseComplaint = "CloseComplaint";
+    
+    public static final String AddChangeRatesRequest = "AddChangeRatesRequest";
+    
+    public static final String CloseChangeRatesRequest = "CloseChangeRatesRequest";
+    
+    public static final String GetAllChangeRatesRequests = "GetAllChangeRatesRequests";
 }
