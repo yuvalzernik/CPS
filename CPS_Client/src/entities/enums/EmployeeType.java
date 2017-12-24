@@ -5,5 +5,5 @@ public enum EmployeeType
     CustomerService,
     Parkinglot,
     ParkinglotManager,
-    CPSManager
+    CEO
 }

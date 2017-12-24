@@ -1,9 +1,10 @@
-package CPS_Clients.Controllers;
+package CPS_Clients.Controllers.Employee;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import CPS_Clients.ConstsEmployees;
+import CPS_Clients.Controllers.BaseController;
 import CPS_Utilities.Consts;
 import CPS_Utilities.DialogBuilder;
 import javafx.event.ActionEvent;
@@ -11,9 +12,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Alert.AlertType;
 
-public class ManagerLoginController extends BaseController{
+public class CeoLoginController extends EmployeeBaseController{
 	private ArrayList<String> DisableParkingSpotInputs = new ArrayList<>();
-	public ManagerLoginController()
+	public CeoLoginController()
 	{
 		super();
 		DisableParkingSpotInputs.add("Parking Spot Number:");
@@ -44,11 +45,11 @@ public class ManagerLoginController extends BaseController{
     {
     	Dialog<List<String>> dialog = DialogBuilder.InputsDialog(Consts.FillRequest, DisableParkingSpotInputs, Consts.Submit);
     	Optional<List<String>> result = dialog.showAndWait();
-		/////////////////check if submit was clicked
+    	result.ifPresent(inputs ->
 		{
 		//save in DB
 		DialogBuilder.AlertDialog(AlertType.INFORMATION, "", ConstsEmployees.ParkingSpotReserved, null,false);
-		}
+		});
     }
 
     @FXML
@@ -79,7 +80,7 @@ public class ManagerLoginController extends BaseController{
     @FXML
     void OnBack(ActionEvent event) 
     {
-    	myControllersManager.Back(PreviousScene,ConstsEmployees.ManagerLogin );
+    	myControllersManager.Back(PreviousScene,ConstsEmployees.CeoLogin );
     }
 
 }

@@ -2,6 +2,7 @@ package entities;
 
 import java.io.Serializable;
 
+import CPS_Clients.Controllers.Employee.EmployeeBaseController;
 import entities.enums.EmployeeType;
 
 public class Employee implements Serializable
@@ -35,6 +36,7 @@ public class Employee implements Serializable
 	this.username = username;
 	this.password = password;
 	this.employeeType = employeeType;
+	
     }
     
     public String getEmployeeId()
