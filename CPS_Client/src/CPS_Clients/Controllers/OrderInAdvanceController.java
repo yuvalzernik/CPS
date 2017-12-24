@@ -114,7 +114,7 @@ public class OrderInAdvanceController extends BaseController
 	    return false;
 	}
 	
-	reservation = new Reservation(ReservationType.InAdvance, customerId.getText(), parkingLot.getText(),
+	reservation = new Reservation(ReservationType.Web, customerId.getText(), parkingLot.getText(),
 		carNumber.getText(), arrivalDate.getValue(), leavingDate.getValue(),
 		LocalTime.parse(arrivalHour.getText()), LocalTime.parse(leavingHour.getText()),
 		ReservationStatus.NotStarted);

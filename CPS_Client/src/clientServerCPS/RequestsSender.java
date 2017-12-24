@@ -12,6 +12,8 @@ import java.util.Optional;
 import CPS_Utilities.Consts;
 import CPS_Utilities.DialogBuilder;
 import CPS_Utilities.LoginIdentification;
+import entities.ChangeParkingSpotStatusRequest;
+import entities.ChangeParkinglotStatusRequest;
 import entities.ChangeRatesRequest;
 import entities.ChangeRatesResponse;
 import entities.CloseComplaintRequest;
@@ -19,6 +21,7 @@ import entities.Complaint;
 import entities.Customer;
 import entities.Employee;
 import entities.FullMembership;
+import entities.ParkingSpot;
 import entities.Parkinglot;
 import entities.PartialMembership;
 import entities.Reservation;
@@ -32,16 +35,23 @@ public class RequestsSender
     {
 	ArrayList<String> ip = new ArrayList<>();
 	
-	ip.add("ip:");
+	ip.add("IP:");
 	
-	Dialog<List<String>> dialog = DialogBuilder.InputsDialog(Consts.FillRequest, ip, Consts.Submit);
+	Dialog<List<String>> dialog = DialogBuilder.InputsDialog("Set server's IP", ip, Consts.Submit);
 	
+	dialog.setHeaderText("Add server ip or Cancel to use local host");
+			
 	Optional<List<String>> result = dialog.showAndWait();
 	
 	result.ifPresent(inputs ->
 	{
 	    serverIP = inputs.get(0);
 	});
+	
+	if(!result.isPresent())
+	{
+	    serverIP = "127.0.0.1";
+	}
     }
     
     public RequestsSender(String ip) 
@@ -67,8 +77,6 @@ public class RequestsSender
 	}
 	catch (Exception e)
 	{
-	    e.printStackTrace();
-	    
 	    return new ServerResponse<T>(RequestResult.Failed, null, "Internal server error");
 	}
     }
@@ -128,9 +136,14 @@ public class RequestsSender
 	return SendRequest(null, ClientServerConsts.GetAllParkinglots);
     }
     
-    public static ServerResponse<ArrayList<Parkinglot>> GetParkinglot(String parkinglotName)
+    public static ServerResponse<Parkinglot> GetParkinglot(String parkinglotName)
     {
 	return SendRequest(parkinglotName, ClientServerConsts.GetParkingLot);
+    }
+    
+    public static ServerResponse<ChangeParkinglotStatusRequest> ChangeParkinglotStatus(ChangeParkinglotStatusRequest changeParkinglotStatusRequest)
+    {
+	return SendRequest(changeParkinglotStatusRequest, ClientServerConsts.ChangeParkinglotStatus);
     }
     
     public static ServerResponse<Complaint> AddComplaint(Complaint complaint)
@@ -161,5 +174,15 @@ public class RequestsSender
     public static ServerResponse<ArrayList<ChangeRatesRequest>> GetAllChangeRatesRequests()
     {
 	return SendRequest(null, ClientServerConsts.GetAllChangeRatesRequests);
+    }
+    
+    public static ServerResponse<ChangeParkingSpotStatusRequest> ChangeParkingSpotStatus(ChangeParkingSpotStatusRequest changeParkingSpotStatusRequest)
+    {
+	return SendRequest(changeParkingSpotStatusRequest, ClientServerConsts.ChangeParkingSpotStatus);
+    }
+    
+    public static ServerResponse<ArrayList<ParkingSpot>> GetAllDisabledParkingSpots()
+    {
+	return SendRequest(null, ClientServerConsts.GetAllDisabledParkingSpots);
     }
 }
