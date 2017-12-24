@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 
 
-<AnchorPane prefHeight="165.0" prefWidth="426.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="CPS_Clients.Controllers.CustomerServiceEnteryController">
+<AnchorPane prefHeight="165.0" prefWidth="426.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="CPS_Clients.Controllers.Employee.CustomerServiceEnteryController">
    <children>
       <Button layoutX="302.0" layoutY="111.0" mnemonicParsing="false" onAction="#OnBack" prefHeight="31.0" prefWidth="93.0" text="back" />
       <Button layoutX="27.0" layoutY="33.0" mnemonicParsing="false" onAction="#OnManageComplaints" prefHeight="50.0" prefWidth="160.0" text="Manage complaints" />
