@@ -10,8 +10,13 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import CPS_Utilities.CloseComplaintRequest;
+import CPS_Utilities.Consts;
+import CPS_Utilities.DialogBuilder;
+import CPS_Utilities.GuestIdentifyingInformation;
 import CPS_Utilities.LoginIdentification;
 import entities.ChangeRatesRequest;
 import entities.ChangeRatesResponse;
@@ -22,6 +27,7 @@ import entities.FullMembership;
 import entities.Parkinglot;
 import entities.PartialMembership;
 import entities.Reservation;
+import javafx.scene.control.Dialog;
 
 public class RequestsSender
 {
@@ -29,10 +35,23 @@ public class RequestsSender
     
     public RequestsSender() throws IOException, URISyntaxException
     {
-	BufferedReader bufferedReader = new BufferedReader(
-		new InputStreamReader(getClass().getResourceAsStream("ServerIP.txt")));
+	ArrayList<String> ip = new ArrayList<>();
 	
-	serverIP = bufferedReader.readLine();
+	ip.add("ip:");
+	
+	Dialog<List<String>> dialog = DialogBuilder.InputsDialog(Consts.FillRequest, ip, Consts.Submit);
+	
+	Optional<List<String>> result = dialog.showAndWait();
+	
+	result.ifPresent(inputs ->
+	{
+	    serverIP = inputs.get(0);
+	});
+    }
+    
+    public RequestsSender(String ip) 
+    {
+	serverIP = ip;
     }
     
     @SuppressWarnings("unchecked")

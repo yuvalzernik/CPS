@@ -9,6 +9,7 @@ import java.util.function.Function;
 import CPS_Utilities.CPS_Tracer;
 import CPS_Utilities.CloseComplaintRequest;
 import CPS_Utilities.LoginIdentification;
+import entities.ChangeRatesRequest;
 import entities.ChangeRatesResponse;
 import entities.Complaint;
 import entities.Customer;
@@ -28,13 +29,13 @@ public class Tests
     {
 	try
 	{
-	    new RequestsSender();
+	    new RequestsSender("127.0.0.1");
 	    
 	    // FullMembershipTest() PartialMembershipTest() ComplaintTest()
 	    // CustomerTest() ReservationTest() ChangeRatesTest()
 	    // EmployeeTest() ParkinglotTest() 
 	    
-	    if (CustomerTest())
+	    if (ComplaintTest())
 	    {
 		System.out.println("Test Succeed");
 	    }
@@ -51,12 +52,20 @@ public class Tests
     
     private static boolean ChangeRatesTest()
     {
-	ChangeRatesResponse changeRatesResponse = new ChangeRatesResponse("111", true);
+	ChangeRatesRequest changeRatesRequest = new ChangeRatesRequest("Test lot", 55, 55);
 	
-	ServerResponse<ChangeRatesResponse> serverResponse = RequestsSender
+	ServerResponse<ChangeRatesRequest> serverResponse = RequestsSender.AddChangeRatesRequest(changeRatesRequest);
+	
+	ServerResponse<ArrayList<ChangeRatesRequest>> serverListResponse = RequestsSender.GetAllChangeRatesRequests();
+	
+	System.out.println(serverListResponse.GetResponseObject());
+	
+	ChangeRatesResponse changeRatesResponse = new ChangeRatesResponse(serverResponse.GetResponseObject().getRequestId(), true);
+	
+	ServerResponse<ChangeRatesResponse> serverChangeResponse = RequestsSender
 		.CloseChangeRatesRequest(changeRatesResponse);
 	
-	if (!serverResponse.GetRequestResult().equals(RequestResult.Succeed))
+	if (!serverChangeResponse.GetRequestResult().equals(RequestResult.Succeed))
 	{
 	    return false;
 	}
@@ -89,7 +98,7 @@ public class Tests
 	}
 	
 	CloseComplaintRequest closeComplaintRequest = new CloseComplaintRequest(
-		serverResponse.GetResponseObject().getComplaintId(), 1000);
+		serverResponse.GetResponseObject().getComplaintId(), 2000);
 	
 	ServerResponse<CloseComplaintRequest> serverResponse2 = RequestsSender.CloseComplaint(closeComplaintRequest);
 	

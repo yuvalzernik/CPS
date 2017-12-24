@@ -1,5 +1,7 @@
 package CPS_Server;
 
+
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -16,8 +18,8 @@ public class ServerController
 	myRequestHandler = new ServerRequestHandler();
     }
     
-    private void ListenAndResponse()
-    {
+    private void ListenAndResponse() throws IOException
+    {	
 	try (ServerSocket serverSocket = new ServerSocket(ClientServerConsts.PORT))
 	{
 	    CPS_Tracer.TraceInformation("Server has started to listen on IP "
@@ -32,7 +34,7 @@ public class ServerController
 		    myRequestHandler.HandleRequestAsync(socket);
 		}
 		catch (Exception e)
-		{
+		{		    
 		    CPS_Tracer.TraceError(e.toString());
 		    // Socked will be closed and the client will get
 		    // ServerResponse with Failed result

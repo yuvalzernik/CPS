@@ -129,7 +129,7 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	
 	case ClientServerConsts.CloseComplaint:
 	    return CloseComplaint((CloseComplaintRequest) clientRequest.GetSentObject());
-	    
+	
 	case ClientServerConsts.AddChangeRatesRequest:
 	    return AddChangeRatesRequest((ChangeRatesRequest) clientRequest.GetSentObject());
 	
@@ -331,32 +331,27 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	    
 	    resultSet.next();
 	    
-	    String test1 = resultSet.getString(3);
-	    String test2 = resultSet.getString(4);
-	    String test3 = resultSet.getString(2);
-	    
+	    if (changeRatesResponse.getIsApproved())
+	    {
+		
+		preparedStatementString = "SELECT * FROM ParkingLots WHERE parkinglotName = ?";
+		
+		PreparedStatement preparedStatement2 = mySqlConnection.prepareStatement(preparedStatementString,
+			ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+		
+		preparedStatement2.setString(1, resultSet.getString(2));
+		
+		ResultSet resultSet2 = preparedStatement2.executeQuery();
+		
+		resultSet2.next();
+		
+		// updates the parkinglot's row
+		resultSet2.updateString(4, resultSet.getString(3));
+		resultSet2.updateString(5, resultSet.getString(4));
+		
+		resultSet2.updateRow();
+	    }
 	    resultSet.deleteRow();
-	    
-	    resultSet.close();
-	    
-	    preparedStatement.close();
-	    
-	    preparedStatementString = "SELECT * FROM ParkingLots WHERE parkinglotName = ?";
-	    
-	    PreparedStatement preparedStatement2 = mySqlConnection.prepareStatement(preparedStatementString,
-		    ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-	    
-	    preparedStatement2.setString(1, test3);
-	    
-	    ResultSet resultSet2 = preparedStatement2.executeQuery();
-	    
-	    resultSet2.next();
-	    
-	    // updates the parkinglot's row
-	    resultSet2.updateString(4, test1);
-	    resultSet2.updateString(5, test2);
-	    
-	    resultSet2.updateRow();
 	    
 	    ServerResponse<ChangeRatesResponse> serverResponse = new ServerResponse<>(RequestResult.Succeed,
 		    changeRatesResponse, null);
