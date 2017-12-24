@@ -18,6 +18,7 @@ import clientServerCPS.RequestResult;
 import clientServerCPS.ServerResponse;
 import entities.ChangeRatesRequest;
 import entities.ChangeRatesResponse;
+import entities.CloseComplaintRequest;
 import entities.Complaint;
 import entities.Customer;
 import entities.Employee;
@@ -37,7 +38,6 @@ import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 
 import CPS_Utilities.CPS_Tracer;
-import CPS_Utilities.CloseComplaintRequest;
 import CPS_Utilities.LoginIdentification;
 
 public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
@@ -226,6 +226,24 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	    }
 	    
 	    resultSet.next();
+	    
+	    if (closeComplaintRequest.getCompensation() > 0)
+	    {
+		PreparedStatement preparedStatement2 = mySqlConnection.prepareStatement(
+			"SELECT * FROM Customers WHERE customerId = ? ", ResultSet.TYPE_SCROLL_SENSITIVE,
+			ResultSet.CONCUR_UPDATABLE);
+		
+		preparedStatement2.setString(1, resultSet.getString(2));
+		
+		ResultSet resultSet2 = preparedStatement2.executeQuery();
+		
+		resultSet2.next();
+		
+		resultSet2.updateString(3, Float
+			.toString(Float.parseFloat(resultSet2.getString(3)) + closeComplaintRequest.getCompensation()));
+		
+		resultSet2.updateRow();
+	    }
 	    
 	    resultSet.updateString(5, ComplaintStatus.Closed.toString());
 	    resultSet.updateString(6, Float.toString(closeComplaintRequest.getCompensation()));

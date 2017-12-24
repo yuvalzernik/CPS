@@ -1,25 +1,20 @@
 package clientServerCPS;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import CPS_Utilities.CloseComplaintRequest;
 import CPS_Utilities.Consts;
 import CPS_Utilities.DialogBuilder;
-import CPS_Utilities.GuestIdentifyingInformation;
 import CPS_Utilities.LoginIdentification;
 import entities.ChangeRatesRequest;
 import entities.ChangeRatesResponse;
+import entities.CloseComplaintRequest;
 import entities.Complaint;
 import entities.Customer;
 import entities.Employee;
@@ -131,6 +126,11 @@ public class RequestsSender
     public static ServerResponse<ArrayList<Parkinglot>> GetAllParkinglots()
     {
 	return SendRequest(null, ClientServerConsts.GetAllParkinglots);
+    }
+    
+    public static ServerResponse<ArrayList<Parkinglot>> GetParkinglot(String parkinglotName)
+    {
+	return SendRequest(parkinglotName, ClientServerConsts.GetParkingLot);
     }
     
     public static ServerResponse<Complaint> AddComplaint(Complaint complaint)

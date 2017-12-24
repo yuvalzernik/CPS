@@ -28,6 +28,8 @@ public class ClientServerConsts
     
     public static final String AddParkinglot = "AddParkinglot";
     
+    public static final String GetParkingLot = "GetParkingLot";
+    
     public static final String GetAllParkinglots = "GetAllParkinglots";
     
     public static final String AddComplaint = "AddComplaint";

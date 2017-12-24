@@ -7,10 +7,10 @@ import java.util.Random;
 import java.util.function.Function;
 
 import CPS_Utilities.CPS_Tracer;
-import CPS_Utilities.CloseComplaintRequest;
 import CPS_Utilities.LoginIdentification;
 import entities.ChangeRatesRequest;
 import entities.ChangeRatesResponse;
+import entities.CloseComplaintRequest;
 import entities.Complaint;
 import entities.Customer;
 import entities.Employee;
