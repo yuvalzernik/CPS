@@ -99,7 +99,9 @@ public class OrderInAdvanceController extends BaseController
     @FXML
     void OnBack(ActionEvent event)
     {
-	myControllersManager.Back(PreviousScene, ConstsWeb.OrderInAdvance);
+    	arrivalDate.getEditor().clear();
+    	leavingDate.getEditor().clear();
+    	myControllersManager.Back(PreviousScene, ConstsWeb.OrderInAdvance);
     }
     
     private boolean TryConstructOrderInAdvance()
