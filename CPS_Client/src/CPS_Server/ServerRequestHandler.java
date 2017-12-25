@@ -16,16 +16,21 @@ import clientServerCPS.ClientRequest;
 import clientServerCPS.ClientServerConsts;
 import clientServerCPS.RequestResult;
 import clientServerCPS.ServerResponse;
+import entities.ChangeParkingSpotStatusRequest;
+import entities.ChangeParkinglotStatusRequest;
 import entities.ChangeRatesRequest;
 import entities.ChangeRatesResponse;
+import entities.CloseComplaintRequest;
 import entities.Complaint;
 import entities.Customer;
 import entities.Employee;
 import entities.FullMembership;
+import entities.ParkingSpot;
 import entities.Parkinglot;
 import entities.Reservation;
 import entities.enums.ComplaintStatus;
 import entities.enums.EmployeeType;
+import entities.enums.ParkingSpotStatus;
 import entities.enums.ParkinglotStatus;
 import entities.enums.ReservationStatus;
 import entities.enums.ReservationType;
@@ -37,7 +42,6 @@ import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 
 import CPS_Utilities.CPS_Tracer;
-import CPS_Utilities.CloseComplaintRequest;
 import CPS_Utilities.LoginIdentification;
 
 public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
@@ -104,11 +108,8 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	    return GetCustomer((String) clientRequest.GetSentObject());
 	
 	case ClientServerConsts.Reservation:
-	    return Reservation((Reservation) clientRequest.GetSentObject());/////// what????
-									    /////// <-->
-									    /////// what
-									    /////// what?
-	    
+	    return Reservation((Reservation) clientRequest.GetSentObject());
+	
 	case ClientServerConsts.GetReservation:
 	    return GetReservation((String) clientRequest.GetSentObject());
 	
@@ -138,6 +139,18 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	
 	case ClientServerConsts.CloseChangeRatesRequest:
 	    return CloseChangeRatesRequest((ChangeRatesResponse) clientRequest.GetSentObject());
+	
+	case ClientServerConsts.GetParkingLot:
+	    return GetParkinglot((String) clientRequest.GetSentObject());
+	
+	case ClientServerConsts.ChangeParkinglotStatus:
+	    return ChangeParkinglotStatus((ChangeParkinglotStatusRequest) clientRequest.GetSentObject());
+	
+	case ClientServerConsts.ChangeParkingSpotStatus:
+	    return ChangeParkingSpotStatus((ChangeParkingSpotStatusRequest) clientRequest.GetSentObject());
+	
+	case ClientServerConsts.GetAllDisabledParkingSpots:
+	    return GetAllDisabledParkingSpots();
 	
 	default:
 	    CPS_Tracer.TraceError(
@@ -226,6 +239,24 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	    }
 	    
 	    resultSet.next();
+	    
+	    if (closeComplaintRequest.getCompensation() > 0)
+	    {
+		PreparedStatement preparedStatement2 = mySqlConnection.prepareStatement(
+			"SELECT * FROM Customers WHERE customerId = ? ", ResultSet.TYPE_SCROLL_SENSITIVE,
+			ResultSet.CONCUR_UPDATABLE);
+		
+		preparedStatement2.setString(1, resultSet.getString(2));
+		
+		ResultSet resultSet2 = preparedStatement2.executeQuery();
+		
+		resultSet2.next();
+		
+		resultSet2.updateString(3, Float
+			.toString(Float.parseFloat(resultSet2.getString(3)) + closeComplaintRequest.getCompensation()));
+		
+		resultSet2.updateRow();
+	    }
 	    
 	    resultSet.updateString(5, ComplaintStatus.Closed.toString());
 	    resultSet.updateString(6, Float.toString(closeComplaintRequest.getCompensation()));
@@ -969,12 +1000,15 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 		{
 		    serverResponse = new ServerResponse<>(RequestResult.WrongCredentials, null, "Wrong password");
 		}
-		
-		Employee employee = new Employee(resultSet.getString(1), resultSet.getString(2), resultSet.getString(3),
-			resultSet.getString(4), resultSet.getString(5), resultSet.getString(6), resultSet.getString(7),
-			EmployeeType.valueOf(resultSet.getString(8)));
-		
-		serverResponse = new ServerResponse<>(RequestResult.Succeed, employee, "Found");
+		else
+		{
+		    Employee employee = new Employee(resultSet.getString(1), resultSet.getString(2),
+			    resultSet.getString(3), resultSet.getString(4), resultSet.getString(5),
+			    resultSet.getString(6), resultSet.getString(7),
+			    EmployeeType.valueOf(resultSet.getString(8)));
+		    
+		    serverResponse = new ServerResponse<>(RequestResult.Succeed, employee, "Found");
+		}
 	    }
 	    
 	    CPS_Tracer.TraceInformation("Server response to client after trying to get employee: \n" + serverResponse);
@@ -986,6 +1020,201 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	    CPS_Tracer.TraceError("Failed in getting emlpoyee.\nCredentials: " + loginIdentification, e);
 	    
 	    return new ServerResponse<>(RequestResult.Failed, null, "Failed to get emlpoyee ");
+	}
+    }
+    
+    private ServerResponse<Parkinglot> GetParkinglot(String parkinglotName)
+    {
+	CPS_Tracer.TraceInformation("Trying to get Parkinglot: " + parkinglotName);
+	
+	try (PreparedStatement preparedStatement = mySqlConnection.prepareStatement(
+		"SELECT * FROM ParkingLots WHERE parkinglotName = ?", ResultSet.TYPE_SCROLL_SENSITIVE,
+		ResultSet.CONCUR_UPDATABLE))
+	{
+	    ServerResponse<Parkinglot> serverResponse;
+	    
+	    preparedStatement.setString(1, parkinglotName);
+	    
+	    ResultSet resultSet = preparedStatement.executeQuery();
+	    
+	    if (!resultSet.isBeforeFirst())
+	    {
+		serverResponse = new ServerResponse<>(RequestResult.NotFound, null, "parkinglot Not Found");
+	    }
+	    else
+	    {
+		resultSet.next();
+		
+		Parkinglot parkinglot = new Parkinglot(resultSet.getString(1), Integer.parseInt(resultSet.getString(2)),
+			ParkinglotStatus.valueOf(resultSet.getString(3)), Float.parseFloat(resultSet.getString(4)),
+			Float.parseFloat(resultSet.getString(5)));
+		
+		serverResponse = new ServerResponse<>(RequestResult.Succeed, parkinglot, "Found");
+	    }
+	    
+	    CPS_Tracer
+		    .TraceInformation("Server response to client after trying to get parkinglot: \n" + serverResponse);
+	    
+	    return serverResponse;
+	}
+	catch (Exception e)
+	{
+	    CPS_Tracer.TraceError("Failed in getting parkinglot: " + parkinglotName, e);
+	    
+	    return new ServerResponse<>(RequestResult.Failed, null, "Failed to get parkinglot ");
+	}
+    }
+    
+    private ServerResponse<ChangeParkinglotStatusRequest> ChangeParkinglotStatus(
+	    ChangeParkinglotStatusRequest changeParkinglotStatusRequest)
+    {
+	CPS_Tracer.TraceInformation("Trying to change parkinglot's status: \n" + changeParkinglotStatusRequest);
+	
+	try (PreparedStatement preparedStatement = mySqlConnection.prepareStatement(
+		"SELECT * FROM ParkingLots WHERE parkinglotName = ?", ResultSet.TYPE_SCROLL_SENSITIVE,
+		ResultSet.CONCUR_UPDATABLE))
+	{
+	    ServerResponse<ChangeParkinglotStatusRequest> serverResponse;
+	    
+	    preparedStatement.setString(1, changeParkinglotStatusRequest.getParkinglotName());
+	    
+	    ResultSet resultSet = preparedStatement.executeQuery();
+	    
+	    if (!resultSet.isBeforeFirst())
+	    {
+		serverResponse = new ServerResponse<>(RequestResult.NotFound, null, "parkinglot Not Found");
+	    }
+	    else
+	    {
+		resultSet.next();
+		
+		resultSet.updateString(3, changeParkinglotStatusRequest.getParkinglotStatus().toString());
+		
+		resultSet.updateRow();
+		
+		serverResponse = new ServerResponse<>(RequestResult.Succeed, changeParkinglotStatusRequest, "Updated");
+	    }
+	    
+	    CPS_Tracer.TraceInformation(
+		    "Server response to client after trying to change parkinglot status: \n" + serverResponse);
+	    
+	    return serverResponse;
+	}
+	catch (Exception e)
+	{
+	    CPS_Tracer.TraceError("Failed in changing parkinglot status: \n" + changeParkinglotStatusRequest, e);
+	    
+	    return new ServerResponse<>(RequestResult.Failed, null, "Failed changing parkinglot status ");
+	}
+    }
+    
+    private ServerResponse<ChangeParkingSpotStatusRequest> ChangeParkingSpotStatus(
+	    ChangeParkingSpotStatusRequest changeParkingSpotStatusRequest)
+    {
+	CPS_Tracer.TraceInformation("Trying to change parking spot status: \n" + changeParkingSpotStatusRequest);
+	
+	try
+	{
+	    ServerResponse<ChangeParkingSpotStatusRequest> serverResponse;
+	    
+	    if (changeParkingSpotStatusRequest.getParkingSpotStatus().equals(ParkingSpotStatus.Active))
+	    {
+		PreparedStatement preparedStatement = mySqlConnection.prepareStatement(
+			"SELECT * FROM DisabledParkingSpots WHERE parkinglotName = ? AND parkingSpot = ?",
+			ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+		
+		preparedStatement.setString(1, changeParkingSpotStatusRequest.getParkinglotName());
+		preparedStatement.setString(2, changeParkingSpotStatusRequest.getParkingSpot().toString());
+		
+		ResultSet resultSet = preparedStatement.executeQuery();
+		
+		if (!resultSet.isBeforeFirst())
+		{
+		    serverResponse = new ServerResponse<>(RequestResult.NotFound, changeParkingSpotStatusRequest,
+			    "parking spot Not Found");
+		}
+		else
+		{
+		    resultSet.next();
+		    
+		    resultSet.updateString(6, ParkingSpotStatus.Active.toString());
+		    resultSet.updateString(5, LocalDateTime.now().toString());
+		    
+		    resultSet.updateRow();
+		    
+		    serverResponse = new ServerResponse<>(RequestResult.Succeed, changeParkingSpotStatusRequest,
+			    "parking spot Actived.");
+		}
+	    }
+	    else // Disable spot
+	    {
+		String preparedStatementString = "INSERT INTO DisabledParkingSpots(uniqueCol, parkinglotName, parkingSpot, startDateTime, endDateTime, status) VALUES(?, ?, ?, ?, ?, ?)";
+		
+		ArrayList<String> values = new ArrayList<>();
+		
+		values.add(changeParkingSpotStatusRequest.getParkinglotName() + " "
+			+ changeParkingSpotStatusRequest.getParkingSpot().toString());
+		values.add(changeParkingSpotStatusRequest.getParkinglotName());
+		values.add(changeParkingSpotStatusRequest.getParkingSpot().toString());
+		values.add(LocalDateTime.now().toString());
+		values.add(null);
+		values.add(ParkingSpotStatus.Disabled.toString());
+		
+		AddRowToTable(preparedStatementString, values);
+		
+		serverResponse = new ServerResponse<>(RequestResult.Succeed, changeParkingSpotStatusRequest,
+			"parking spot Disabled.");
+		
+	    }
+	    
+	    CPS_Tracer.TraceInformation(
+		    "Server response to client after trying to change parking spot status: \n" + serverResponse);
+	    
+	    return serverResponse;
+	}
+	catch (Exception e)
+	{
+	    CPS_Tracer.TraceError("Failed in changing parking spot status: \n" + changeParkingSpotStatusRequest, e);
+	    
+	    return new ServerResponse<>(RequestResult.Failed, null, "Failed to change parking spot status ");
+	}
+    }
+    
+    private ServerResponse<ArrayList<ParkingSpot>> GetAllDisabledParkingSpots()
+    {
+	CPS_Tracer.TraceInformation("Trying to get all disabled parking spots.");
+	
+	try (PreparedStatement preparedStatement = mySqlConnection
+		.prepareStatement("SELECT * FROM DisabledParkingSpots WHERE status = ?"))
+	{
+	    ServerResponse<ArrayList<ParkingSpot>> serverResponse;
+	    
+	    ArrayList<ParkingSpot> parkingSpots = new ArrayList<>();
+	    
+	    preparedStatement.setString(1, "Disabled");
+	    
+	    ResultSet resultSet = preparedStatement.executeQuery();
+	    
+	    while (resultSet.next())
+	    {
+		ParkingSpot parkingSpot = ParkingSpot.Parse(resultSet.getString(3));
+		
+		parkingSpots.add(parkingSpot);
+	    }
+	    
+	    serverResponse = new ServerResponse<>(RequestResult.Succeed, parkingSpots,
+		    "Found " + parkingSpots.size() + " parking spots.");
+	    
+	    CPS_Tracer.TraceInformation(
+		    "Server response to client after trying to get disabled parking spots: \n" + serverResponse);
+	    
+	    return serverResponse;
+	}
+	catch (Exception e)
+	{
+	    CPS_Tracer.TraceError("Failed in getting disabled parking spots.", e);
+	    
+	    return new ServerResponse<>(RequestResult.Failed, null, "Failed to get disabled parking spots");
 	}
     }
 }

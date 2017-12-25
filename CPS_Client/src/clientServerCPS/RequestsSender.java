@@ -1,29 +1,27 @@
 package clientServerCPS;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import CPS_Utilities.CloseComplaintRequest;
 import CPS_Utilities.Consts;
 import CPS_Utilities.DialogBuilder;
-import CPS_Utilities.GuestIdentifyingInformation;
 import CPS_Utilities.LoginIdentification;
+import entities.ChangeParkingSpotStatusRequest;
+import entities.ChangeParkinglotStatusRequest;
 import entities.ChangeRatesRequest;
 import entities.ChangeRatesResponse;
+import entities.CloseComplaintRequest;
 import entities.Complaint;
 import entities.Customer;
 import entities.Employee;
 import entities.FullMembership;
+import entities.ParkingSpot;
 import entities.Parkinglot;
 import entities.PartialMembership;
 import entities.Reservation;
@@ -37,16 +35,23 @@ public class RequestsSender
     {
 	ArrayList<String> ip = new ArrayList<>();
 	
-	ip.add("ip:");
+	ip.add("IP:");
 	
-	Dialog<List<String>> dialog = DialogBuilder.InputsDialog(Consts.FillRequest, ip, Consts.Submit);
+	Dialog<List<String>> dialog = DialogBuilder.InputsDialog("Set server's IP", ip, Consts.Submit);
 	
+	dialog.setHeaderText("Add server ip or Cancel to use local host");
+			
 	Optional<List<String>> result = dialog.showAndWait();
 	
 	result.ifPresent(inputs ->
 	{
 	    serverIP = inputs.get(0);
 	});
+	
+	if(!result.isPresent())
+	{
+	    serverIP = "127.0.0.1";
+	}
     }
     
     public RequestsSender(String ip) 
@@ -72,8 +77,6 @@ public class RequestsSender
 	}
 	catch (Exception e)
 	{
-	    e.printStackTrace();
-	    
 	    return new ServerResponse<T>(RequestResult.Failed, null, "Internal server error");
 	}
     }
@@ -133,6 +136,16 @@ public class RequestsSender
 	return SendRequest(null, ClientServerConsts.GetAllParkinglots);
     }
     
+    public static ServerResponse<Parkinglot> GetParkinglot(String parkinglotName)
+    {
+	return SendRequest(parkinglotName, ClientServerConsts.GetParkingLot);
+    }
+    
+    public static ServerResponse<ChangeParkinglotStatusRequest> ChangeParkinglotStatus(ChangeParkinglotStatusRequest changeParkinglotStatusRequest)
+    {
+	return SendRequest(changeParkinglotStatusRequest, ClientServerConsts.ChangeParkinglotStatus);
+    }
+    
     public static ServerResponse<Complaint> AddComplaint(Complaint complaint)
     {
 	return SendRequest(complaint, ClientServerConsts.AddComplaint);
@@ -161,5 +174,15 @@ public class RequestsSender
     public static ServerResponse<ArrayList<ChangeRatesRequest>> GetAllChangeRatesRequests()
     {
 	return SendRequest(null, ClientServerConsts.GetAllChangeRatesRequests);
+    }
+    
+    public static ServerResponse<ChangeParkingSpotStatusRequest> ChangeParkingSpotStatus(ChangeParkingSpotStatusRequest changeParkingSpotStatusRequest)
+    {
+	return SendRequest(changeParkingSpotStatusRequest, ClientServerConsts.ChangeParkingSpotStatus);
+    }
+    
+    public static ServerResponse<ArrayList<ParkingSpot>> GetAllDisabledParkingSpots()
+    {
+	return SendRequest(null, ClientServerConsts.GetAllDisabledParkingSpots);
     }
 }

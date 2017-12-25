@@ -1,4 +1,4 @@
-package CPS_Utilities;
+package entities;
 
 import java.io.Serializable;
 

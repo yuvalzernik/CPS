@@ -2,6 +2,6 @@ package entities.enums;
 
 public enum ReservationType
 {
-    InAdvance,
+    Web,
     Local
 }

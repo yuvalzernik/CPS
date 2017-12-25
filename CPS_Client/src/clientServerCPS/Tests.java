@@ -7,17 +7,21 @@ import java.util.Random;
 import java.util.function.Function;
 
 import CPS_Utilities.CPS_Tracer;
-import CPS_Utilities.CloseComplaintRequest;
 import CPS_Utilities.LoginIdentification;
+import entities.ChangeParkingSpotStatusRequest;
+import entities.ChangeParkinglotStatusRequest;
 import entities.ChangeRatesRequest;
 import entities.ChangeRatesResponse;
+import entities.CloseComplaintRequest;
 import entities.Complaint;
 import entities.Customer;
 import entities.Employee;
 import entities.FullMembership;
+import entities.ParkingSpot;
 import entities.Parkinglot;
 import entities.PartialMembership;
 import entities.Reservation;
+import entities.enums.ParkingSpotStatus;
 import entities.enums.ParkinglotStatus;
 import entities.enums.ReservationStatus;
 import entities.enums.ReservationType;
@@ -33,9 +37,9 @@ public class Tests
 	    
 	    // FullMembershipTest() PartialMembershipTest() ComplaintTest()
 	    // CustomerTest() ReservationTest() ChangeRatesTest()
-	    // EmployeeTest() ParkinglotTest() 
+	    // EmployeeTest() ParkinglotTest() DisabledParkingSpotsTest()
 	    
-	    if (ComplaintTest())
+	    if (DisabledParkingSpotsTest())
 	    {
 		System.out.println("Test Succeed");
 	    }
@@ -50,6 +54,40 @@ public class Tests
 	}
     }
     
+    private static boolean DisabledParkingSpotsTest()
+    {
+	ChangeParkingSpotStatusRequest request = new ChangeParkingSpotStatusRequest(new ParkingSpot(1, 1, 2),
+		"Test lot", ParkingSpotStatus.Disabled);
+	
+	ServerResponse<ChangeParkingSpotStatusRequest> serverResponse = RequestsSender.ChangeParkingSpotStatus(request);
+	
+	if (!serverResponse.GetRequestResult().equals(RequestResult.Succeed))
+	{
+	    return false;
+	}
+	
+	ServerResponse<ArrayList<ParkingSpot>> serverResponse2 = RequestsSender.GetAllDisabledParkingSpots();
+	
+	CPS_Tracer.TraceInformation(serverResponse2.toString());
+	
+	if (!serverResponse2.GetRequestResult().equals(RequestResult.Succeed))
+	{
+	    return false;
+	}
+	
+	request = new ChangeParkingSpotStatusRequest(new ParkingSpot(1, 1, 2), "Test lot", ParkingSpotStatus.Active);
+	
+	ServerResponse<ChangeParkingSpotStatusRequest> serverResponse3 = RequestsSender
+		.ChangeParkingSpotStatus(request);
+	
+	if (!serverResponse3.GetRequestResult().equals(RequestResult.Succeed))
+	{
+	    return false;
+	}
+	
+	return true;
+    }
+    
     private static boolean ChangeRatesTest()
     {
 	ChangeRatesRequest changeRatesRequest = new ChangeRatesRequest("Test lot", 55, 55);
@@ -60,7 +98,8 @@ public class Tests
 	
 	System.out.println(serverListResponse.GetResponseObject());
 	
-	ChangeRatesResponse changeRatesResponse = new ChangeRatesResponse(serverResponse.GetResponseObject().getRequestId(), true);
+	ChangeRatesResponse changeRatesResponse = new ChangeRatesResponse(
+		serverResponse.GetResponseObject().getRequestId(), true);
 	
 	ServerResponse<ChangeRatesResponse> serverChangeResponse = RequestsSender
 		.CloseChangeRatesRequest(changeRatesResponse);
@@ -120,12 +159,20 @@ public class Tests
 	
 	CPS_Tracer.TraceInformation(serverResponse.toString());
 	
-	ServerResponse<ArrayList<Parkinglot>> serverGetResponse = RequestsSender.GetAllParkinglots();
+	ServerResponse<Parkinglot> serverGetResponse = RequestsSender.GetParkinglot("Test lot" + seed);
 	
-	CPS_Tracer.TraceInformation(serverGetResponse.toString());
+	ServerResponse<ChangeParkinglotStatusRequest> serverResponse2 = RequestsSender.ChangeParkinglotStatus(
+		new ChangeParkinglotStatusRequest(serverGetResponse.GetResponseObject().getParkinglotName(),
+			ParkinglotStatus.Closed));
 	
-	if (!serverGetResponse.GetRequestResult().equals(RequestResult.Succeed)
-		|| !serverResponse.GetRequestResult().equals(RequestResult.Succeed))
+	ServerResponse<ArrayList<Parkinglot>> serverGetAllResponse = RequestsSender.GetAllParkinglots();
+	
+	CPS_Tracer.TraceInformation(serverGetAllResponse.toString());
+	
+	serverGetResponse = RequestsSender.GetParkinglot("Testlot" + seed);
+	
+	if (!serverResponse2.GetRequestResult().equals(RequestResult.Succeed)
+		|| !serverGetResponse.GetResponseObject().getStatus().equals(ParkinglotStatus.Closed))
 	{
 	    return false;
 	}
@@ -164,7 +211,7 @@ public class Tests
     {
 	String id = Integer.toString(new Random().nextInt(1000000) + 3000000);
 	
-	Reservation reservation = new Reservation(ReservationType.InAdvance, id, "Testlot", "333333", LocalDate.now(),
+	Reservation reservation = new Reservation(ReservationType.Web, id, "Testlot", "333333", LocalDate.now(),
 		LocalDate.now(), LocalTime.parse("11:11"), LocalTime.parse("11:11"), ReservationStatus.NotStarted);
 	
 	ServerResponse<Reservation> serverResponse = RequestsSender.Reservation(reservation);

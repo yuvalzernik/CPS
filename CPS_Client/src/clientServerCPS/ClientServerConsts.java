@@ -28,6 +28,10 @@ public class ClientServerConsts
     
     public static final String AddParkinglot = "AddParkinglot";
     
+    public static final String GetParkingLot = "GetParkingLot";
+    
+    public static final String ChangeParkinglotStatus = "ChangeParkinglotStatus";
+    
     public static final String GetAllParkinglots = "GetAllParkinglots";
     
     public static final String AddComplaint = "AddComplaint";
@@ -41,4 +45,8 @@ public class ClientServerConsts
     public static final String CloseChangeRatesRequest = "CloseChangeRatesRequest";
     
     public static final String GetAllChangeRatesRequests = "GetAllChangeRatesRequests";
+    
+    public static final String ChangeParkingSpotStatus = "ChangeParkingSpotStatus";
+    
+    public static final String GetAllDisabledParkingSpots = "GetAllDisabledParkingSpots";
 }
