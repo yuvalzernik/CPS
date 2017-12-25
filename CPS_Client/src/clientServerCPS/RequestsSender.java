@@ -185,4 +185,10 @@ public class RequestsSender
     {
 	return SendRequest(null, ClientServerConsts.GetAllDisabledParkingSpots);
     }
+    public static ServerResponse<FullMembership> ChangeExpireFullMembership(FullMembership fullMembership) {
+    	return SendRequest(fullMembership, ClientServerConsts.ChangeExpireFullMembership);
+	}
+    public static ServerResponse<PartialMembership> ChangeExpirePartialMembership(PartialMembership partialMembership) {
+    	return SendRequest(partialMembership, ClientServerConsts.ChangeExpirePartialMembership);
+	}
 }
