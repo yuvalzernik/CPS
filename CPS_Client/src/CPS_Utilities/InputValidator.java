@@ -16,7 +16,6 @@ public class InputValidator {
 		}
 		return true;
 	}
-	
 
 	public static boolean StartingDate(LocalDate startingDate) {
 		if (startingDate.isBefore(LocalDate.now())) {
@@ -26,11 +25,11 @@ public class InputValidator {
 	}
 
 	public static boolean CheckLeavingDate(LocalDate startingDate, LocalDate leavingDate) {
+		
 		if (startingDate.isAfter(leavingDate))
 			return false;
-		if (Period.between(leavingDate, startingDate).getDays() > 14) {
+		if((Period.between(startingDate,leavingDate).getYears() > 0)||(Period.between(startingDate,leavingDate).getMonths()>0)||(Period.between(startingDate,leavingDate).getDays()>14)){	
 			return false;
-
 		}
 		return true;
 	}
@@ -103,11 +102,12 @@ public class InputValidator {
 		return false;
 
 	}
+
 	public static boolean OrderId(String orderid) {
 		if (!Pattern.matches("[0-9]+", orderid))
 			return false;
 		return true;
-		
+
 	}
 
 }

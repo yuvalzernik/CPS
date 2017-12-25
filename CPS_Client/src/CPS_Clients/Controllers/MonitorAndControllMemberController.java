@@ -5,23 +5,31 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.shape.Ellipse;
 import javafx.scene.control.Button;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
+import javax.imageio.ImageTypeSpecifier;
+
+import CPS_Clients.ConstsWeb;
 import CPS_Utilities.Consts;
 import CPS_Utilities.DialogBuilder;
 import CPS_Utilities.InputValidator;
 import clientServerCPS.RequestResult;
 import clientServerCPS.RequestsSender;
 import clientServerCPS.ServerResponse;
+import entities.Customer;
 import entities.FullMembership;
 import entities.PartialMembership;
+import entities.Reservation;
 
 public class MonitorAndControllMemberController extends BaseController {
 
 	private ArrayList<String> subscriptionTypes = new ArrayList<>();
+	String fullOrPartialMembership;
 
 	public MonitorAndControllMemberController() {
 		subscriptionTypes.add(Consts.Payment);
@@ -35,6 +43,9 @@ public class MonitorAndControllMemberController extends BaseController {
 
 	@FXML // fx:id="Subscription_ID"
 	private TextField Subscription_ID; // Value injected by FXMLLoader
+	FullMembership fullMebershipChanged = null;
+
+	PartialMembership parialMebershipChanged = null;
 
 	@FXML
 	void OnSubmit(ActionEvent event) {
@@ -43,6 +54,8 @@ public class MonitorAndControllMemberController extends BaseController {
 
 			return;
 		}
+		SetfullOrPartialMembership();
+
 		ServerResponse<FullMembership> monitorAndControllfullmembership = RequestsSender
 				.GetFullMembership(Subscription_ID.getText());
 		ServerResponse<PartialMembership> monitorAndControllPartialMember = null;
@@ -72,6 +85,7 @@ public class MonitorAndControllMemberController extends BaseController {
 
 	@FXML
 	void OnSubscriptionRenewal(ActionEvent event) {
+		float paymentAmount = 100;
 		String newDate = LocalDate.now().plusDays(28).toString();
 		newDate = "The expiration of the new subscription is: " + newDate;
 		String buttonResult = DialogBuilder.AlertDialog(AlertType.NONE, "Renewal Subscription", newDate,
@@ -79,7 +93,52 @@ public class MonitorAndControllMemberController extends BaseController {
 
 		if (buttonResult == Consts.Payment) {
 			SubscriptionRenewal.setDisable(true);
-			myControllersManager.SetScene(Consts.Payment, Consts.MonitorAndControllMember);
+			
+			if (fullOrPartialMembership.equals("fullMembership")) {
+				ServerResponse<FullMembership> getFullMembership = RequestsSender.GetFullMembership(Subscription_ID.getText());
+				if (getFullMembership.GetRequestResult().equals(RequestResult.Failed)) {
+					DialogBuilder.AlertDialog(AlertType.ERROR, null, Consts.ServerProblemMessage, null, false);
+					return;
+				}
+				fullMebershipChanged=getFullMembership.GetResponseObject();
+			}
+			else if (fullOrPartialMembership.equals("partialMembership")) {
+				ServerResponse<PartialMembership> getpartialMembership = RequestsSender.GetPartialMembership(Subscription_ID.getText());
+				if (getpartialMembership.GetRequestResult().equals(RequestResult.Failed)) {
+					DialogBuilder.AlertDialog(AlertType.ERROR, null, Consts.ServerProblemMessage, null, false);
+					return;
+				}
+				parialMebershipChanged=getpartialMembership.GetResponseObject();
+			}
+			Consumer<Void> afterPayment = Void -> {
+				if (fullOrPartialMembership.equals("fullMembership")) {
+					ServerResponse<FullMembership> ChangeExpiryDateFull = RequestsSender.ChangeExpireFullMembership(fullMebershipChanged);
+					if (ChangeExpiryDateFull.GetRequestResult().equals(RequestResult.Failed)) {
+						DialogBuilder.AlertDialog(AlertType.ERROR, null, Consts.ServerProblemMessage, null, false);
+						return;
+					}
+				} else if (fullOrPartialMembership.equals("partialMembership")) {
+					ServerResponse<PartialMembership> ChangeExpiryDatePartial = RequestsSender.ChangeExpirePartialMembership(parialMebershipChanged);
+					if (ChangeExpiryDatePartial.GetRequestResult().equals(RequestResult.Failed)) {
+						DialogBuilder.AlertDialog(AlertType.ERROR, null, Consts.ServerProblemMessage, null, false);
+						return;
+					}
+				}
+
+				DialogBuilder.AlertDialog(AlertType.INFORMATION, Consts.Approved, Consts.SubscriptionRenewal, null,false);
+
+				myControllersManager.GoToHomePage(Consts.Payment);
+			};
+			
+			
+			if (fullOrPartialMembership.equals("fullMembership")) {	
+			
+				myControllersManager.Payment(fullMebershipChanged, paymentAmount, afterPayment, Consts.MonitorAndControllMember);
+			}
+			else if (fullOrPartialMembership.equals("partialMembership")) {	
+				
+				myControllersManager.Payment(parialMebershipChanged, paymentAmount, afterPayment, Consts.MonitorAndControllMember);
+			}
 		}
 
 	}
@@ -88,6 +147,18 @@ public class MonitorAndControllMemberController extends BaseController {
 	void OnBack(ActionEvent event) {
 		SubscriptionRenewal.setDisable(true);
 		myControllersManager.Back(PreviousScene, Consts.MonitorAndControllMember);
+	}
+
+	void SetfullOrPartialMembership() {
+		int savedValue = Integer.parseInt(Subscription_ID.getText());
+		if (savedValue >= 1000000 && savedValue < 2000000) {
+			this.fullOrPartialMembership = "fullMembership";
+			return;
+		} else if (savedValue > 2000000 && savedValue < 3000000) {
+			this.fullOrPartialMembership = "partialMembership";
+			return;
+
+		}
 	}
 
 }

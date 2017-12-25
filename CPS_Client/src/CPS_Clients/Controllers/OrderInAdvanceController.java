@@ -94,6 +94,8 @@ public class OrderInAdvanceController extends BaseController
 	};
 	
 	myControllersManager.Payment(reservation, paymentAmount, afterPayment, ConstsWeb.OrderInAdvance);
+	arrivalDate.getEditor().clear();
+	leavingDate.getEditor().clear();
     }
     
     @FXML
