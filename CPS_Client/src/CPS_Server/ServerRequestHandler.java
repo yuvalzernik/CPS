@@ -164,6 +164,18 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	}
     }
     
+    private boolean IsDateTimesOverLap(LocalDateTime start1, LocalDateTime end1, LocalDateTime start2,
+	    LocalDateTime end2)
+    {
+	if (start1.isAfter(end2) || start2.isAfter(end1))
+	{
+	    return false;
+	}
+	
+	return true;
+	
+    }
+    
     private ArrayList<String> ConvertToCarList(String carListString)
     {
 	return new ArrayList<>(Arrays.asList(carListString.split(" ,")));
@@ -231,29 +243,174 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	return size;
     }
     
-    /*
-     * private boolean IsParkingSpotFree(String parkinglot, LocalDateTime
-     * fromDateTime, LocalDateTime toDateTime) { CPS_Tracer.TraceInformation(
-     * "Checking if parking lot: " + parkinglot + " is free from " +
-     * fromDateTime + " to " + toDateTime); try { // get parking lot:
-     * PreparedStatement preparedStatement = mySqlConnection.prepareStatement(
-     * "SELECT * FROM ParkingLots WHERE parkinglotName = ?",
-     * ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-     * 
-     * preparedStatement.setString(1, parkinglot);
-     * 
-     * ResultSet resultSet = preparedStatement.executeQuery();
-     * 
-     * resultSet.next();
-     * 
-     * int parkingSpots = Integer.parseInt(resultSet.getString(6));
-     * 
-     * preparedStatement = mySqlConnection.
-     * prepareStatement("SELECT * FROM RealTimeParking WHERE parkinglotName = ?"
-     * , ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE); } catch
-     * (Exception e) { // TODO: handle exception } }
-     */
-   
+    private boolean IsParkingSpotFree(String parkinglot, LocalDateTime fromDateTime, LocalDateTime toDateTime)
+	    throws Exception
+    {
+	CPS_Tracer.TraceInformation(
+		"Checking if parking lot: " + parkinglot + " is free from " + fromDateTime + " to " + toDateTime);
+	try
+	{
+	    int tempCount = 0;
+	    
+	    // get parking lot:
+	    
+	    PreparedStatement preparedStatement = mySqlConnection.prepareStatement(
+		    "SELECT * FROM ParkingLots WHERE parkinglotName = ?", ResultSet.TYPE_SCROLL_SENSITIVE,
+		    ResultSet.CONCUR_UPDATABLE);
+	    
+	    preparedStatement.setString(1, parkinglot);
+	    
+	    ResultSet resultSet = preparedStatement.executeQuery();
+	    
+	    resultSet.next();
+	    
+	    int parkingSpots = Integer.parseInt(resultSet.getString(6));
+	    
+	    // reduce cars that park now and have a collision:
+	    CPS_Tracer.TraceInformation("reduce cars that park now and have a collision");
+	    
+	    preparedStatement = mySqlConnection.prepareStatement(
+		    "SELECT * FROM RealTimeParking WHERE parkinglotName = ?", ResultSet.TYPE_SCROLL_SENSITIVE,
+		    ResultSet.CONCUR_UPDATABLE);
+	    
+	    preparedStatement.setString(1, parkinglot);
+	    
+	    resultSet = preparedStatement.executeQuery();
+	    
+	    while (resultSet.next())
+	    {
+		LocalDateTime carExitDateTime = LocalDateTime.parse(resultSet.getString(4));
+		
+		if (carExitDateTime.isAfter(fromDateTime))
+		{
+		    tempCount++;
+		}
+	    }
+	    
+	    CPS_Tracer.TraceInformation("reduced " + tempCount);
+	    
+	    parkingSpots -= tempCount;
+	    tempCount = 0;
+	    
+	    // reduce reservations:
+	    CPS_Tracer.TraceInformation("reduce reservations");
+	    
+	    preparedStatement = mySqlConnection.prepareStatement(
+		    "SELECT * FROM Reservations WHERE parkinglotName = ? AND status = ? ",
+		    ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+	    
+	    preparedStatement.setString(1, parkinglot);
+	    preparedStatement.setString(2, ReservationStatus.NotStarted.toString());
+	    
+	    resultSet = preparedStatement.executeQuery();
+	    
+	    while (resultSet.next())
+	    {
+		LocalDate carExitDate = LocalDate.parse(resultSet.getString(7));
+		LocalTime carExitTime = LocalTime.parse(resultSet.getString(9));
+		
+		LocalDateTime carExitDateTime = LocalDateTime.of(carExitDate, carExitTime);
+		
+		LocalDate carStartingDate = LocalDate.parse(resultSet.getString(6));
+		LocalTime carStartingTime = LocalTime.parse(resultSet.getString(8));
+		
+		LocalDateTime carStartingDateTime = LocalDateTime.of(carStartingDate, carStartingTime);
+		
+		if (IsDateTimesOverLap(fromDateTime, toDateTime, carStartingDateTime, carExitDateTime))
+		{
+		    tempCount++;
+		}
+	    }
+	    
+	    CPS_Tracer.TraceInformation("reduced " + tempCount);
+	    
+	    parkingSpots -= tempCount;
+	    tempCount = 0;
+	    
+	    // reduce disable parking spots:
+	    CPS_Tracer.TraceInformation("reduce disable parking spots");
+	    
+	    preparedStatement = mySqlConnection.prepareStatement(
+		    "SELECT * FROM DisabledParkingSpots WHERE ParkinglotName = ? ", ResultSet.TYPE_SCROLL_SENSITIVE,
+		    ResultSet.CONCUR_UPDATABLE);
+	    
+	    preparedStatement.setString(1, parkinglot);
+	    
+	    resultSet = preparedStatement.executeQuery();
+	    
+	    tempCount = GetResultSetSize(resultSet);
+	    
+	    CPS_Tracer.TraceInformation("reduced " + tempCount);
+	    
+	    parkingSpots -= tempCount;
+	    tempCount = 0;
+	    
+	    // reduce full memberships:
+	    
+	    // no need.. they signed to all of the parking lots.. we will not
+	    // have free spots..
+	    
+	    // reduce partial memberships:
+	    CPS_Tracer.TraceInformation("reduce partial memberships");
+	    
+	    preparedStatement = mySqlConnection.prepareStatement(
+		    "SELECT * FROM PartialMemberships WHERE Parkinglot = ? ", ResultSet.TYPE_SCROLL_SENSITIVE,
+		    ResultSet.CONCUR_UPDATABLE);
+	    
+	    preparedStatement.setString(1, parkinglot);
+	    
+	    resultSet = preparedStatement.executeQuery();
+	    
+	    while (resultSet.next())
+	    {
+		LocalDate carExitDate = LocalDate.parse(resultSet.getString(3));
+		LocalTime carExitTime = LocalTime.parse(resultSet.getString(7));
+		
+		LocalDateTime carExitDateTime = LocalDateTime.of(carExitDate, carExitTime);
+		
+		LocalDate carStartingDate = LocalDate.parse(resultSet.getString(3));
+		LocalTime carStartingTime = LocalTime.parse("00:00");
+		
+		LocalDateTime carStartingDateTime = LocalDateTime.of(carStartingDate, carStartingTime);
+		
+		LocalDate expiryDate = LocalDate.parse(resultSet.getString(4));
+		
+		while (!expiryDate.equals(carStartingDate))
+		{
+		    if (IsDateTimesOverLap(fromDateTime, toDateTime, carStartingDateTime, carExitDateTime))
+		    {
+			tempCount++;
+			break;
+		    }
+		    carStartingDate = carStartingDate.plusDays(1);
+		    
+		    carStartingDateTime = carStartingDateTime.plusDays(1);
+		    carExitDateTime = carExitDateTime.plusDays(1);
+		}
+	    }
+	    
+	    CPS_Tracer.TraceInformation("reduced " + tempCount);
+	    
+	    parkingSpots -= tempCount;
+	    tempCount = 0;
+	    
+	    if (parkingSpots > 0)
+	    {
+		return true;
+	    }
+	    else
+	    {
+		return false;
+	    }
+	}
+	catch (Exception e)
+	{
+	    CPS_Tracer.TraceError("Failed in IsParkingSpotFree", e);
+	    
+	    throw e;
+	}
+    }
+    
     private ServerResponse<CloseComplaintRequest> CloseComplaint(CloseComplaintRequest closeComplaintRequest)
     {
 	CPS_Tracer.TraceInformation("Trying to close complaint: \n" + closeComplaintRequest.getComplaintId());
