@@ -1283,7 +1283,7 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	    {
 		resultSet.next();
 		
-		if (resultSet.getString(7) != loginIdentification.getPassword())
+		if (!resultSet.getString(7).equals(loginIdentification.getPassword()))
 		{
 		    serverResponse = new ServerResponse<>(RequestResult.WrongCredentials, null, "Wrong password");
 		}
