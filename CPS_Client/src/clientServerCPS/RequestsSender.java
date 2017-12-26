@@ -39,7 +39,7 @@ public class RequestsSender
 	Dialog<List<String>> dialog = DialogBuilder.InputsDialog("Set server's IP", ip, Consts.Submit);
 	
 	dialog.setHeaderText("Add server ip or Cancel to use local host");
-			
+	
 	Optional<List<String>> result = dialog.showAndWait();
 	
 	result.ifPresent(inputs ->
@@ -47,13 +47,13 @@ public class RequestsSender
 	    serverIP = inputs.get(0);
 	});
 	
-	if(!result.isPresent())
+	if (!result.isPresent())
 	{
 	    serverIP = "127.0.0.1";
 	}
     }
     
-    public RequestsSender(String ip) 
+    public RequestsSender(String ip)
     {
 	serverIP = ip;
     }
@@ -76,6 +76,7 @@ public class RequestsSender
 	}
 	catch (Exception e)
 	{
+	    e.printStackTrace();
 	    return new ServerResponse<T>(RequestResult.Failed, null, "Internal server error");
 	}
     }
@@ -140,7 +141,8 @@ public class RequestsSender
 	return SendRequest(parkinglotName, ClientServerConsts.GetParkingLot);
     }
     
-    public static ServerResponse<ChangeParkinglotStatusRequest> ChangeParkinglotStatus(ChangeParkinglotStatusRequest changeParkinglotStatusRequest)
+    public static ServerResponse<ChangeParkinglotStatusRequest> ChangeParkinglotStatus(
+	    ChangeParkinglotStatusRequest changeParkinglotStatusRequest)
     {
 	return SendRequest(changeParkinglotStatusRequest, ClientServerConsts.ChangeParkinglotStatus);
     }
@@ -175,7 +177,8 @@ public class RequestsSender
 	return SendRequest(null, ClientServerConsts.GetAllChangeRatesRequests);
     }
     
-    public static ServerResponse<ChangeParkingSpotStatusRequest> ChangeParkingSpotStatus(ChangeParkingSpotStatusRequest changeParkingSpotStatusRequest)
+    public static ServerResponse<ChangeParkingSpotStatusRequest> ChangeParkingSpotStatus(
+	    ChangeParkingSpotStatusRequest changeParkingSpotStatusRequest)
     {
 	return SendRequest(changeParkingSpotStatusRequest, ClientServerConsts.ChangeParkingSpotStatus);
     }
@@ -184,10 +187,14 @@ public class RequestsSender
     {
 	return SendRequest(null, ClientServerConsts.GetAllDisabledParkingSpots);
     }
-    public static ServerResponse<FullMembership> ChangeExpireFullMembership(FullMembership fullMembership) {
-    	return SendRequest(fullMembership, ClientServerConsts.ChangeExpireFullMembership);
-	}
-    public static ServerResponse<PartialMembership> ChangeExpirePartialMembership(PartialMembership partialMembership) {
-    	return SendRequest(partialMembership, ClientServerConsts.ChangeExpirePartialMembership);
-	}
+    
+    public static ServerResponse<FullMembership> ChangeExpireFullMembership(FullMembership fullMembership)
+    {
+	return SendRequest(fullMembership, ClientServerConsts.ChangeExpireFullMembership);
+    }
+    
+    public static ServerResponse<PartialMembership> ChangeExpirePartialMembership(PartialMembership partialMembership)
+    {
+	return SendRequest(partialMembership, ClientServerConsts.ChangeExpirePartialMembership);
+    }
 }

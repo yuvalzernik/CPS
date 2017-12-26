@@ -39,7 +39,7 @@ public class Tests
 	    // CustomerTest() ReservationTest() ChangeRatesTest()
 	    // EmployeeTest() ParkinglotTest() DisabledParkingSpotsTest()
 	    
-	    if (DisabledParkingSpotsTest())
+	    if (ComplaintTest())
 	    {
 		System.out.println("Test Succeed");
 	    }
@@ -51,6 +51,7 @@ public class Tests
 	catch (Exception e)
 	{
 	    System.out.println("Failed with exception: " + e);
+	    e.printStackTrace();
 	}
     }
     
@@ -120,6 +121,8 @@ public class Tests
 	ServerResponse<Complaint> serverResponse = RequestsSender.AddComplaint(complaint);
 	
 	ServerResponse<ArrayList<Complaint>> serverGetResponse = RequestsSender.GetAllActiveComplaints();
+	
+	CPS_Tracer.TraceInformation(serverGetResponse.toString());;
 	
 	boolean isMyComplaintThere = false;
 	
