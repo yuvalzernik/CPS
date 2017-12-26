@@ -1407,18 +1407,19 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	    if (changeParkingSpotStatusRequest.getParkingSpotStatus().equals(ParkingSpotStatus.Active))
 	    {
 		PreparedStatement preparedStatement = mySqlConnection.prepareStatement(
-			"SELECT * FROM DisabledParkingSpots WHERE parkinglotName = ? AND parkingSpot = ?",
+			"SELECT * FROM DisabledParkingSpots WHERE parkinglotName = ? AND parkingSpot = ? AND status = ?",
 			ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		
 		preparedStatement.setString(1, changeParkingSpotStatusRequest.getParkinglotName());
 		preparedStatement.setString(2, changeParkingSpotStatusRequest.getParkingSpot().toString());
+		preparedStatement.setString(3, ParkingSpotStatus.Disabled.toString());
 		
 		ResultSet resultSet = preparedStatement.executeQuery();
 		
 		if (!resultSet.isBeforeFirst())
 		{
 		    serverResponse = new ServerResponse<>(RequestResult.NotFound, changeParkingSpotStatusRequest,
-			    "parking spot Not Found");
+			    "disabled parking spot Not Found");
 		}
 		else
 		{
@@ -1435,12 +1436,29 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	    }
 	    else // Disable spot
 	    {
+		PreparedStatement preparedStatement = mySqlConnection.prepareStatement(
+			"SELECT * FROM DisabledParkingSpots WHERE parkinglotName = ? AND parkingSpot = ? AND status = ?",
+			ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+		
+		preparedStatement.setString(1, changeParkingSpotStatusRequest.getParkinglotName());
+		preparedStatement.setString(2, changeParkingSpotStatusRequest.getParkingSpot().toString());
+		preparedStatement.setString(3, ParkingSpotStatus.Disabled.toString());
+		
+		ResultSet resultSet = preparedStatement.executeQuery();
+		
+		if (resultSet.isBeforeFirst()) // case parking spot is already disabled
+		{
+		    serverResponse = new ServerResponse<>(RequestResult.NotFound, changeParkingSpotStatusRequest,
+			    "parking spot already disabled");
+		}
+		
 		String preparedStatementString = "INSERT INTO DisabledParkingSpots(uniqueCol, parkinglotName, parkingSpot, startDateTime, endDateTime, status) VALUES(?, ?, ?, ?, ?, ?)";
 		
 		ArrayList<String> values = new ArrayList<>();
 		
-		values.add(changeParkingSpotStatusRequest.getParkinglotName() + " "
-			+ changeParkingSpotStatusRequest.getParkingSpot().toString());
+		String uniqueId = GenerateUniqueId("SELECT uniqueCol FROM DisabledParkingSpots WHERE uniqueCol = ?", 5000000);
+		
+		values.add(uniqueId);
 		values.add(changeParkingSpotStatusRequest.getParkinglotName());
 		values.add(changeParkingSpotStatusRequest.getParkingSpot().toString());
 		values.add(LocalDateTime.now().toString());
