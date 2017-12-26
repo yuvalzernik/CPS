@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="CPS_Clients.Controllers.Employee.ManageComplaintsController">
+   <children>
+      <TableView fx:id="myTable" onMouseClicked="#OnMouseClicked" prefHeight="241.0" prefWidth="403.0">
+        <columns>
+          <TableColumn fx:id="complaintId" onEditStart="#OnEditStartComplaintId" prefWidth="150.0" text="Complaint ID" />
+          <TableColumn fx:id="date" minWidth="0.0" prefWidth="125.0" text="Date" />
+            <TableColumn fx:id="complaints" minWidth="0.0" prefWidth="125.0" text="Complaint" />
+        </columns>
+      </TableView>
+   </children>
+</AnchorPane>

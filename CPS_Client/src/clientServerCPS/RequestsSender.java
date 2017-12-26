@@ -8,7 +8,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
+import entities.CloseComplaintRequest;
 import CPS_Utilities.Consts;
 import CPS_Utilities.DialogBuilder;
 import CPS_Utilities.LoginIdentification;
@@ -16,7 +16,6 @@ import entities.ChangeParkingSpotStatusRequest;
 import entities.ChangeParkinglotStatusRequest;
 import entities.ChangeRatesRequest;
 import entities.ChangeRatesResponse;
-import entities.CloseComplaintRequest;
 import entities.Complaint;
 import entities.Customer;
 import entities.Employee;

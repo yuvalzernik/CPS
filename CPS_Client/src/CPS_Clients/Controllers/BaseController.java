@@ -25,7 +25,7 @@ public abstract class BaseController
 		    ((TextField) f.get(this)).clear();
 		}
 		else if(f.getType().equals(TextArea.class)) {
-			 ((TextArea) f.get(this)).clear();
+			((TextArea) f.get(this)).clear();
 		}
 	    }
 	}

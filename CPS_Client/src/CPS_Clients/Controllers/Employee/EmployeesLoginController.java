@@ -1,7 +1,6 @@
 package CPS_Clients.Controllers.Employee;
 
 import CPS_Clients.ConstsEmployees;
-import CPS_Clients.Controllers.BaseController;
 import CPS_Utilities.DialogBuilder;
 import CPS_Utilities.LoginIdentification;
 import clientServerCPS.RequestResult;
@@ -38,6 +37,9 @@ public class EmployeesLoginController extends EmployeeBaseController {
     	  	
     	  	if (employeeRes.GetRequestResult().equals(RequestResult.WrongCredentials))
     			DialogBuilder.AlertDialog(AlertType.ERROR, null, ConstsEmployees.IncorrectUsernameOrPassword, null, false);
+    	  	//if (employeeRes.GetRequestResult().equals(RequestResult.Failed )|| employeeRes.GetRequestResult().equals(RequestResult.NotFound)) {
+    	  		//DialogBuilder.AlertDialog(AlertType.ERROR, null, ConstsEmployees.ErrorPleaseTryAgainLater, null, false);
+			//}
     	  	else 
     	  	{
     	  		MyEmployee=employeeRes.GetResponseObject();

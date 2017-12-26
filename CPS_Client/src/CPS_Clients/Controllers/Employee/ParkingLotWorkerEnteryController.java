@@ -1,20 +1,15 @@
 package CPS_Clients.Controllers.Employee;
 
-
-
-//import java.awt.Checkbox;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import clientServerCPS.RequestResult;
 import clientServerCPS.RequestsSender;
 import CPS_Clients.ConstsEmployees;
-import CPS_Clients.Controllers.BaseController;
-//import CPS_Clients.ConstsWeb;
 import CPS_Utilities.Consts;
 import CPS_Utilities.DialogBuilder;
 import clientServerCPS.ServerResponse;
+import entities.ChangeParkinglotStatusRequest;
 import entities.Parkinglot;
 import entities.enums.ParkinglotStatus;
 import javafx.event.ActionEvent;
@@ -72,25 +67,38 @@ public class ParkingLotWorkerEnteryController extends EmployeeBaseController {
     	if (result.equals("OK"))
     	{
     		String parkinglotName=MyEmployee.getOrgAffiliation();
-    		ServerResponse<ArrayList<Parkinglot>> ParkinglotsRes= RequestsSender.GetAllParkinglots();
-    		ArrayList<Parkinglot> Parkinglots = ParkinglotsRes.GetResponseObject();
-    		//submit disabled parking lot in DB
-    		DialogBuilder.AlertDialog(AlertType.INFORMATION, "", ConstsEmployees.ParkingLotDisabled, null,false);
+    		
+    		//ServerResponse<ArrayList<Parkinglot>> ParkinglotsRes= RequestsSender.GetAllParkinglots();
+    		//ArrayList<Parkinglot> Parkinglots = ParkinglotsRes.GetResponseObject();
+    		
+    		ServerResponse<Parkinglot>ParkinglotRes= RequestsSender.GetParkinglot(parkinglotName);
+    		Parkinglot parkinglot=ParkinglotRes.GetResponseObject();
+    		ParkinglotStatus status=parkinglot.getStatus();
+    		if(status.equals(ParkinglotStatus.OutOfOrder))
+	    		DialogBuilder.AlertDialog(AlertType.ERROR, "", ConstsEmployees.AlreadyDisabled, null,false);
+
+    		else 
+    		{
+	    		ChangeParkinglotStatusRequest changeParkinglotStatusRequest = new ChangeParkinglotStatusRequest(parkinglotName, ParkinglotStatus.OutOfOrder);
+	    		ServerResponse<ChangeParkinglotStatusRequest>ParkinglotDisableRes= RequestsSender.ChangeParkinglotStatus(changeParkinglotStatusRequest);
+	    		    		
+		    	if(ParkinglotDisableRes.GetRequestResult().equals(RequestResult.Succeed))
+		    	{
+	    		DialogBuilder.AlertDialog(AlertType.INFORMATION, "", ConstsEmployees.ParkingLotDisabled, null,false);
+		    	}
+		    	else 
+		    	{
+		    		DialogBuilder.AlertDialog(AlertType.ERROR, "", Consts.ServerProblemMessage, null,false);
+		    	}
+    		}
     	}
     }
 
     @FXML
     void OnReserveParkingSpot(ActionEvent event) 
     {
-    	Dialog<List<String>> dialog = DialogBuilder.InputsDialog(Consts.FillRequest, DisableParkingSpotInputs, Consts.Submit);
-    	Optional<List<String>> result = dialog.showAndWait();
-    	result.ifPresent(inputs->
-	    {
-	    //check if not already reserved or disabeled or exist or 
-		//save in DB
-		DialogBuilder.AlertDialog(AlertType.INFORMATION, "", ConstsEmployees.ParkingSpotReserved, null,false);
-	    });
-    	
+    	myControllersManager.SetScene(ConstsEmployees.ReserveParkingSpot, ConstsEmployees.ParkingLotWorkerEntery);
+
     }
 
     @FXML
@@ -98,11 +106,59 @@ public class ParkingLotWorkerEnteryController extends EmployeeBaseController {
     {
     	Dialog<List<String>> dialog = DialogBuilder.InputsDialog(Consts.FillRequest, DisableParkingSpotInputs, Consts.Submit);
     	Optional<List<String>> result = dialog.showAndWait();
-    	/////////////////check if submit was clicked
+    	result.ifPresent(inputs->
     	{
-    	//save in DB
-    	DialogBuilder.AlertDialog(AlertType.INFORMATION, "", ConstsEmployees.ParkingSpotDisabled, null,false);
+    		String parkinglotName=MyEmployee.getOrgAffiliation();
+    		ServerResponse<Parkinglot>ParkinglotRes= RequestsSender.GetParkinglot(parkinglotName);
+    		Parkinglot parkinglot=ParkinglotRes.GetResponseObject();
+    		ParkinglotStatus status=parkinglot.getStatus();
+    		if(status.equals(ParkinglotStatus.OutOfOrder))
+	    		DialogBuilder.AlertDialog(AlertType.ERROR, "", ConstsEmployees.ParkingLotIsDisabled, null,false);
+    		else 
+    		{
+    			//ParkingSpot();
+    			//ChangeParkingSpotStatusRequest changeParkingSpotStatusRequest= new ChangeParkingSpotStatusRequest(inputs.get(0),parkinglotName,ParkingSpotStatus.Disabled);
+    			//DialogBuilder.AlertDialog(AlertType.INFORMATION, "", ConstsEmployees.ParkingSpotDisabled, null,false);
+    		}
+    	});
+    }
+    @FXML
+    void OnUndisableParkingLot(ActionEvent event)
+    {
+    	String result =DialogBuilder.AlertDialog(AlertType.CONFIRMATION,"" , ConstsEmployees.ConfirmParkingLotUnDisabled, null,false);
+    	if (result.equals("OK"))
+    	{
+    		String parkinglotName=MyEmployee.getOrgAffiliation();
+    		
+    		//ServerResponse<ArrayList<Parkinglot>> ParkinglotsRes= RequestsSender.GetAllParkinglots();
+    		//ArrayList<Parkinglot> Parkinglots = ParkinglotsRes.GetResponseObject();
+    		
+    		ServerResponse<Parkinglot>ParkinglotRes= RequestsSender.GetParkinglot(parkinglotName);
+    		Parkinglot parkinglot=ParkinglotRes.GetResponseObject();
+    		ParkinglotStatus status=parkinglot.getStatus();
+    		if(status.equals(ParkinglotStatus.Open))
+	    		DialogBuilder.AlertDialog(AlertType.ERROR, "", ConstsEmployees.Alreadyinabled, null,false);
+
+    		else 
+    		{
+	    		ChangeParkinglotStatusRequest changeParkinglotStatusRequest = new ChangeParkinglotStatusRequest(parkinglotName, ParkinglotStatus.Open);
+	    		ServerResponse<ChangeParkinglotStatusRequest>ParkinglotDisableRes= RequestsSender.ChangeParkinglotStatus(changeParkinglotStatusRequest);
+	    		    		
+		    	if(ParkinglotDisableRes.GetRequestResult().equals(RequestResult.Succeed))
+		    	{
+	    		DialogBuilder.AlertDialog(AlertType.INFORMATION, "", ConstsEmployees.ParkingLotIsInabled, null,false);
+		    	}
+		    	else 
+		    	{
+		    		DialogBuilder.AlertDialog(AlertType.ERROR, "", Consts.ServerProblemMessage, null,false);
+		    	}
+    		}
     	}
+    }
+    @FXML
+    void OnUndisableParkingSpot(ActionEvent event)
+    {
+    	
     }
 
     @FXML
