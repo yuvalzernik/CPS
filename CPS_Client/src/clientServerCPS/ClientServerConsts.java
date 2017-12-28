@@ -53,4 +53,6 @@ public class ClientServerConsts
     public static final String ChangeExpireFullMembership = "ChangeExpireFullMembership";
     
     public static final String ChangeExpirePartialMembership = "ChangeExpirePartialMembership";
+    
+    public static final String TryInsertGuestCar = "TryInsertGuestCar";
 }

@@ -7,5 +7,6 @@ public enum RequestResult
     Failed,
     NotFound,
     AlredyExist,
-    WrongCredentials
+    WrongCredentials,
+    ResourceNotAvaillable
 }

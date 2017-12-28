@@ -12,6 +12,7 @@ import entities.CloseComplaintRequest;
 import CPS_Utilities.Consts;
 import CPS_Utilities.DialogBuilder;
 import CPS_Utilities.LoginIdentification;
+import entities.AddRealTimeParkingRequest;
 import entities.ChangeParkingSpotStatusRequest;
 import entities.ChangeParkinglotStatusRequest;
 import entities.ChangeRatesRequest;
@@ -196,5 +197,10 @@ public class RequestsSender
     public static ServerResponse<PartialMembership> ChangeExpirePartialMembership(PartialMembership partialMembership)
     {
 	return SendRequest(partialMembership, ClientServerConsts.ChangeExpirePartialMembership);
+    }
+    
+    public static ServerResponse<AddRealTimeParkingRequest> TryInsertGuestCar(AddRealTimeParkingRequest addRealTimeParkingRequest)
+    {
+	return SendRequest(addRealTimeParkingRequest, ClientServerConsts.TryInsertGuestCar);
     }
 }

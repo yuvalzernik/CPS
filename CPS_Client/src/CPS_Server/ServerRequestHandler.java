@@ -22,6 +22,7 @@ import clientServerCPS.ClientRequest;
 import clientServerCPS.ClientServerConsts;
 import clientServerCPS.RequestResult;
 import clientServerCPS.ServerResponse;
+import entities.AddRealTimeParkingRequest;
 import entities.ChangeParkingSpotStatusRequest;
 import entities.ChangeParkinglotStatusRequest;
 import entities.ChangeRatesRequest;
@@ -156,6 +157,9 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	case ClientServerConsts.ChangeExpirePartialMembership:
 	    return ChangeExpirePartialMembership((PartialMembership) clientRequest.GetSentObject());
 	
+	case ClientServerConsts.TryInsertGuestCar:
+	    return TryInsertGuestCar((AddRealTimeParkingRequest) clientRequest.GetSentObject());
+	
 	default:
 	    CPS_Tracer.TraceError(
 		    "Server recived unknown destination. \nDestination: " + clientRequest.getServerDestination());
@@ -266,12 +270,13 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	    
 	    int parkingSpots = Integer.parseInt(resultSet.getString(6));
 	    
+	    CPS_Tracer.TraceInformation("starting reduce spots from: " + parkingSpots);
+	    
 	    // reduce cars that park now and have a collision:
 	    CPS_Tracer.TraceInformation("reduce cars that park now and have a collision");
 	    
-	    preparedStatement = mySqlConnection.prepareStatement(
-		    "SELECT * FROM RealTimeParking WHERE parkinglotName = ?", ResultSet.TYPE_SCROLL_SENSITIVE,
-		    ResultSet.CONCUR_UPDATABLE);
+	    preparedStatement = mySqlConnection.prepareStatement("SELECT * FROM RealTimeParking WHERE parkingLot = ?",
+		    ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 	    
 	    preparedStatement.setString(1, parkinglot);
 	    
@@ -296,8 +301,8 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	    CPS_Tracer.TraceInformation("reduce reservations");
 	    
 	    preparedStatement = mySqlConnection.prepareStatement(
-		    "SELECT * FROM Reservations WHERE parkinglotName = ? AND status = ? ",
-		    ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+		    "SELECT * FROM Reservations WHERE parkingLot = ? AND status = ? ", ResultSet.TYPE_SCROLL_SENSITIVE,
+		    ResultSet.CONCUR_UPDATABLE);
 	    
 	    preparedStatement.setString(1, parkinglot);
 	    preparedStatement.setString(2, ReservationStatus.NotStarted.toString());
@@ -331,10 +336,11 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	    CPS_Tracer.TraceInformation("reduce disable parking spots");
 	    
 	    preparedStatement = mySqlConnection.prepareStatement(
-		    "SELECT * FROM DisabledParkingSpots WHERE ParkinglotName = ? ", ResultSet.TYPE_SCROLL_SENSITIVE,
-		    ResultSet.CONCUR_UPDATABLE);
+		    "SELECT * FROM DisabledParkingSpots WHERE parkinglotName = ? AND status = ? ",
+		    ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 	    
 	    preparedStatement.setString(1, parkinglot);
+	    preparedStatement.setString(2, ParkingSpotStatus.Disabled.toString());
 	    
 	    resultSet = preparedStatement.executeQuery();
 	    
@@ -393,6 +399,8 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	    
 	    parkingSpots -= tempCount;
 	    tempCount = 0;
+	    
+	    CPS_Tracer.TraceInformation("parking spots remaining: " + parkingSpots);
 	    
 	    if (parkingSpots > 0)
 	    {
@@ -1446,30 +1454,33 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 		
 		ResultSet resultSet = preparedStatement.executeQuery();
 		
-		if (resultSet.isBeforeFirst()) // case parking spot is already disabled
+		if (resultSet.isBeforeFirst()) // case parking spot is already
+					       // disabled
 		{
 		    serverResponse = new ServerResponse<>(RequestResult.NotFound, changeParkingSpotStatusRequest,
 			    "parking spot already disabled");
 		}
-		
-		String preparedStatementString = "INSERT INTO DisabledParkingSpots(uniqueCol, parkinglotName, parkingSpot, startDateTime, endDateTime, status) VALUES(?, ?, ?, ?, ?, ?)";
-		
-		ArrayList<String> values = new ArrayList<>();
-		
-		String uniqueId = GenerateUniqueId("SELECT uniqueCol FROM DisabledParkingSpots WHERE uniqueCol = ?", 5000000);
-		
-		values.add(uniqueId);
-		values.add(changeParkingSpotStatusRequest.getParkinglotName());
-		values.add(changeParkingSpotStatusRequest.getParkingSpot().toString());
-		values.add(LocalDateTime.now().toString());
-		values.add(null);
-		values.add(ParkingSpotStatus.Disabled.toString());
-		
-		AddRowToTable(preparedStatementString, values);
-		
-		serverResponse = new ServerResponse<>(RequestResult.Succeed, changeParkingSpotStatusRequest,
-			"parking spot Disabled.");
-		
+		else
+		{
+		    String preparedStatementString = "INSERT INTO DisabledParkingSpots(uniqueCol, parkinglotName, parkingSpot, startDateTime, endDateTime, status) VALUES(?, ?, ?, ?, ?, ?)";
+		    
+		    ArrayList<String> values = new ArrayList<>();
+		    
+		    String uniqueId = GenerateUniqueId("SELECT uniqueCol FROM DisabledParkingSpots WHERE uniqueCol = ?",
+			    5000000);
+		    
+		    values.add(uniqueId);
+		    values.add(changeParkingSpotStatusRequest.getParkinglotName());
+		    values.add(changeParkingSpotStatusRequest.getParkingSpot().toString());
+		    values.add(LocalDateTime.now().toString());
+		    values.add(null);
+		    values.add(ParkingSpotStatus.Disabled.toString());
+		    
+		    AddRowToTable(preparedStatementString, values);
+		    
+		    serverResponse = new ServerResponse<>(RequestResult.Succeed, changeParkingSpotStatusRequest,
+			    "parking spot Disabled.");
+		}
 	    }
 	    
 	    CPS_Tracer.TraceInformation(
@@ -1520,6 +1531,66 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	    CPS_Tracer.TraceError("Failed in getting disabled parking spots.", e);
 	    
 	    return new ServerResponse<>(RequestResult.Failed, null, "Failed to get disabled parking spots");
+	}
+    }
+    
+    private ServerResponse<AddRealTimeParkingRequest> TryInsertGuestCar(AddRealTimeParkingRequest request)
+    {
+	CPS_Tracer.TraceInformation("Trying to insert guest car: \n" + request);
+	
+	try
+	{
+	    ServerResponse<AddRealTimeParkingRequest> serverResponse;
+	    
+	    // Check if the car is not in a parking lot already:
+	    
+	    String preparedStatementString = "SELECT * FROM RealTimeParking WHERE carNumber = ?";
+	    
+	    PreparedStatement preparedStatement = mySqlConnection.prepareStatement(preparedStatementString);
+	    
+	    preparedStatement.setString(1, request.getCarNumber());
+	    
+	    ResultSet resultSet = preparedStatement.executeQuery();
+	    
+	    if (resultSet.isBeforeFirst())
+	    {
+		serverResponse = new ServerResponse<>(RequestResult.AlredyExist, request, null);
+	    }
+	    // Check if there is a free parking spot:
+	    else if (!IsParkingSpotFree(request.getParkinglot(), request.getStartDateTime(), request.getExiDateTime()))
+	    {
+		serverResponse = new ServerResponse<>(RequestResult.ResourceNotAvaillable, request, "Parkinglot full");
+	    }
+	    else
+	    {
+		preparedStatementString = "INSERT INTO RealTimeParking(parkingLot, parkingSpot, startDateTime, exitDateTime, carNumber) VALUES(?, ?, ?, ?, ?)";
+		
+		ArrayList<String> values = new ArrayList<>();
+		
+		values.add(request.getParkinglot());
+		values.add(new ParkingSpot(1, 1, 1).toString());
+		values.add(request.getStartDateTime().toString());
+		values.add(request.getExiDateTime().toString());
+		values.add(request.getCarNumber());
+		
+		AddRowToTable(preparedStatementString, values);
+		
+		serverResponse = new ServerResponse<>(RequestResult.Succeed, request, null);
+	    }
+	    
+	    CPS_Tracer.TraceInformation(
+		    "Server response to client after trying to insert guest car: \n" + serverResponse);
+	    
+	    return serverResponse;
+	}
+	catch (Exception e)
+	{
+	    ServerResponse<AddRealTimeParkingRequest> serverResponse = new ServerResponse<>(RequestResult.Failed,
+		    request, "Failed to insert guest car");
+	    
+	    CPS_Tracer.TraceError("Failed to insert guest car", e);
+	    
+	    return serverResponse;
 	}
     }
 }

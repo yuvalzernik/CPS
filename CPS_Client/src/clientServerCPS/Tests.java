@@ -1,6 +1,7 @@
 package clientServerCPS;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Random;
@@ -8,6 +9,7 @@ import java.util.function.Function;
 
 import CPS_Utilities.CPS_Tracer;
 import CPS_Utilities.LoginIdentification;
+import entities.AddRealTimeParkingRequest;
 import entities.ChangeParkingSpotStatusRequest;
 import entities.ChangeParkinglotStatusRequest;
 import entities.ChangeRatesRequest;
@@ -38,21 +40,46 @@ public class Tests
 	    // FullMembershipTest() PartialMembershipTest() ComplaintTest()
 	    // CustomerTest() ReservationTest() ChangeRatesTest()
 	    // EmployeeTest() ParkinglotTest() DisabledParkingSpotsTest()
+	    // GuestEntryTest()
+	    for (int i = 0; i < 1; i++)
+	    {
+		if (GuestEntryTest())
+		{
+		    System.out.println("Test Succeed");
+		}
+		else
+		{
+		    System.out.println("Test Failed");
+		}
+	    }
 	    
-	    if (DisabledParkingSpotsTest())
-	    {
-		System.out.println("Test Succeed");
-	    }
-	    else
-	    {
-		System.out.println("Test Failed");
-	    }
 	}
 	catch (Exception e)
 	{
 	    System.out.println("Failed with exception: " + e);
 	    e.printStackTrace();
 	}
+    }
+    
+    private static boolean GuestEntryTest()
+    {
+	ServerResponse<AddRealTimeParkingRequest> serverResponse = null;
+	
+	for (int i = 0; i < 1; i++)
+	{
+	    AddRealTimeParkingRequest request = new AddRealTimeParkingRequest("Test lot", LocalDateTime.now(),
+		    LocalDateTime.now().plusHours(5), "3333333" + i);
+	    
+	    serverResponse = RequestsSender.TryInsertGuestCar(request);
+	    
+	    CPS_Tracer.TraceInformation("server respnse after trying to add car: \n" + serverResponse);
+	}
+	
+	if (!serverResponse.GetRequestResult().equals(RequestResult.Succeed))
+	{
+	    return false;
+	}
+	return true;
     }
     
     private static boolean DisabledParkingSpotsTest()
@@ -122,7 +149,8 @@ public class Tests
 	
 	ServerResponse<ArrayList<Complaint>> serverGetResponse = RequestsSender.GetAllActiveComplaints();
 	
-	CPS_Tracer.TraceInformation(serverGetResponse.toString());;
+	CPS_Tracer.TraceInformation(serverGetResponse.toString());
+	;
 	
 	boolean isMyComplaintThere = false;
 	
@@ -265,8 +293,8 @@ public class Tests
 	carList.add("444444444");
 	carList.add("555555555");
 	
-	PartialMembership partialMembership = new PartialMembership(id, LocalDate.now(), LocalDate.now(), "testLot",
-		carList, LocalTime.now());
+	PartialMembership partialMembership = new PartialMembership(id, LocalDate.now(), LocalDate.now().plusDays(20),
+		"Test lot", carList, LocalTime.now());
 	
 	ServerResponse<PartialMembership> serverResponse = RequestsSender.RegisterPartialMembership(partialMembership);
 	
