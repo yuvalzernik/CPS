@@ -8,13 +8,13 @@
 <AnchorPane prefHeight="513.0" prefWidth="667.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CPS_Clients.Controllers.Employee.ManagerLoginController">
    <children>
       <Button layoutX="63.0" layoutY="37.0" mnemonicParsing="false" onAction="#OnInitializeParkingLot" prefHeight="83.0" prefWidth="212.0" text="Initialize Parking Lot" />
-      <Button layoutX="297.0" layoutY="352.0" mnemonicParsing="false" onAction="#OnRigisterDisabledParkingLot" prefHeight="83.0" prefWidth="233.0" text="Register disabled Parking Spot" />
+      <Button layoutX="297.0" layoutY="352.0" mnemonicParsing="false" onAction="#OnRegisterDisabeledParkingSpot" prefHeight="83.0" prefWidth="233.0" text="Register disabled Parking Spot" />
       <Button layoutX="297.0" layoutY="37.0" mnemonicParsing="false" onAction="#OnReserveParkingSpot" prefHeight="83.0" prefWidth="233.0" text="Reserve Parking spot" />
-      <Button layoutX="297.0" layoutY="246.0" mnemonicParsing="false" onAction="#OnDisabeledParkingLot" prefHeight="83.0" prefWidth="233.0" text="Register Disabeled Parking Lot" />
+      <Button layoutX="297.0" layoutY="246.0" mnemonicParsing="false" onAction="#OnRigisterDisabledParkingLot" prefHeight="83.0" prefWidth="233.0" text="Register Disabeled Parking Lot" />
       <Button layoutX="61.0" layoutY="142.0" mnemonicParsing="false" onAction="#OnRequestUpdatePrices" prefHeight="83.0" prefWidth="212.0" text="Request Update Prices" />
       <Button layoutX="297.0" layoutY="142.0" mnemonicParsing="false" onAction="#OnProduceReport" prefHeight="83.0" prefWidth="233.0" text="Produce report" />
       <Button layoutX="488.0" layoutY="448.0" mnemonicParsing="false" onAction="#OnBack" prefHeight="36.0" prefWidth="128.0" text="back" />
-      <Button layoutX="63.0" layoutY="246.0" mnemonicParsing="false" onAction="#OnUndisableParkingLot" prefHeight="83.0" prefWidth="212.0" text="Undisabeled Parking Lot" />
-      <Button layoutX="63.0" layoutY="352.0" mnemonicParsing="false" onAction="#OnUndisableParkingSpot" prefHeight="83.0" prefWidth="212.0" text="Undisabled Parking Spot" />
+      <Button layoutX="63.0" layoutY="246.0" mnemonicParsing="false" onAction="#OnUndisableParkingLot" prefHeight="83.0" prefWidth="212.0" text="Enabele Parking Lot" />
+      <Button layoutX="63.0" layoutY="352.0" mnemonicParsing="false" onAction="#OnUndisableParkingSpot" prefHeight="83.0" prefWidth="212.0" text="Enable Parking Spot" />
    </children>
 </AnchorPane>

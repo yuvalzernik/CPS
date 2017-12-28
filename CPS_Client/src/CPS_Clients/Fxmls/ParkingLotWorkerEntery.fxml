@@ -12,7 +12,7 @@
       <Button layoutX="317.0" layoutY="40.0" mnemonicParsing="false" onAction="#OnReserveParkingSpot" prefHeight="75.0" prefWidth="228.0" text="Reserve Parking spot" />
       <Button layoutX="314.0" layoutY="237.0" mnemonicParsing="false" onAction="#OnRegisterDisabeledParkingSpot" prefHeight="75.0" prefWidth="234.0" text="Register Disabled Parking Spot" />
       <Button layoutX="488.0" layoutY="330.0" mnemonicParsing="false" onAction="#onBack" prefHeight="39.0" prefWidth="120.0" text="Back" />
-      <Button layoutX="41.0" layoutY="136.0" mnemonicParsing="false" onAction="#OnUndisableParkingLot" prefHeight="75.0" prefWidth="234.0" text="Undisable Parking Lot" />
-      <Button layoutX="41.0" layoutY="237.0" mnemonicParsing="false" onAction="#OnUndisableParkingSpot" prefHeight="75.0" prefWidth="234.0" text="Undisable Parking Spot" />
+      <Button layoutX="41.0" layoutY="136.0" mnemonicParsing="false" onAction="#OnUndisableParkingLot" prefHeight="75.0" prefWidth="234.0" text="Enable Parking Lot" />
+      <Button layoutX="41.0" layoutY="237.0" mnemonicParsing="false" onAction="#OnUndisableParkingSpot" prefHeight="75.0" prefWidth="234.0" text="Enable Parking Spot" />
    </children>
 </AnchorPane>

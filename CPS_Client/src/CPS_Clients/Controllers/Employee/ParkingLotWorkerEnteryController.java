@@ -3,14 +3,18 @@ package CPS_Clients.Controllers.Employee;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 import clientServerCPS.RequestResult;
 import clientServerCPS.RequestsSender;
 import CPS_Clients.ConstsEmployees;
 import CPS_Utilities.Consts;
 import CPS_Utilities.DialogBuilder;
 import clientServerCPS.ServerResponse;
+import entities.ChangeParkingSpotStatusRequest;
 import entities.ChangeParkinglotStatusRequest;
+import entities.ParkingSpot;
 import entities.Parkinglot;
+import entities.enums.ParkingSpotStatus;
 import entities.enums.ParkinglotStatus;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -24,10 +28,9 @@ public class ParkingLotWorkerEnteryController extends EmployeeBaseController {
 	public ParkingLotWorkerEnteryController()
 	{
 		super();
-		//DisableParkingSpotInputs.add("Parking Lot Name:");
-		DisableParkingSpotInputs.add("Parking Spot Number:");
-		
-		//InitializeParkingSpotInputs.add("Parking Lot Name:");
+		DisableParkingSpotInputs.add("Parking Spot Width:");
+		DisableParkingSpotInputs.add("Parking Spot height:");
+		DisableParkingSpotInputs.add("Parking Spot depth:");
 		InitializeParkingSpotInputs.add("Parking Lot Width:");
 	}
 	
@@ -39,12 +42,11 @@ public class ParkingLotWorkerEnteryController extends EmployeeBaseController {
     	result.ifPresent(inputs->
 	    {
 	    	String parkinglotName=MyEmployee.getOrgAffiliation();
-	    	//String parkinglotName=inputs.get(0);
-	    	String s_width=inputs.get(0);
-	    	int width=Integer.parseInt(s_width);
-	    	if (width>=4 && width<=8) 
+	    	//parkinglotName= parkinglotName.toLowerCase();
+	    	boolean IsValid= Pattern.matches("[0-9]+",inputs.get(0)) && 4 <= Integer.parseInt(inputs.get(0)) && Integer.parseInt(inputs.get(0))<=8 ;
+	    	if (IsValid) 
 	    	{
-				Parkinglot parkinglot=new Parkinglot(parkinglotName, width, ParkinglotStatus.Open, 5, 4);
+				Parkinglot parkinglot=new Parkinglot(parkinglotName, Integer.parseInt(inputs.get(0)), ParkinglotStatus.Open, 5, 4);
 		    	ServerResponse<Parkinglot>ParkinglotRes= RequestsSender.AddParkinglot(parkinglot);
 		    	if(ParkinglotRes.GetRequestResult().equals(RequestResult.Succeed))
 		        	DialogBuilder.AlertDialog(AlertType.INFORMATION, "", ConstsEmployees.ParkingLotWasinitialized, null,false);
@@ -56,8 +58,6 @@ public class ParkingLotWorkerEnteryController extends EmployeeBaseController {
 	    	else 
 	    		DialogBuilder.AlertDialog(AlertType.ERROR, "", ConstsEmployees.ParkingLotSizeError, null,false);
     	});
-
-    	
     }
 
     @FXML
@@ -67,10 +67,7 @@ public class ParkingLotWorkerEnteryController extends EmployeeBaseController {
     	if (result.equals("OK"))
     	{
     		String parkinglotName=MyEmployee.getOrgAffiliation();
-    		
-    		//ServerResponse<ArrayList<Parkinglot>> ParkinglotsRes= RequestsSender.GetAllParkinglots();
-    		//ArrayList<Parkinglot> Parkinglots = ParkinglotsRes.GetResponseObject();
-    		
+    		//parkinglotName= parkinglotName.toLowerCase();
     		ServerResponse<Parkinglot>ParkinglotRes= RequestsSender.GetParkinglot(parkinglotName);
     		Parkinglot parkinglot=ParkinglotRes.GetResponseObject();
     		ParkinglotStatus status=parkinglot.getStatus();
@@ -97,8 +94,7 @@ public class ParkingLotWorkerEnteryController extends EmployeeBaseController {
     @FXML
     void OnReserveParkingSpot(ActionEvent event) 
     {
-    	myControllersManager.SetScene(ConstsEmployees.ReserveParkingSpot, ConstsEmployees.ParkingLotWorkerEntery);
-
+    	myControllersManager.SetScene(ConstsEmployees.ReserveParkingSpotInLocalParkingLot, ConstsEmployees.ParkingLotWorkerEntery);
     }
 
     @FXML
@@ -109,6 +105,7 @@ public class ParkingLotWorkerEnteryController extends EmployeeBaseController {
     	result.ifPresent(inputs->
     	{
     		String parkinglotName=MyEmployee.getOrgAffiliation();
+    		//parkinglotName= parkinglotName.toLowerCase();
     		ServerResponse<Parkinglot>ParkinglotRes= RequestsSender.GetParkinglot(parkinglotName);
     		Parkinglot parkinglot=ParkinglotRes.GetResponseObject();
     		ParkinglotStatus status=parkinglot.getStatus();
@@ -116,9 +113,22 @@ public class ParkingLotWorkerEnteryController extends EmployeeBaseController {
 	    		DialogBuilder.AlertDialog(AlertType.ERROR, "", ConstsEmployees.ParkingLotIsDisabled, null,false);
     		else 
     		{
-    			//ParkingSpot();
-    			//ChangeParkingSpotStatusRequest changeParkingSpotStatusRequest= new ChangeParkingSpotStatusRequest(inputs.get(0),parkinglotName,ParkingSpotStatus.Disabled);
-    			//DialogBuilder.AlertDialog(AlertType.INFORMATION, "", ConstsEmployees.ParkingSpotDisabled, null,false);
+    			boolean temp1= Pattern.matches("[0-9]+", inputs.get(0)) && parkinglot.getWidth() >= Integer.parseInt(inputs.get(0)) && 0<Integer.parseInt(inputs.get(0));
+    			boolean temp2= Pattern.matches("[0-9]+", inputs.get(1)) && parkinglot.getHeight() >= Integer.parseInt(inputs.get(1)) && 0<Integer.parseInt(inputs.get(1));
+    			boolean temp3= Pattern.matches("[0-9]+", inputs.get(2)) && parkinglot.getDepth() >= Integer.parseInt(inputs.get(2)) && 0<Integer.parseInt(inputs.get(2));
+    			if (temp1 && temp2 && temp3) 
+    			{
+	    			ParkingSpot parkingspot= new ParkingSpot(Integer.parseInt(inputs.get(0)),Integer.parseInt(inputs.get(1)),Integer.parseInt(inputs.get(2)));
+	    			ChangeParkingSpotStatusRequest changeParkingSpotStatusRequest= new ChangeParkingSpotStatusRequest(parkingspot,parkinglotName,ParkingSpotStatus.Disabled);
+		    		ServerResponse<ChangeParkingSpotStatusRequest> ChangeParkingSpotStatusRes= RequestsSender.ChangeParkingSpotStatus(changeParkingSpotStatusRequest);
+		    		if(ChangeParkingSpotStatusRes.GetRequestResult().equals(RequestResult.Succeed))
+		    			DialogBuilder.AlertDialog(AlertType.INFORMATION, "", ConstsEmployees.ParkingSpotDisabled, null,false);
+		    		else if(ChangeParkingSpotStatusRes.GetRequestResult().equals(RequestResult.NotFound))
+		    			DialogBuilder.AlertDialog(AlertType.ERROR, "", ConstsEmployees.ParkingSpotAlreadyDisabled, null,false);
+		    		else DialogBuilder.AlertDialog(AlertType.ERROR, "", Consts.ServerProblemMessage, null,false);
+
+    			}
+    			else DialogBuilder.AlertDialog(AlertType.ERROR, "", ConstsEmployees.FieldWrong, null,false);
     		}
     	});
     }
@@ -129,10 +139,7 @@ public class ParkingLotWorkerEnteryController extends EmployeeBaseController {
     	if (result.equals("OK"))
     	{
     		String parkinglotName=MyEmployee.getOrgAffiliation();
-    		
-    		//ServerResponse<ArrayList<Parkinglot>> ParkinglotsRes= RequestsSender.GetAllParkinglots();
-    		//ArrayList<Parkinglot> Parkinglots = ParkinglotsRes.GetResponseObject();
-    		
+    		//parkinglotName= parkinglotName.toLowerCase();
     		ServerResponse<Parkinglot>ParkinglotRes= RequestsSender.GetParkinglot(parkinglotName);
     		Parkinglot parkinglot=ParkinglotRes.GetResponseObject();
     		ParkinglotStatus status=parkinglot.getStatus();
@@ -158,7 +165,38 @@ public class ParkingLotWorkerEnteryController extends EmployeeBaseController {
     @FXML
     void OnUndisableParkingSpot(ActionEvent event)
     {
-    	
+    	Dialog<List<String>> dialog = DialogBuilder.InputsDialog(Consts.FillRequest, DisableParkingSpotInputs, Consts.Submit);
+    	Optional<List<String>> result = dialog.showAndWait();
+    	result.ifPresent(inputs->
+    	{
+    		String parkinglotName=MyEmployee.getOrgAffiliation();
+    		//parkinglotName= parkinglotName.toLowerCase();
+    		ServerResponse<Parkinglot>ParkinglotRes= RequestsSender.GetParkinglot(parkinglotName);
+    		Parkinglot parkinglot=ParkinglotRes.GetResponseObject();
+    		ParkinglotStatus status=parkinglot.getStatus();
+    		if(status.equals(ParkinglotStatus.OutOfOrder))
+	    		DialogBuilder.AlertDialog(AlertType.ERROR, "", ConstsEmployees.ParkingLotIsDisabled, null,false);
+    		else 
+    		{
+
+    			boolean temp1= Pattern.matches("[0-9]+", inputs.get(0)) && parkinglot.getWidth() >= Integer.parseInt(inputs.get(0)) && 0<Integer.parseInt(inputs.get(0));
+    			boolean temp2= Pattern.matches("[0-9]+", inputs.get(1)) && parkinglot.getHeight() >= Integer.parseInt(inputs.get(1)) && 0<Integer.parseInt(inputs.get(1));
+    			boolean temp3= Pattern.matches("[0-9]+", inputs.get(2)) && parkinglot.getDepth() >= Integer.parseInt(inputs.get(2)) && 0<Integer.parseInt(inputs.get(2));
+    			if (temp1 && temp2 && temp3) 
+    			{
+	    			ParkingSpot parkingspot= new ParkingSpot(Integer.parseInt(inputs.get(0)),Integer.parseInt(inputs.get(1)),Integer.parseInt(inputs.get(2)));
+	        		ChangeParkingSpotStatusRequest changeParkingSpotStatusRequest= new ChangeParkingSpotStatusRequest(parkingspot,parkinglotName,ParkingSpotStatus.Active);
+	        		ServerResponse<ChangeParkingSpotStatusRequest> ChangeParkingSpotStatusRes= RequestsSender.ChangeParkingSpotStatus(changeParkingSpotStatusRequest);
+	        		if(ChangeParkingSpotStatusRes.GetRequestResult().equals(RequestResult.Succeed))
+	        			DialogBuilder.AlertDialog(AlertType.INFORMATION, "", ConstsEmployees.parkingSpotInabled, null,false);
+	        		else if(ChangeParkingSpotStatusRes.GetRequestResult().equals(RequestResult.NotFound))
+					DialogBuilder.AlertDialog(AlertType.ERROR, "", ConstsEmployees.ParkingSpotAlreadyEnabled, null,false);
+	        		else DialogBuilder.AlertDialog(AlertType.ERROR, "", Consts.ServerProblemMessage, null,false);
+    			}
+        		else DialogBuilder.AlertDialog(AlertType.ERROR, "", ConstsEmployees.FieldWrong, null,false);
+    			
+    		}
+    	});
     }
 
     @FXML

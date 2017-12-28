@@ -19,13 +19,10 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 
-public class ReserveParkingSpotController extends EmployeeBaseController
+public class ReserveParkingSpotInLocalParkingLotController extends EmployeeBaseController
 {
     @FXML // fx:id="carNumber"
     private TextField carNumber; // Value injected by FXMLLoader
-    
-    @FXML // fx:id="parkingLot"
-    private TextField parkingLot; // Value injected by FXMLLoader
     
     @FXML // fx:id="arrivalHour"
     private TextField arrivalHour; // Value injected by FXMLLoader
@@ -67,7 +64,6 @@ public class ReserveParkingSpotController extends EmployeeBaseController
 		{
 		    return;
 		}
-		
 		    ServerResponse<Reservation> OrderInAdvanceResponse = RequestsSender.Reservation(reservation);
 		    ServerResponse<Customer> AddCustomerIfNotExist = RequestsSender.AddCustomerIfNotExists(customer);
 		    
@@ -103,7 +99,7 @@ public class ReserveParkingSpotController extends EmployeeBaseController
 	    return false;
 	}
 	
-	reservation = new Reservation(ReservationType.Employee, customerId.getText(), parkingLot.getText(),
+	reservation = new Reservation(ReservationType.Employee, customerId.getText(), MyEmployee.getOrgAffiliation(),
 		carNumber.getText(), arrivalDate.getValue(), leavingDate.getValue(),
 		LocalTime.parse(arrivalHour.getText()), LocalTime.parse(leavingHour.getText()),
 		ReservationStatus.NotStarted);
