@@ -71,7 +71,7 @@ public class Tests
 	    AddRealTimeParkingRequest request = new AddRealTimeParkingRequest("Test lot", LocalDateTime.now(),
 		    LocalDateTime.now().plusHours(5), "333333", true);
 	    
-	    serverResponse = RequestsSender.TryInsertGuestCar(request);
+	    serverResponse = RequestsSender.TryInsertCar(request);
 	    
 	    CPS_Tracer.TraceInformation("server respnse after trying to add car: \n" + serverResponse);
 	}

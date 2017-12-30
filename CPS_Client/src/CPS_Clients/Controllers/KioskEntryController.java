@@ -1,17 +1,26 @@
 package CPS_Clients.Controllers;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import CPS_Utilities.Consts;
 import CPS_Utilities.DialogBuilder;
-import CPS_Utilities.GuestIdentifyingInformation;
-import CPS_Utilities.MemberIdentifyingInformation;
+import clientServerCPS.RequestResult;
+import clientServerCPS.RequestsSender;
+import clientServerCPS.ServerResponse;
+import entities.AddRealTimeParkingRequest;
+import entities.FullMembership;
+import entities.PartialMembership;
+import entities.Reservation;
+import entities.enums.ReservationStatus;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Dialog;
@@ -23,11 +32,11 @@ public class KioskEntryController extends BaseController
     
     private ArrayList<String> MemberInputs = new ArrayList<>();
     
-    private MemberIdentifyingInformation memberIdentifyingInformation;
+    private ArrayList<String> subscriptionTypes = new ArrayList<>();
     
-    private GuestIdentifyingInformation guestIdentifyingInformation;
+    private String parkinglot;
     
-    public KioskEntryController()
+    public KioskEntryController() throws IOException
     {
 	super();
 	
@@ -36,19 +45,19 @@ public class KioskEntryController extends BaseController
 	
 	MemberInputs.add("Subscription id:");
 	MemberInputs.add("Car number:");
+	
+	subscriptionTypes.add(Consts.FullMembership);
+	subscriptionTypes.add(Consts.PartialMembership);
+	
+	parkinglot = new BufferedReader(
+		new InputStreamReader(getClass().getResourceAsStream(Consts.ParkinglotNamePathFromController)))
+			.readLine();
     }
     
     @FXML
     void OnGuestEntry(ActionEvent event) throws IOException, URISyntaxException
     {
-	if (!IsParkinglotFull())
-	{
-	    myControllersManager.SetScene(Consts.GuestEntry, Consts.KioskEntry);
-	}
-	else
-	{
-	    DialogBuilder.AlertDialog(AlertType.ERROR, "error", "We are sorry, the parkinglot is full.", null, false);
-	}
+	myControllersManager.SetScene(Consts.GuestEntry, Consts.KioskEntry);
     }
     
     @FXML
@@ -60,16 +69,60 @@ public class KioskEntryController extends BaseController
 	
 	result.ifPresent(inputs ->
 	{
-	    guestIdentifyingInformation = new GuestIdentifyingInformation(inputs.get(0), inputs.get(1));
+	    ServerResponse<Reservation> reservationResponse = RequestsSender.GetReservation(inputs.get(0));
 	    
-	    boolean isOrderExist = CheckAndSubmitPreOrder(guestIdentifyingInformation);
+	    Reservation reservation = reservationResponse.GetResponseObject();
 	    
-	    if (isOrderExist)
+	    if (reservationResponse.GetRequestResult().equals(RequestResult.Failed))
 	    {
-		DialogBuilder.AlertDialog(AlertType.INFORMATION, Consts.Approved, Consts.LeaveTheCarMessage, null,
+		DialogBuilder.AlertDialog(AlertType.ERROR, null, Consts.ServerProblemMessage, null, false);
+		return;
+	    }
+	    
+	    if (reservationResponse.GetRequestResult().equals(RequestResult.NotFound)
+		    || !inputs.get(1).equals(reservationResponse.GetResponseObject().getCarNumber())
+		    || !reservationResponse.GetResponseObject().getReservationStatus()
+			    .equals(ReservationStatus.NotStarted))
+	    {
+		DialogBuilder.AlertDialog(AlertType.ERROR, null, "No reservation with these details was found.", null,
 			false);
+		return;
+	    }
+	    
+	    if (reservationResponse.GetRequestResult().equals(RequestResult.Succeed))
+	    {
+		if (!reservation.getArrivalDate().equals(LocalDate.now())
+			|| !reservation.getArrivalHour().isAfter(LocalTime.now()))
+		{
+		    DialogBuilder.AlertDialog(AlertType.ERROR, null,
+			    "You have a reservation, but not for now. \nYou can check your reservations details on the main page.",
+			    null, false);
+		    return;
+		}
+	    }
+	    
+	    if (reservationResponse.GetRequestResult().equals(RequestResult.Succeed)
+		    && inputs.get(1).equals(reservationResponse.GetResponseObject().getCarNumber()))
+	    {
+		AddRealTimeParkingRequest request = new AddRealTimeParkingRequest(parkinglot, LocalDateTime.now(),
+			LocalDateTime.of(reservation.getLeavingDate(), reservation.getLeavingHour()),
+			reservation.getCarNumber(), false);
 		
-		myControllersManager.SetScene(Consts.Kiosk, null);
+		ServerResponse<AddRealTimeParkingRequest> insertResponse = RequestsSender.TryInsertCar(request);
+		
+		if (insertResponse.GetRequestResult().equals(RequestResult.Succeed))
+		{
+		    
+		    DialogBuilder.AlertDialog(AlertType.INFORMATION, Consts.Approved, Consts.LeaveTheCarMessage, null,
+			    false);
+		    
+		    myControllersManager.GoToHomePage(Consts.KioskEntry);
+		}
+		else
+		{
+		    DialogBuilder.AlertDialog(AlertType.ERROR, null, Consts.ServerProblemMessage, null, false);
+		    return;
+		}
 	    }
 	});
     }
@@ -77,24 +130,22 @@ public class KioskEntryController extends BaseController
     @FXML
     void OnMemberEntry(ActionEvent event)
     {
-	Dialog<List<String>> dialog = DialogBuilder.InputsDialog(Consts.FillRequest, MemberInputs, Consts.Submit);
+	String buttonResult = DialogBuilder.AlertDialog(AlertType.NONE, "Register", "Please choose subscription type",
+		subscriptionTypes, true);
 	
-	Optional<List<String>> result = dialog.showAndWait();
-	
-	result.ifPresent(inputs ->
+	switch (buttonResult)
 	{
-	    memberIdentifyingInformation = new MemberIdentifyingInformation(inputs.get(0), inputs.get(1));
-	    
-	    boolean isMemberLegal = CheckAndSubmitMember(memberIdentifyingInformation);
-	    
-	    if (isMemberLegal)
-	    {
-		DialogBuilder.AlertDialog(AlertType.INFORMATION, Consts.Approved, Consts.LeaveTheCarMessage, null,
-			false);
-		
-		myControllersManager.SetScene(Consts.Kiosk, null);
-	    }
-	});
+	case Consts.FullMembership:
+	    HandleFullMember();
+	    break;
+	
+	case Consts.PartialMembership:
+	    HandlePartialMember();
+	    break;
+	
+	default:
+	    break;
+	}
     }
     
     @FXML
@@ -103,30 +154,146 @@ public class KioskEntryController extends BaseController
 	myControllersManager.Back(PreviousScene, Consts.KioskEntry);
     }
     
-    private boolean CheckAndSubmitPreOrder(GuestIdentifyingInformation guestIdentifyingInformation)
+    private void HandleFullMember()
     {
-	// Todo:
-	// Send the obj to the server..
+	Dialog<List<String>> dialog = DialogBuilder.InputsDialog(Consts.FillRequest, MemberInputs, Consts.Submit);
 	
-	return true;
+	Optional<List<String>> result = dialog.showAndWait();
+	
+	result.ifPresent(inputs ->
+	{
+	    ServerResponse<FullMembership> fullMmembershipResponse = RequestsSender.GetFullMembership(inputs.get(0));
+	    
+	    FullMembership fullMembership = fullMmembershipResponse.GetResponseObject();
+	    
+	    if (fullMmembershipResponse.GetRequestResult().equals(RequestResult.Failed))
+	    
+	    {
+		DialogBuilder.AlertDialog(AlertType.ERROR, null, Consts.ServerProblemMessage, null, false);
+		return;
+	    }
+	    
+	    if (fullMmembershipResponse.GetRequestResult().equals(RequestResult.NotFound)
+		    || !fullMmembershipResponse.GetResponseObject().GetCarNumber().equals(inputs.get(1)))
+	    
+	    {
+		DialogBuilder.AlertDialog(AlertType.ERROR, null, "No membership with these details was found.", null,
+			false);
+		return;
+	    }
+	    
+	    if (fullMmembershipResponse.GetRequestResult().equals(RequestResult.Succeed)
+		    && LocalDate.now().isAfter(fullMembership.getExpiryDate()))
+	    {
+		DialogBuilder.AlertDialog(AlertType.ERROR, null,
+			"Your membership is expired. \nYou can renew on the main page -> Monitor and controll.", null,
+			false);
+		return;
+	    }
+	    
+	    if (fullMmembershipResponse.GetRequestResult().equals(RequestResult.Succeed))
+	    {
+		LocalDateTime expiry = LocalDateTime.of(fullMembership.getExpiryDate(), LocalTime.parse("00:00"));
+		
+		LocalDateTime parkingExitDateTime = LocalDateTime.now().plusDays(14).isAfter(expiry) ? expiry
+			: LocalDateTime.now().plusDays(14);
+		
+		AddRealTimeParkingRequest request = new AddRealTimeParkingRequest(parkinglot, LocalDateTime.now(),
+			parkingExitDateTime, fullMembership.GetCarNumber(), false);
+		
+		ServerResponse<AddRealTimeParkingRequest> insertResponse = RequestsSender.TryInsertCar(request);
+		
+		if (insertResponse.GetRequestResult().equals(RequestResult.Succeed))
+		{
+		    
+		    DialogBuilder.AlertDialog(AlertType.INFORMATION, Consts.Approved, Consts.LeaveTheCarMessage, null,
+			    false);
+		    
+		    myControllersManager.GoToHomePage(Consts.KioskEntry);
+		}
+		else if (insertResponse.GetRequestResult().equals(RequestResult.AlredyExist))
+		{
+		    DialogBuilder.AlertDialog(AlertType.ERROR, null, "Your car is already in the parking lot.", null,
+			    false);
+		    return;
+		}
+		else
+		{
+		    DialogBuilder.AlertDialog(AlertType.ERROR, null, Consts.ServerProblemMessage, null, false);
+		    return;
+		}
+	    }
+	});
     }
     
-    private boolean CheckAndSubmitMember(MemberIdentifyingInformation memberIdentifyingInformation)
+    private void HandlePartialMember()
     {
-	// Todo:
-	// Send the obj to the server..
+	Dialog<List<String>> dialog = DialogBuilder.InputsDialog(Consts.FillRequest, MemberInputs, Consts.Submit);
 	
-	return true;
-    }
-    
-    private boolean IsParkinglotFull() throws IOException, URISyntaxException
-    {
-	// Todo:
-	// check if parking is full
+	Optional<List<String>> result = dialog.showAndWait();
 	
-	String myParkinglotName = new String(
-		Files.readAllBytes(Paths.get(getClass().getResource(Consts.ParkinglotNamePathFromController).toURI())));
-	
-	return false;
+	result.ifPresent(inputs ->
+	{
+	    ServerResponse<PartialMembership> partialMembershipResponse = RequestsSender
+		    .GetPartialMembership(inputs.get(0));
+	    
+	    String carNumber = inputs.get(1);
+	    
+	    PartialMembership partialMembership = partialMembershipResponse.GetResponseObject();
+	    
+	    if (partialMembershipResponse.GetRequestResult().equals(RequestResult.Failed))
+	    
+	    {
+		DialogBuilder.AlertDialog(AlertType.ERROR, null, Consts.ServerProblemMessage, null, false);
+		return;
+	    }
+	    
+	    if (partialMembershipResponse.GetRequestResult().equals(RequestResult.NotFound)
+		    || (partialMembershipResponse.GetRequestResult().equals(RequestResult.Succeed)
+			    && !partialMembership.GetCarList().contains(carNumber)))
+	    
+	    {
+		DialogBuilder.AlertDialog(AlertType.ERROR, null, "No membership with these details was found.", null,
+			false);
+		return;
+	    }
+	    
+	    if (partialMembershipResponse.GetRequestResult().equals(RequestResult.Succeed)
+		    && LocalDate.now().isAfter(partialMembership.getExpiryDate()))
+	    {
+		DialogBuilder.AlertDialog(AlertType.ERROR, null,
+			"Your membership is expired. \nYou can renew on the main page -> Monitor and controll.", null,
+			false);
+		return;
+	    }
+	    
+	    if (partialMembershipResponse.GetRequestResult().equals(RequestResult.Succeed))
+	    {
+		AddRealTimeParkingRequest request = new AddRealTimeParkingRequest(parkinglot, LocalDateTime.now(),
+			LocalDateTime.of(LocalDate.now(), partialMembership.GetExitTime()), inputs.get(1), false);
+		
+		ServerResponse<AddRealTimeParkingRequest> insertResponse = RequestsSender.TryInsertCar(request);
+		
+		if (insertResponse.GetRequestResult().equals(RequestResult.Succeed))
+		{
+		    
+		    DialogBuilder.AlertDialog(AlertType.INFORMATION, Consts.Approved, Consts.LeaveTheCarMessage, null,
+			    false);
+		    
+		    myControllersManager.GoToHomePage(Consts.KioskEntry);
+		}
+		else if (insertResponse.GetRequestResult().equals(RequestResult.AlredyExist))
+		{
+		    DialogBuilder.AlertDialog(AlertType.ERROR, null, "Your car is already in the parking lot.", null,
+			    false);
+		    return;
+		}
+		else
+		{
+		    DialogBuilder.AlertDialog(AlertType.ERROR, null, Consts.ServerProblemMessage, null, false);
+		    return;
+		}
+	    }
+	});
     }
 }

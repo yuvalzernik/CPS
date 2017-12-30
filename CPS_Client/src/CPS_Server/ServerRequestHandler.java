@@ -70,7 +70,7 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	myRobot = new CPSRobot(mySqlConnection, this);
     }
     
-    public void HandleRequestAsync(Socket socket)
+    public static void HandleRequestAsync(Socket socket)
     {
 	CompletableFuture.runAsync(() ->
 	{
@@ -80,7 +80,7 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	    {
 		ClientRequest clientRequest = (ClientRequest) inputStream.readObject();
 		
-		outputStream.writeObject(ExtractAndApplyRequest(clientRequest));
+		outputStream.writeObject(new ServerRequestHandler().ExtractAndApplyRequest(clientRequest));
 	    }
 	    catch (Exception e)
 	    {
