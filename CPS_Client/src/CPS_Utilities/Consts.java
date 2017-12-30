@@ -66,6 +66,10 @@ public class Consts
     
     public static final String MonitorAndControllNotMember ="Monitor And Controll Not Member";
     
-    public static final String MonitorAndControllNotMemberFxmlPath ="Fxmls/MonitorAndControllNotMember.fxml";    
+    public static final String MonitorAndControllNotMemberFxmlPath ="Fxmls/MonitorAndControllNotMember.fxml";
     
+    public static final String ComplaintRegistered = "Your complaint has been successfully recorded";
+    
+    public static final String SubscriptionRenewal  = "Thank you for renewal your subscription";
+
 }

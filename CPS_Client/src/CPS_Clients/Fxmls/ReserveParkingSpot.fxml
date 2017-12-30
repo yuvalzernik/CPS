@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.web.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="444.0" prefWidth="427.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CPS_Clients.Controllers.Employee.ReserveParkingSpotController">
+   <children>
+      <Label layoutX="138.0" layoutY="15.0" text="order in advance">
+         <font>
+            <Font name="AR DELANEY" size="31.0" />
+         </font>
+      </Label>
+      <Label layoutX="30.0" layoutY="240.0" text="Arrival Hour" />
+      <Label layoutX="30.0" layoutY="200.0" text="Arrival Date" />
+      <Label layoutX="30.0" layoutY="160.0" text="Parkig Lot" />
+      <Label layoutX="30.0" layoutY="120.0" text="Car Number" />
+      <Label layoutX="34.0" layoutY="80.0" text="ID" />
+      <Label layoutX="30.0" layoutY="280.0" text="Leaving Date" />
+      <Label layoutX="30.0" layoutY="320.0" text="Leaving Hour" />
+      <Label layoutX="30.0" layoutY="360.0" prefHeight="21.0" prefWidth="51.0" text="Email" />
+      <Button layoutX="332.0" layoutY="395.0" mnemonicParsing="false" onAction="#OnSubmit" text="Submit" />
+      <ImageView fitHeight="37.0" fitWidth="102.0" layoutX="22.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../../../Desktop/לימודים/סמסטר%20ה/פרויקט/לוגו/3.gif" />
+         </image>
+      </ImageView>
+      <TextField fx:id="carNumber" layoutX="139.0" layoutY="116.0" />
+      <TextField fx:id="parkingLot" layoutX="139.0" layoutY="156.0" />
+      <TextField fx:id="arrivalHour" layoutX="139.0" layoutY="236.0" promptText="HH:MM" />
+      <TextField fx:id="leavingHour" layoutX="139.0" layoutY="316.0" promptText="HH:MM" />
+      <TextField fx:id="email" layoutX="139.0" layoutY="356.0" />
+      <TextField fx:id="customerId" layoutX="139.0" layoutY="75.0" />
+      <Button layoutX="16.0" layoutY="408.0" mnemonicParsing="false" onAction="#OnBack" text="Back" />
+      <DatePicker fx:id="arrivalDate" layoutX="138.0" layoutY="196.0" prefHeight="25.0" prefWidth="149.0" />
+      <DatePicker fx:id="leavingDate" layoutX="139.0" layoutY="276.0" prefHeight="25.0" prefWidth="149.0" />
+   </children>
+</AnchorPane>

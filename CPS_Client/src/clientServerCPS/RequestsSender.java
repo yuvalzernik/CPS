@@ -8,15 +8,15 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
+import entities.CloseComplaintRequest;
 import CPS_Utilities.Consts;
 import CPS_Utilities.DialogBuilder;
 import CPS_Utilities.LoginIdentification;
+import entities.AddRealTimeParkingRequest;
 import entities.ChangeParkingSpotStatusRequest;
 import entities.ChangeParkinglotStatusRequest;
 import entities.ChangeRatesRequest;
 import entities.ChangeRatesResponse;
-import entities.CloseComplaintRequest;
 import entities.Complaint;
 import entities.Customer;
 import entities.Employee;
@@ -24,6 +24,7 @@ import entities.FullMembership;
 import entities.ParkingSpot;
 import entities.Parkinglot;
 import entities.PartialMembership;
+import entities.RemoveCarRequest;
 import entities.Reservation;
 import javafx.scene.control.Dialog;
 
@@ -40,7 +41,7 @@ public class RequestsSender
 	Dialog<List<String>> dialog = DialogBuilder.InputsDialog("Set server's IP", ip, Consts.Submit);
 	
 	dialog.setHeaderText("Add server ip or Cancel to use local host");
-			
+	
 	Optional<List<String>> result = dialog.showAndWait();
 	
 	result.ifPresent(inputs ->
@@ -48,13 +49,13 @@ public class RequestsSender
 	    serverIP = inputs.get(0);
 	});
 	
-	if(!result.isPresent())
+	if (!result.isPresent())
 	{
 	    serverIP = "127.0.0.1";
 	}
     }
     
-    public RequestsSender(String ip) 
+    public RequestsSender(String ip)
     {
 	serverIP = ip;
     }
@@ -77,6 +78,7 @@ public class RequestsSender
 	}
 	catch (Exception e)
 	{
+	    e.printStackTrace();
 	    return new ServerResponse<T>(RequestResult.Failed, null, "Internal server error");
 	}
     }
@@ -141,7 +143,8 @@ public class RequestsSender
 	return SendRequest(parkinglotName, ClientServerConsts.GetParkingLot);
     }
     
-    public static ServerResponse<ChangeParkinglotStatusRequest> ChangeParkinglotStatus(ChangeParkinglotStatusRequest changeParkinglotStatusRequest)
+    public static ServerResponse<ChangeParkinglotStatusRequest> ChangeParkinglotStatus(
+	    ChangeParkinglotStatusRequest changeParkinglotStatusRequest)
     {
 	return SendRequest(changeParkinglotStatusRequest, ClientServerConsts.ChangeParkinglotStatus);
     }
@@ -176,7 +179,8 @@ public class RequestsSender
 	return SendRequest(null, ClientServerConsts.GetAllChangeRatesRequests);
     }
     
-    public static ServerResponse<ChangeParkingSpotStatusRequest> ChangeParkingSpotStatus(ChangeParkingSpotStatusRequest changeParkingSpotStatusRequest)
+    public static ServerResponse<ChangeParkingSpotStatusRequest> ChangeParkingSpotStatus(
+	    ChangeParkingSpotStatusRequest changeParkingSpotStatusRequest)
     {
 	return SendRequest(changeParkingSpotStatusRequest, ClientServerConsts.ChangeParkingSpotStatus);
     }
@@ -184,5 +188,25 @@ public class RequestsSender
     public static ServerResponse<ArrayList<ParkingSpot>> GetAllDisabledParkingSpots()
     {
 	return SendRequest(null, ClientServerConsts.GetAllDisabledParkingSpots);
+    }
+    
+    public static ServerResponse<FullMembership> ChangeExpireFullMembership(FullMembership fullMembership)
+    {
+	return SendRequest(fullMembership, ClientServerConsts.ChangeExpireFullMembership);
+    }
+    
+    public static ServerResponse<PartialMembership> ChangeExpirePartialMembership(PartialMembership partialMembership)
+    {
+	return SendRequest(partialMembership, ClientServerConsts.ChangeExpirePartialMembership);
+    }
+    
+    public static ServerResponse<AddRealTimeParkingRequest> TryInsertGuestCar(AddRealTimeParkingRequest addRealTimeParkingRequest)
+    {
+	return SendRequest(addRealTimeParkingRequest, ClientServerConsts.TryInsertGuestCar);
+    }
+    
+    public static ServerResponse<RemoveCarRequest> RemoveCar(RemoveCarRequest removeCarRequest)
+    {
+	return SendRequest(removeCarRequest, ClientServerConsts.RemoveCar);
     }
 }

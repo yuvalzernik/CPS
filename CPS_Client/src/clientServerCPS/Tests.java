@@ -1,6 +1,7 @@
 package clientServerCPS;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Random;
@@ -8,6 +9,7 @@ import java.util.function.Function;
 
 import CPS_Utilities.CPS_Tracer;
 import CPS_Utilities.LoginIdentification;
+import entities.AddRealTimeParkingRequest;
 import entities.ChangeParkingSpotStatusRequest;
 import entities.ChangeParkinglotStatusRequest;
 import entities.ChangeRatesRequest;
@@ -20,6 +22,7 @@ import entities.FullMembership;
 import entities.ParkingSpot;
 import entities.Parkinglot;
 import entities.PartialMembership;
+import entities.RemoveCarRequest;
 import entities.Reservation;
 import entities.enums.ParkingSpotStatus;
 import entities.enums.ParkinglotStatus;
@@ -38,20 +41,46 @@ public class Tests
 	    // FullMembershipTest() PartialMembershipTest() ComplaintTest()
 	    // CustomerTest() ReservationTest() ChangeRatesTest()
 	    // EmployeeTest() ParkinglotTest() DisabledParkingSpotsTest()
+	    // GuestEntryTest()
+	    for (int i = 0; i < 1; i++)
+	    {
+		if (EntryAndRemoveDynamicTest())
+		{
+		    System.out.println("Test Succeed");
+		}
+		else
+		{
+		    System.out.println("Test Failed");
+		}
+	    }
 	    
-	    if (DisabledParkingSpotsTest())
-	    {
-		System.out.println("Test Succeed");
-	    }
-	    else
-	    {
-		System.out.println("Test Failed");
-	    }
 	}
 	catch (Exception e)
 	{
 	    System.out.println("Failed with exception: " + e);
+	    e.printStackTrace();
 	}
+    }
+    
+    private static boolean EntryAndRemoveDynamicTest()
+    {
+	ServerResponse<AddRealTimeParkingRequest> serverResponse = null;
+	
+	for (int i = 0; i < 1; i++)
+	{
+	    AddRealTimeParkingRequest request = new AddRealTimeParkingRequest("Test lot", LocalDateTime.now(),
+		    LocalDateTime.now().plusHours(5), "333333", true);
+	    
+	    serverResponse = RequestsSender.TryInsertGuestCar(request);
+	    
+	    CPS_Tracer.TraceInformation("server respnse after trying to add car: \n" + serverResponse);
+	}
+	
+	if (!serverResponse.GetRequestResult().equals(RequestResult.Succeed))
+	{
+	    return false;
+	}
+	return true;
     }
     
     private static boolean DisabledParkingSpotsTest()
@@ -120,6 +149,9 @@ public class Tests
 	ServerResponse<Complaint> serverResponse = RequestsSender.AddComplaint(complaint);
 	
 	ServerResponse<ArrayList<Complaint>> serverGetResponse = RequestsSender.GetAllActiveComplaints();
+	
+	CPS_Tracer.TraceInformation(serverGetResponse.toString());
+	;
 	
 	boolean isMyComplaintThere = false;
 	
@@ -211,8 +243,8 @@ public class Tests
     {
 	String id = Integer.toString(new Random().nextInt(1000000) + 3000000);
 	
-	Reservation reservation = new Reservation(ReservationType.Web, id, "Testlot", "333333", LocalDate.now(),
-		LocalDate.now(), LocalTime.parse("11:11"), LocalTime.parse("11:11"), ReservationStatus.NotStarted);
+	Reservation reservation = new Reservation(ReservationType.Web, id, "Test lot", "333333", LocalDate.now(),
+		LocalDate.now().plusDays(1), LocalTime.parse("11:11"), LocalTime.parse("11:11"), ReservationStatus.NotStarted);
 	
 	ServerResponse<Reservation> serverResponse = RequestsSender.Reservation(reservation);
 	
@@ -262,8 +294,8 @@ public class Tests
 	carList.add("444444444");
 	carList.add("555555555");
 	
-	PartialMembership partialMembership = new PartialMembership(id, LocalDate.now(), LocalDate.now(), "testLot",
-		carList, LocalTime.now());
+	PartialMembership partialMembership = new PartialMembership(id, LocalDate.now(), LocalDate.now().plusDays(20),
+		"Test lot", carList, LocalTime.now());
 	
 	ServerResponse<PartialMembership> serverResponse = RequestsSender.RegisterPartialMembership(partialMembership);
 	

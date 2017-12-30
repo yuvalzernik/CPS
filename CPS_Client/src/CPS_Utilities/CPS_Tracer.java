@@ -22,7 +22,7 @@ public class CPS_Tracer
 	System.out.println();
     }
     
-    public static void TraceError(String message, Exception e)
+    public static void TraceError(String message, Throwable e)
     {
 	System.out.println();
 	System.out.println("=========================================================");

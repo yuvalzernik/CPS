@@ -1,7 +1,6 @@
 package entities;
 
 import java.io.Serializable;
-
 import entities.enums.EmployeeType;
 
 public class Employee implements Serializable

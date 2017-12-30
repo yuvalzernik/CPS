@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane prefHeight="288.0" prefWidth="532.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="CPS_Clients.Controllers.Employee.ManageRequestRateChangeController">
+   <children>
+      <TableView fx:id="myTable" onMouseClicked="#OnMouseClicked" prefHeight="288.0" prefWidth="532.0">
+        <columns>
+          <TableColumn fx:id="parkingLot" prefWidth="202.0" text="Parking Lot" />
+          <TableColumn fx:id="newGuestPrice" prefWidth="164.0" text="New guest price" />
+            <TableColumn fx:id="newInAdvancePrice" prefWidth="165.0" text="New in advance price" />
+        </columns>
+      </TableView>
+   </children>
+</AnchorPane>

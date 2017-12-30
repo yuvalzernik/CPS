@@ -23,6 +23,25 @@ public class ConstsEmployees {
 	 public static final String ParkingLotSizeError = "Parking lot width should be between 4-8";
 	 public static final String ParkingLotWasAlreadyinitialized ="Parking Lot Was already initialized";
 	 public static final String RequestSent = "Your request was sent to the CEO";
-	 public static final String RateChange = "Rate Change";
-	 public static final String RateChangeFxmlPath = "Fxmls/RateChange.fxml";
+	 public static final String ManageRequestRateChange = "Rate Change";
+	 public static final String ManageRequestRateChangeFxmlPath = "Fxmls/ManageRequestRateChange.fxml";
+	 public static final String RequestDoNotSent = "Your request was not sent to the CEO, Please try again later";
+	 public static final String ReservationSubmitted = "Reservation has been made";
+	 public static final String ReserveParkingSpot = "Reserve Parking Spot";
+	 public static final String ReserveParkingSpotFxmlPath = "Fxmls/ReserveParkingSpot.fxml";
+	 public static final String ErrorPleaseTryAgainLater = "Error Please Try Again Later";
+	 public static final String ConfirmParkingLotUnDisabled =  "Are you sure you want to inable this parking lot?";
+	 public static final String ParkingLotIsInabled = "Parking lot was enabled";
+	 public static final String AlreadyDisabled = "Parking lot Was Already Disabled";
+     public static final String Alreadyinabled = "Parking lot was already enabled";
+     public static final String ParkingLotIsDisabled = "Sorry, Parking Lot is disabled, please inable it and try again";
+	 public static final String FieldWrong = "One field Or More is Wrong";
+	 public static final String parkingSpotInabled= "Parking spot was enabled";
+   	 public static final String ParkingSpotAlreadyEnabled = "Parking spot was already enabled"; 
+   	 public static final String ParkingSpotAlreadyDisabled = "Parking spot was already disabled";
+	 public static final String ParkingLotNotFound = "Parking Lot Not Found";
+	 public static final String  ReserveParkingSpotInLocalParkingLot = "Reserve Parking Spot In Local Parking Lot";
+	 public static final String  ReserveParkingSpotInLocalParkingLotFxmlPath = "Fxmls/ReserveParkingSpotInLocalParkingLot.fxml";; 
+
+	    
 }

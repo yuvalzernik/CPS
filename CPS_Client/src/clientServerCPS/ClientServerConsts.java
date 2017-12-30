@@ -49,4 +49,12 @@ public class ClientServerConsts
     public static final String ChangeParkingSpotStatus = "ChangeParkingSpotStatus";
     
     public static final String GetAllDisabledParkingSpots = "GetAllDisabledParkingSpots";
+    
+    public static final String ChangeExpireFullMembership = "ChangeExpireFullMembership";
+    
+    public static final String ChangeExpirePartialMembership = "ChangeExpirePartialMembership";
+    
+    public static final String TryInsertGuestCar = "TryInsertGuestCar";
+    
+    public static final String RemoveCar = "RemoveCar";
 }
