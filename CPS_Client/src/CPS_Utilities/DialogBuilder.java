@@ -14,6 +14,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.GridPane;
+import javafx.stage.StageStyle;
 
 public class DialogBuilder
 {
@@ -35,6 +36,8 @@ public class DialogBuilder
     {
 	Dialog<List<String>> dialog = new Dialog<>();
 	dialog.setTitle(dialogTitle);
+	
+	dialog.getDialogPane().getStylesheets().add(DialogBuilder.class.getResource("..\\CPS_Clients\\style.css").toExternalForm());
 	
 	// Set the button types
 	ButtonType submit = new ButtonType(buttonLabel, ButtonData.OK_DONE);
@@ -78,6 +81,8 @@ public class DialogBuilder
 	
 	alert.setTitle(title);
 	alert.setHeaderText(header);
+	
+	alert.getDialogPane().getStylesheets().add(DialogBuilder.class.getResource("..\\CPS_Clients\\style.css").toExternalForm());
 	
 	if (buttonNames != null)
 	{
