@@ -53,8 +53,11 @@ public class ClientServerConsts
     public static final String ChangeExpireFullMembership = "ChangeExpireFullMembership";
     
     public static final String ChangeExpirePartialMembership = "ChangeExpirePartialMembership";
+<<<<<<< HEAD
     
     public static final String TryInsertGuestCar = "TryInsertGuestCar";
     
     public static final String RemoveCar = "RemoveCar";
+=======
+>>>>>>> refs/heads/YuvalWeb
 }

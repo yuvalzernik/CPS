@@ -189,6 +189,7 @@ public class RequestsSender
     {
 	return SendRequest(null, ClientServerConsts.GetAllDisabledParkingSpots);
     }
+<<<<<<< HEAD
     
     public static ServerResponse<FullMembership> ChangeExpireFullMembership(FullMembership fullMembership)
     {
@@ -209,4 +210,12 @@ public class RequestsSender
     {
 	return SendRequest(removeCarRequest, ClientServerConsts.RemoveCar);
     }
+=======
+    public static ServerResponse<FullMembership> ChangeExpireFullMembership(FullMembership fullMembership) {
+    	return SendRequest(fullMembership, ClientServerConsts.ChangeExpireFullMembership);
+	}
+    public static ServerResponse<PartialMembership> ChangeExpirePartialMembership(PartialMembership partialMembership) {
+    	return SendRequest(partialMembership, ClientServerConsts.ChangeExpirePartialMembership);
+	}
+>>>>>>> refs/heads/YuvalWeb
 }
