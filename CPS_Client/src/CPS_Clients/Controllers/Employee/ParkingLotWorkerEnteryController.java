@@ -2,7 +2,7 @@ package CPS_Clients.Controllers.Employee;
 
 
 
-//import java.awt.Checkbox;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -10,8 +10,6 @@ import java.util.Optional;
 import clientServerCPS.RequestResult;
 import clientServerCPS.RequestsSender;
 import CPS_Clients.ConstsEmployees;
-import CPS_Clients.Controllers.BaseController;
-//import CPS_Clients.ConstsWeb;
 import CPS_Utilities.Consts;
 import CPS_Utilities.DialogBuilder;
 import clientServerCPS.ServerResponse;
