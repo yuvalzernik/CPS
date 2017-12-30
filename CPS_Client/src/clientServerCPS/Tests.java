@@ -22,6 +22,7 @@ import entities.FullMembership;
 import entities.ParkingSpot;
 import entities.Parkinglot;
 import entities.PartialMembership;
+import entities.RemoveCarRequest;
 import entities.Reservation;
 import entities.enums.ParkingSpotStatus;
 import entities.enums.ParkinglotStatus;
@@ -43,7 +44,7 @@ public class Tests
 	    // GuestEntryTest()
 	    for (int i = 0; i < 1; i++)
 	    {
-		if (GuestEntryTest())
+		if (EntryAndRemoveDynamicTest())
 		{
 		    System.out.println("Test Succeed");
 		}
@@ -61,14 +62,14 @@ public class Tests
 	}
     }
     
-    private static boolean GuestEntryTest()
+    private static boolean EntryAndRemoveDynamicTest()
     {
 	ServerResponse<AddRealTimeParkingRequest> serverResponse = null;
 	
 	for (int i = 0; i < 1; i++)
 	{
 	    AddRealTimeParkingRequest request = new AddRealTimeParkingRequest("Test lot", LocalDateTime.now(),
-		    LocalDateTime.now().plusHours(5), "3333333" + i);
+		    LocalDateTime.now().plusHours(5), "333333", true);
 	    
 	    serverResponse = RequestsSender.TryInsertGuestCar(request);
 	    
@@ -242,8 +243,8 @@ public class Tests
     {
 	String id = Integer.toString(new Random().nextInt(1000000) + 3000000);
 	
-	Reservation reservation = new Reservation(ReservationType.Web, id, "Testlot", "333333", LocalDate.now(),
-		LocalDate.now(), LocalTime.parse("11:11"), LocalTime.parse("11:11"), ReservationStatus.NotStarted);
+	Reservation reservation = new Reservation(ReservationType.Web, id, "Test lot", "333333", LocalDate.now(),
+		LocalDate.now().plusDays(1), LocalTime.parse("11:11"), LocalTime.parse("11:11"), ReservationStatus.NotStarted);
 	
 	ServerResponse<Reservation> serverResponse = RequestsSender.Reservation(reservation);
 	

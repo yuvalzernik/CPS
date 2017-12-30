@@ -24,6 +24,7 @@ import entities.FullMembership;
 import entities.ParkingSpot;
 import entities.Parkinglot;
 import entities.PartialMembership;
+import entities.RemoveCarRequest;
 import entities.Reservation;
 import javafx.scene.control.Dialog;
 
@@ -202,5 +203,10 @@ public class RequestsSender
     public static ServerResponse<AddRealTimeParkingRequest> TryInsertGuestCar(AddRealTimeParkingRequest addRealTimeParkingRequest)
     {
 	return SendRequest(addRealTimeParkingRequest, ClientServerConsts.TryInsertGuestCar);
+    }
+    
+    public static ServerResponse<RemoveCarRequest> RemoveCar(RemoveCarRequest removeCarRequest)
+    {
+	return SendRequest(removeCarRequest, ClientServerConsts.RemoveCar);
     }
 }

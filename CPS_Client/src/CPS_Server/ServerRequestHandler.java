@@ -35,6 +35,7 @@ import entities.FullMembership;
 import entities.ParkingSpot;
 import entities.Parkinglot;
 import entities.PartialMembership;
+import entities.RemoveCarRequest;
 import entities.Reservation;
 import entities.enums.ComplaintStatus;
 import entities.enums.EmployeeType;
@@ -47,6 +48,8 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 
 {
     Connection mySqlConnection;
+    
+    CPSRobot myRobot;
     
     public ServerRequestHandler() throws Exception
     {
@@ -63,6 +66,8 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	    CPS_Tracer.TraceError("Failed to connect to DB.", e);
 	    throw e;
 	}
+	
+	myRobot = new CPSRobot(mySqlConnection, this);
     }
     
     public void HandleRequestAsync(Socket socket)
@@ -158,7 +163,10 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	    return ChangeExpirePartialMembership((PartialMembership) clientRequest.GetSentObject());
 	
 	case ClientServerConsts.TryInsertGuestCar:
-	    return TryInsertGuestCar((AddRealTimeParkingRequest) clientRequest.GetSentObject());
+	    return TryInsertCar((AddRealTimeParkingRequest) clientRequest.GetSentObject());
+	
+	case ClientServerConsts.RemoveCar:
+	    return RemoveCar((RemoveCarRequest) clientRequest.GetSentObject());
 	
 	default:
 	    CPS_Tracer.TraceError(
@@ -286,7 +294,8 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	    {
 		LocalDateTime carExitDateTime = LocalDateTime.parse(resultSet.getString(4));
 		
-		if (carExitDateTime.isAfter(fromDateTime))
+		if (carExitDateTime.isAfter(fromDateTime) || LocalDateTime.now()
+			.isAfter(carExitDateTime)/* case car stuck */)
 		{
 		    tempCount++;
 		}
@@ -354,7 +363,7 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	    // reduce full memberships:
 	    
 	    // no need.. they signed to all of the parking lots.. we will not
-	    // have free spots..
+	    // have free spots if we reduce them..
 	    
 	    // reduce partial memberships:
 	    CPS_Tracer.TraceInformation("reduce partial memberships");
@@ -842,27 +851,60 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	
 	try
 	{
-	    String preparedStatementString = "INSERT INTO PartialMemberships(subscriptionId, customerId, startDate, expiryDate, parkinglot, carList, exitTime) VALUES(?, ?, ?, ?, ?, ?, ?)";
+	    ServerResponse<PartialMembership> serverResponse;
 	    
-	    ArrayList<String> values = new ArrayList<>();
+	    // Check if we have space for him:
 	    
-	    String subscriptionId = GenerateUniqueId(
-		    "SELECT subscriptionId FROM PartialMemberships WHERE subscriptionId = ?", 2000000);
+	    PreparedStatement preparedStatement = mySqlConnection
+		    .prepareStatement("SELECT * FROM PartialMemberships WHERE parkinglot = ?");
 	    
-	    values.add(subscriptionId);
-	    values.add(partialMembership.GetCustomerId());
-	    values.add(partialMembership.GetStartDate().toString());
-	    values.add(partialMembership.getExpiryDate().toString());
-	    values.add(partialMembership.GetParkinglot());
-	    values.add(partialMembership.CarListString());
-	    values.add(partialMembership.GetExitTime().toString());
+	    preparedStatement.setString(1, partialMembership.GetParkinglot());
 	    
-	    AddRowToTable(preparedStatementString, values);
+	    ResultSet resultSet = preparedStatement.executeQuery();
 	    
-	    partialMembership.SetSubscriptionId(subscriptionId);
+	    int totalPartialMemberships = 0;
 	    
-	    ServerResponse<PartialMembership> serverResponse = new ServerResponse<>(RequestResult.Succeed,
-		    partialMembership, null);
+	    while (resultSet.next())
+	    {
+		LocalDateTime expiryDateTime = LocalDateTime.parse(resultSet.getString(4));
+		
+		if (expiryDateTime.isAfter(LocalDateTime.now()))
+		{
+		    totalPartialMemberships++;
+		}
+	    }
+	    
+	    int parkinglotSize = GetParkinglot(partialMembership.GetParkinglot()).GetResponseObject()
+		    .getTotalSpotsNumber();
+	    
+	    if (parkinglotSize <= totalPartialMemberships)
+	    {
+		serverResponse = new ServerResponse<PartialMembership>(RequestResult.ResourceNotAvaillable,
+			partialMembership, "We dont have a place for another member");
+	    }
+	    else
+	    {
+		String preparedStatementString = "INSERT INTO PartialMemberships(subscriptionId, customerId, startDate, expiryDate, parkinglot, carList, exitTime) VALUES(?, ?, ?, ?, ?, ?, ?)";
+		
+		ArrayList<String> values = new ArrayList<>();
+		
+		String subscriptionId = GenerateUniqueId(
+			"SELECT subscriptionId FROM PartialMemberships WHERE subscriptionId = ?", 2000000);
+		
+		values.add(subscriptionId);
+		values.add(partialMembership.GetCustomerId());
+		values.add(partialMembership.GetStartDate().toString());
+		values.add(partialMembership.getExpiryDate().toString());
+		values.add(partialMembership.GetParkinglot());
+		values.add(partialMembership.CarListString());
+		values.add(partialMembership.GetExitTime().toString());
+		
+		AddRowToTable(preparedStatementString, values);
+		
+		partialMembership.SetSubscriptionId(subscriptionId);
+		
+		serverResponse = new ServerResponse<>(RequestResult.Succeed, partialMembership, null);
+	    }
 	    
 	    CPS_Tracer.TraceInformation("Server response to client after register: \n" + serverResponse);
 	    
@@ -885,28 +927,43 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	
 	try
 	{
-	    String preparedStatementString = "INSERT INTO Reservations(orderId, type, customerId, parkingLot, carNumber, startingDate, endingDate, startHour, endHour, status) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	    ServerResponse<Reservation> serverResponse;
 	    
-	    ArrayList<String> values = new ArrayList<>();
+	    // Check if there is place for the reservation:
 	    
-	    String orderId = GenerateUniqueId("SELECT orderId FROM Reservations WHERE orderId = ?", 3000000);
+	    LocalDateTime from = LocalDateTime.of(reservation.getArrivalDate(), reservation.getArrivalHour());
+	    LocalDateTime to = LocalDateTime.of(reservation.getLeavingDate(), reservation.getLeavingHour());
 	    
-	    values.add(orderId);
-	    values.add(reservation.getReservationType().toString());
-	    values.add(reservation.getCustomerId());
-	    values.add(reservation.getParkinglot());
-	    values.add(reservation.getCarNumber());
-	    values.add(reservation.getArrivalDate().toString());
-	    values.add(reservation.getLeavingDate().toString());
-	    values.add(reservation.getArrivalHour().toString());
-	    values.add(reservation.getLeavingHour().toString());
-	    values.add(reservation.getReservationStatus().toString());
-	    
-	    AddRowToTable(preparedStatementString, values);
-	    
-	    reservation.setOrderId(orderId);
-	    
-	    ServerResponse<Reservation> serverResponse = new ServerResponse<>(RequestResult.Succeed, reservation, null);
+	    if (!IsParkingSpotFree(reservation.getParkinglot(), from, to))
+	    {
+		serverResponse = new ServerResponse<Reservation>(RequestResult.ResourceNotAvaillable, reservation,
+			"parking lot full in the requested time");
+	    }
+	    else
+	    {
+		String preparedStatementString = "INSERT INTO Reservations(orderId, type, customerId, parkingLot, carNumber, startingDate, endingDate, startHour, endHour, status) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		
+		ArrayList<String> values = new ArrayList<>();
+		
+		String orderId = GenerateUniqueId("SELECT orderId FROM Reservations WHERE orderId = ?", 3000000);
+		
+		values.add(orderId);
+		values.add(reservation.getReservationType().toString());
+		values.add(reservation.getCustomerId());
+		values.add(reservation.getParkinglot());
+		values.add(reservation.getCarNumber());
+		values.add(reservation.getArrivalDate().toString());
+		values.add(reservation.getLeavingDate().toString());
+		values.add(reservation.getArrivalHour().toString());
+		values.add(reservation.getLeavingHour().toString());
+		values.add(reservation.getReservationStatus().toString());
+		
+		AddRowToTable(preparedStatementString, values);
+		
+		reservation.setOrderId(orderId);
+		
+		serverResponse = new ServerResponse<>(RequestResult.Succeed, reservation, null);
+	    }
 	    
 	    CPS_Tracer.TraceInformation("Server response to client after adding order: \n" + serverResponse);
 	    
@@ -1318,7 +1375,7 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	}
     }
     
-    private ServerResponse<Parkinglot> GetParkinglot(String parkinglotName)
+    ServerResponse<Parkinglot> GetParkinglot(String parkinglotName)
     {
 	CPS_Tracer.TraceInformation("Trying to get Parkinglot: " + parkinglotName);
 	
@@ -1534,7 +1591,7 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	}
     }
     
-    private ServerResponse<AddRealTimeParkingRequest> TryInsertGuestCar(AddRealTimeParkingRequest request)
+    private ServerResponse<AddRealTimeParkingRequest> TryInsertCar(AddRealTimeParkingRequest request)
     {
 	CPS_Tracer.TraceInformation("Trying to insert guest car: \n" + request);
 	
@@ -1557,23 +1614,52 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 		serverResponse = new ServerResponse<>(RequestResult.AlredyExist, request, null);
 	    }
 	    // Check if there is a free parking spot:
-	    else if (!IsParkingSpotFree(request.getParkinglot(), request.getStartDateTime(), request.getExiDateTime()))
+	    else if (request.getIsGuestRequest() && !IsParkingSpotFree(request.getParkinglot(),
+		    request.getStartDateTime(), request.getExiDateTime()))
 	    {
 		serverResponse = new ServerResponse<>(RequestResult.ResourceNotAvaillable, request, "Parkinglot full");
 	    }
 	    else
 	    {
+		// if its reservation: change its status.
+		
+		preparedStatementString = "SELECT * FROM Reservations WHERE carNumber = ? AND parkingLot = ?";
+		
+		preparedStatement = mySqlConnection.prepareStatement(preparedStatementString,
+			ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+		
+		preparedStatement.setString(1, request.getCarNumber());
+		preparedStatement.setString(2, request.getParkinglot());
+		
+		resultSet = preparedStatement.executeQuery();
+		
+		while(resultSet.next())
+		{
+		    LocalDate reservationStartingTime = LocalDate.parse(resultSet.getString(6));
+		    
+		    if(reservationStartingTime.equals(LocalDate.now()))
+		    {
+			resultSet.updateString(10, ReservationStatus.Fullfilled.toString());
+			
+			resultSet.updateRow();
+		    }
+		}
+		
+		// add the parking:
+		
 		preparedStatementString = "INSERT INTO RealTimeParking(parkingLot, parkingSpot, startDateTime, exitDateTime, carNumber) VALUES(?, ?, ?, ?, ?)";
 		
 		ArrayList<String> values = new ArrayList<>();
 		
 		values.add(request.getParkinglot());
-		values.add(new ParkingSpot(1, 1, 1).toString());
+		values.add(new ParkingSpot(2, 2, 2).toString());
 		values.add(request.getStartDateTime().toString());
 		values.add(request.getExiDateTime().toString());
 		values.add(request.getCarNumber());
 		
 		AddRowToTable(preparedStatementString, values);
+		
+		myRobot.OrginizeParkingSpotsAfterAddCar(request);
 		
 		serverResponse = new ServerResponse<>(RequestResult.Succeed, request, null);
 	    }
@@ -1589,6 +1675,56 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 		    request, "Failed to insert guest car");
 	    
 	    CPS_Tracer.TraceError("Failed to insert guest car", e);
+	    
+	    return serverResponse;
+	}
+    }
+    
+    private ServerResponse<RemoveCarRequest> RemoveCar(RemoveCarRequest request)
+    {
+	CPS_Tracer.TraceInformation("Trying to remove a car: \n" + request);
+	
+	try
+	{
+	    ServerResponse<RemoveCarRequest> serverResponse;
+	    
+	    // Check if the car is in a parking lot:
+	    
+	    String preparedStatementString = "SELECT * FROM RealTimeParking WHERE carNumber = ? AND parkingLot = ?";
+	    
+	    PreparedStatement preparedStatement = mySqlConnection.prepareStatement(preparedStatementString,
+		    ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+	    
+	    preparedStatement.setString(1, request.getCarNumber());
+	    
+	    preparedStatement.setString(2, request.getParkinglot());
+	    
+	    ResultSet resultSet = preparedStatement.executeQuery();
+	    
+	    if (!resultSet.isBeforeFirst())
+	    {
+		serverResponse = new ServerResponse<>(RequestResult.NotFound, request, null);
+	    }
+	    
+	    else
+	    {
+		resultSet.next();
+		
+		resultSet.deleteRow();
+		
+		serverResponse = new ServerResponse<>(RequestResult.Succeed, request, null);
+	    }
+	    
+	    CPS_Tracer.TraceInformation("Server response to client after trying to remove car: \n" + serverResponse);
+	    
+	    return serverResponse;
+	}
+	catch (Exception e)
+	{
+	    ServerResponse<RemoveCarRequest> serverResponse = new ServerResponse<>(RequestResult.Failed, request,
+		    "Failed to remove car");
+	    
+	    CPS_Tracer.TraceError("Failed to remove car", e);
 	    
 	    return serverResponse;
 	}

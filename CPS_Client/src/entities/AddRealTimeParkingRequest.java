@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 public class AddRealTimeParkingRequest implements Serializable
 {
     private static final long serialVersionUID = 1L;
-
+    
     private String parkinglot;
     
     private LocalDateTime startDateTime;
@@ -15,13 +15,16 @@ public class AddRealTimeParkingRequest implements Serializable
     
     private String carNumber;
     
+    private boolean isGuestRequest;
+    
     public AddRealTimeParkingRequest(String parkinglot, LocalDateTime startDateTime, LocalDateTime exiDateTime,
-	    String carNumber)
+	    String carNumber, boolean isGuestRequest)
     {
 	this.parkinglot = parkinglot;
 	this.startDateTime = startDateTime;
 	this.exiDateTime = exiDateTime;
 	this.carNumber = carNumber;
+	this.isGuestRequest = isGuestRequest;
     }
     
     @Override
@@ -34,6 +37,11 @@ public class AddRealTimeParkingRequest implements Serializable
     public String getCarNumber()
     {
 	return carNumber;
+    }
+    
+    public boolean getIsGuestRequest()
+    {
+	return isGuestRequest;
     }
     
     public LocalDateTime getExiDateTime()
