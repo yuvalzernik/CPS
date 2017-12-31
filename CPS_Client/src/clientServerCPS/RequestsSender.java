@@ -200,7 +200,8 @@ public class RequestsSender
 	return SendRequest(partialMembership, ClientServerConsts.ChangeExpirePartialMembership);
     }
     
-    public static ServerResponse<AddRealTimeParkingRequest> TryInsertGuestCar(AddRealTimeParkingRequest addRealTimeParkingRequest)
+    public static ServerResponse<AddRealTimeParkingRequest> TryInsertCar(
+	    AddRealTimeParkingRequest addRealTimeParkingRequest)
     {
 	return SendRequest(addRealTimeParkingRequest, ClientServerConsts.TryInsertGuestCar);
     }
@@ -209,4 +210,5 @@ public class RequestsSender
     {
 	return SendRequest(removeCarRequest, ClientServerConsts.RemoveCar);
     }
+    
 }

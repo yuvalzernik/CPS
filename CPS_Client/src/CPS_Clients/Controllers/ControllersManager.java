@@ -29,7 +29,7 @@ public class ControllersManager
     public ControllersManager(List<Pair<String, URL>> fxmlNamePathList, Stage stage, String homepage) throws IOException, URISyntaxException
     {
 	new RequestsSender();
-	
+		
 	this.homePage = homepage;
 	
 	myStage = stage;
@@ -39,6 +39,8 @@ public class ControllersManager
 	    FXMLLoader loader = new FXMLLoader(fxmlNamePath.getValue());
 	    
 	    Scene scene = new Scene(loader.load());
+	    
+	    scene.getStylesheets().add(getClass().getResource("..\\style.css").toExternalForm());
 	    
 	    BaseController controller = loader.getController();
 	    

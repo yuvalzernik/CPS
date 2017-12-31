@@ -1,5 +1,10 @@
 package CPS_Clients.Controllers;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -7,8 +12,15 @@ import java.util.function.Consumer;
 
 import CPS_Utilities.Consts;
 import CPS_Utilities.DialogBuilder;
-import CPS_Utilities.GuestIdentifyingInformation;
-import CPS_Utilities.MemberIdentifyingInformation;
+import clientServerCPS.RequestResult;
+import clientServerCPS.RequestsSender;
+import clientServerCPS.ServerResponse;
+import entities.FullMembership;
+import entities.Parkinglot;
+import entities.PartialMembership;
+import entities.RemoveCarRequest;
+import entities.Reservation;
+import entities.enums.ReservationType;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Dialog;
@@ -20,13 +32,11 @@ public class KioskExitController extends BaseController
     
     private ArrayList<String> MemberInputs = new ArrayList<>();
     
-    private MemberIdentifyingInformation memberIdentifyingInformation;
+    private String parkinglotName;
     
-    private GuestIdentifyingInformation guestIdentifyingInformation;
+    private Parkinglot parkinglot;
     
-    private float paymentAmount;
-    
-    public KioskExitController()
+    public KioskExitController() throws IOException
     {
 	super();
 	
@@ -35,6 +45,12 @@ public class KioskExitController extends BaseController
 	
 	MemberInputs.add("Subscription id:");
 	MemberInputs.add("Car number:");
+	
+	parkinglotName = new BufferedReader(
+		new InputStreamReader(getClass().getResourceAsStream(Consts.ParkinglotNamePathFromController)))
+			.readLine();
+	
+	parkinglot = RequestsSender.GetParkinglot(parkinglotName).GetResponseObject();
     }
     
     @FXML
@@ -46,19 +62,44 @@ public class KioskExitController extends BaseController
 	
 	result.ifPresent(inputs ->
 	{
-	    memberIdentifyingInformation = new MemberIdentifyingInformation(inputs.get(0), inputs.get(1));
+	    ServerResponse<FullMembership> fullMemberResponse = RequestsSender.GetFullMembership(inputs.get(0));
+	    ServerResponse<PartialMembership> partialMemberResponse = RequestsSender
+		    .GetPartialMembership(inputs.get(0));
 	    
-	    boolean isCarExist = CheckAndExitMember(memberIdentifyingInformation);
+	    if (fullMemberResponse.GetRequestResult().equals(RequestResult.Failed)
+		    || partialMemberResponse.GetRequestResult().equals(RequestResult.Failed))
+	    {
+		DialogBuilder.AlertDialog(AlertType.ERROR, null, Consts.ServerProblemMessage, null, false);
+		return;
+	    }
 	    
-	    if (isCarExist)
+	    if (fullMemberResponse.GetRequestResult().equals(RequestResult.NotFound)
+		    && partialMemberResponse.GetRequestResult().equals(RequestResult.NotFound))
+	    {
+		DialogBuilder.AlertDialog(AlertType.ERROR, null, "Membership not found.", null, false);
+		return;
+	    }
+	    
+	    ServerResponse<RemoveCarRequest> removeResponse = RequestsSender
+		    .RemoveCar(new RemoveCarRequest(parkinglotName, inputs.get(1)));
+	    
+	    if (removeResponse.GetRequestResult().equals(RequestResult.NotFound))
+	    {
+		DialogBuilder.AlertDialog(AlertType.ERROR, null, "Car not found.", null, false);
+		return;
+	    }
+	    else if (removeResponse.GetRequestResult().equals(RequestResult.Succeed))
 	    {
 		DialogBuilder.AlertDialog(AlertType.INFORMATION, Consts.Approved, Consts.LeaveTheParkinglotMessage,
 			null, false);
 		
-		myControllersManager.SetScene(Consts.Kiosk, null);
+		myControllersManager.GoToHomePage(Consts.KioskExit);
 	    }
-	    
-	    // Else todo
+	    else
+	    {
+		DialogBuilder.AlertDialog(AlertType.ERROR, null, Consts.ServerProblemMessage, null, false);
+		return;
+	    }
 	});
     }
     
@@ -71,28 +112,63 @@ public class KioskExitController extends BaseController
 	
 	result.ifPresent(inputs ->
 	{
-	    memberIdentifyingInformation = new MemberIdentifyingInformation(inputs.get(0), inputs.get(1));
+	    ServerResponse<Reservation> reservationResponse = RequestsSender.GetReservation(inputs.get(0));
 	    
-	    boolean isCarExist = CheckAndExitOrder(guestIdentifyingInformation);
-	    
-	    // Todo : create the partial membership object and send it to db +
-	    // add it to Payment parameters.
-	    
-	    if (isCarExist)
+	    if (reservationResponse.GetRequestResult().equals(RequestResult.Failed))
 	    {
-		Consumer<Void> afterPayment = Void ->
+		DialogBuilder.AlertDialog(AlertType.ERROR, null, Consts.ServerProblemMessage, null, false);
+		return;
+	    }
+	    
+	    if (reservationResponse.GetRequestResult().equals(RequestResult.NotFound))
+	    {
+		DialogBuilder.AlertDialog(AlertType.ERROR, null, "Order not found.", null, false);
+		return;
+	    }
+	    
+	    if (reservationResponse.GetRequestResult().equals(RequestResult.Succeed)
+		    && !reservationResponse.GetResponseObject().getCarNumber().equals(inputs.get(1)))
+	    {
+		DialogBuilder.AlertDialog(AlertType.ERROR, null, "Car not found.", null, false);
+		return;
+	    }
+	    
+	    ServerResponse<RemoveCarRequest> removeRequest = RequestsSender
+		    .RemoveCar(new RemoveCarRequest(parkinglotName, inputs.get(1)));
+	    
+	    if (removeRequest.GetRequestResult().equals(RequestResult.Succeed))
+	    {
+		Reservation reservation = reservationResponse.GetResponseObject();
+		
+		if (reservation.getReservationType().equals(ReservationType.Local))
+		{
+		    Consumer<Void> afterPayment = Void ->
+		    {
+			DialogBuilder.AlertDialog(AlertType.INFORMATION, Consts.Approved,
+				Consts.LeaveTheParkinglotMessage, null, false);
+			
+			myControllersManager.GoToHomePage(Consts.Payment);
+		    };
+		    
+		    float paymentAmount = LocalDateTime.of(reservation.getArrivalDate(), reservation.getArrivalHour())
+			    .until(LocalDateTime.now(), ChronoUnit.DAYS) * parkinglot.getGuestRate();
+		    
+		    myControllersManager.Payment(reservation, paymentAmount, afterPayment, Consts.KioskExit);
+		}
+		else
 		{
 		    DialogBuilder.AlertDialog(AlertType.INFORMATION, Consts.Approved, Consts.LeaveTheParkinglotMessage,
 			    null, false);
 		    
-		    myControllersManager.SetScene(Consts.Kiosk, null);
-		};
-		
-		// myControllersManager.Payment(paymentAmount, afterPayment,
-		// Consts.KioskExit);
+		    myControllersManager.GoToHomePage(Consts.Payment);
+		}
+	    }
+	    else
+	    {
+		DialogBuilder.AlertDialog(AlertType.ERROR, null, Consts.ServerProblemMessage, null, false);
+		return;
 	    }
 	    
-	    // Else todo
 	});
     }
     
@@ -100,23 +176,5 @@ public class KioskExitController extends BaseController
     void OnBack(ActionEvent event)
     {
 	myControllersManager.Back(PreviousScene, Consts.KioskExit);
-    }
-    
-    private boolean CheckAndExitOrder(GuestIdentifyingInformation guestIdentifyingInformation)
-    {
-	// Todo:
-	// Send the obj to the server and validate and get payment amount
-	
-	paymentAmount = 100;
-	
-	return true;
-    }
-    
-    private boolean CheckAndExitMember(MemberIdentifyingInformation memberIdentifyingInformation)
-    {
-	// Todo:
-	// Send the obj to the server and validate..
-	
-	return true;
     }
 }

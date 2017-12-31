@@ -11,12 +11,6 @@ import clientServerCPS.ClientServerConsts;
 
 public class ServerController
 {
-    private ServerRequestHandler myRequestHandler;
-    
-    public ServerController() throws Exception
-    {
-	myRequestHandler = new ServerRequestHandler();
-    }
     
     private void ListenAndResponse() throws IOException
     {	
@@ -31,7 +25,7 @@ public class ServerController
 		{
 		    Socket socket = serverSocket.accept();
 		    
-		    myRequestHandler.HandleRequestAsync(socket);
+		    ServerRequestHandler.HandleRequestAsync(socket);
 		}
 		catch (Exception e)
 		{		    
