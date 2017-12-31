@@ -5,11 +5,11 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
-<AnchorPane prefHeight="438.0" prefWidth="573.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="CPS_Clients.Controllers.MonitorAndControllController">
+<AnchorPane prefHeight="314.0" prefWidth="359.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CPS_Clients.Controllers.MonitorAndControllController">
    <children>
-      <Button layoutX="87.0" layoutY="200.0" mnemonicParsing="false" onAction="#OnMember" text="Member" />
-      <Button layoutX="362.0" layoutY="200.0" mnemonicParsing="false" onAction="#OnNotAMember" text="Not a member" />
-      <Button layoutX="36.0" layoutY="39.0" mnemonicParsing="false" onAction="#OnBack" text="Back" />
+      <Button layoutX="54.0" layoutY="157.0" mnemonicParsing="false" onAction="#OnMember" text="Member" />
+      <Button layoutX="208.0" layoutY="157.0" mnemonicParsing="false" onAction="#OnNotAMember" text="Not a member" />
+      <Button layoutX="33.0" layoutY="271.0" mnemonicParsing="false" onAction="#OnBack" text="Back" />
+      <Label layoutX="120.0" layoutY="27.0" prefHeight="47.0" prefWidth="175.0" text="monitor and controll" />
    </children>
 </AnchorPane>
