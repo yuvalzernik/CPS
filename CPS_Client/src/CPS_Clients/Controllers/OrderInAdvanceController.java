@@ -74,55 +74,6 @@ public class OrderInAdvanceController extends BaseController {
 			parkinglist.add(initListParkinglot.GetResponseObject().get(i));
 		}
 	}
-<<<<<<< HEAD
-	
-	Consumer<Void> afterPayment = Void ->
-	{
-	    // Todo : consider sending these requests in parallel.
-	    // + what if register succeed but add customer failed ?
-	    
-	    ServerResponse<Reservation> OrderInAdvanceResponse = RequestsSender.Reservation(reservation);
-	    
-	    ServerResponse<Customer> AddCustomerIfNotExist = RequestsSender.AddCustomerIfNotExists(customer);
-	    
-	    if (OrderInAdvanceResponse.GetRequestResult().equals(RequestResult.Failed)
-		    || AddCustomerIfNotExist.GetRequestResult().equals(RequestResult.Failed))
-	    {
-		DialogBuilder.AlertDialog(AlertType.ERROR, null, Consts.ServerProblemMessage, null, false);
-		
-		return;
-	    }
-	    
-	    DialogBuilder.AlertDialog(AlertType.INFORMATION, Consts.Approved, Consts.ThankYouForOrderInAdvance, null,
-		    false);
-	    
-	    myControllersManager.GoToHomePage(Consts.Payment);
-	};
-	
-	myControllersManager.Payment(reservation, paymentAmount, afterPayment, ConstsWeb.OrderInAdvance);
-	arrivalDate.getEditor().clear();
-	leavingDate.getEditor().clear();
-    }
-    
-    @FXML
-    void OnBack(ActionEvent event)
-    {
-    	arrivalDate.getEditor().clear();
-    	leavingDate.getEditor().clear();
-    	myControllersManager.Back(PreviousScene, ConstsWeb.OrderInAdvance);
-    }
-    
-    private boolean TryConstructOrderInAdvance()
-    {
-	customer = new Customer(customerId.getText(), email.getText(), 0);
-	
-	if (!InputValidator.OrderInAdvance(carNumber.getText(), arrivalDate.getValue(), leavingDate.getValue(),
-		arrivalHour.getText(), leavingHour.getText()) || !InputValidator.Customer(customer))
-	{
-	    DialogBuilder.AlertDialog(AlertType.ERROR, null, Consts.InputsAreIncorrect, null, false);
-	    
-	    return false;
-=======
 
 	@FXML
 	void OnPayment(ActionEvent event) {
@@ -155,7 +106,7 @@ public class OrderInAdvanceController extends BaseController {
 		myControllersManager.Payment(reservation, paymentAmount, afterPayment, ConstsWeb.OrderInAdvance);
 		arrivalDate.setValue(LocalDate.now());
 		leavingDate.setValue(LocalDate.now());
->>>>>>> refs/heads/YuvalWeb
+
 	}
 
 	@FXML
