@@ -47,7 +47,7 @@ import entities.enums.ReservationType;
 public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 
 {
-<<<<<<< HEAD
+
     Connection mySqlConnection;
     
     CPSRobot myRobot;
