@@ -60,6 +60,6 @@ public class DisabledParkingSpot implements Serializable
 	@Override
     public String toString()
     {
-		return "Parking lot name: " + parkingLotName;
+		return "Parking lot name: " + parkingLotName + "\nParking Spot: " + parkingSpot + "\n Start DateTime: " + startDateTime + "\nEnd DateTime: " + endDateTime;
     }
 }

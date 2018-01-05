@@ -57,5 +57,14 @@ public class ClientServerConsts
     public static final String TryInsertGuestCar = "TryInsertGuestCar";
     
     public static final String RemoveCar = "RemoveCar";
-
+    
+    public static final String GetComplaintsReport = "GetComplaintsReport";
+    
+    public static final String GetPerformanceReport = "GetPerformanceReport";
+        
+    public static final String GetReservationReport = "GetReservationReport";
+        
+    public static final String GetDisabledReport = "GetDisabledReport";
+    
+    public static final String GetActivityReport = "GetActivityReport";
 }

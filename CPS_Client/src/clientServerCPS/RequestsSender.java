@@ -5,6 +5,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.URISyntaxException;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -12,20 +14,25 @@ import entities.CloseComplaintRequest;
 import CPS_Utilities.Consts;
 import CPS_Utilities.DialogBuilder;
 import CPS_Utilities.LoginIdentification;
+import entities.ActivityReport;
 import entities.AddRealTimeParkingRequest;
 import entities.ChangeParkingSpotStatusRequest;
 import entities.ChangeParkinglotStatusRequest;
 import entities.ChangeRatesRequest;
 import entities.ChangeRatesResponse;
 import entities.Complaint;
+import entities.ComplaintsReport;
 import entities.Customer;
+import entities.DisabledReport;
 import entities.Employee;
 import entities.FullMembership;
 import entities.ParkingSpot;
 import entities.Parkinglot;
 import entities.PartialMembership;
+import entities.PerformanceReport;
 import entities.RemoveCarRequest;
 import entities.Reservation;
+import entities.ReservationReport;
 import javafx.scene.control.Dialog;
 
 public class RequestsSender
@@ -209,4 +216,28 @@ public class RequestsSender
 	return SendRequest(removeCarRequest, ClientServerConsts.RemoveCar);
     }
     
+    public static ServerResponse<ComplaintsReport> GetComplaintsReport()
+    {
+	return SendRequest(null, ClientServerConsts.GetComplaintsReport);
+    }
+    
+    public static ServerResponse<PerformanceReport> GetPerformanceReport()
+    {
+	return SendRequest(null, ClientServerConsts.GetPerformanceReport);
+    }
+    
+    public static ServerResponse<ReservationReport> GetReservationReport(String parkinglotName)
+    {
+	return SendRequest(parkinglotName, ClientServerConsts.GetReservationReport);
+    }
+    
+    public static ServerResponse<DisabledReport> GetDisabledReport(String parkinglotName)
+    {
+	return SendRequest(parkinglotName, ClientServerConsts.GetDisabledReport);
+    }
+    
+    public static ServerResponse<ActivityReport> GetActivityReport(LocalDate localDate)
+    {
+	return SendRequest(localDate, ClientServerConsts.GetActivityReport);
+    }
 }

@@ -9,6 +9,7 @@ import java.util.function.Function;
 
 import CPS_Utilities.CPS_Tracer;
 import CPS_Utilities.LoginIdentification;
+import entities.ActivityReport;
 import entities.AddRealTimeParkingRequest;
 import entities.ChangeParkingSpotStatusRequest;
 import entities.ChangeParkinglotStatusRequest;
@@ -16,14 +17,18 @@ import entities.ChangeRatesRequest;
 import entities.ChangeRatesResponse;
 import entities.CloseComplaintRequest;
 import entities.Complaint;
+import entities.ComplaintsReport;
 import entities.Customer;
+import entities.DisabledReport;
 import entities.Employee;
 import entities.FullMembership;
 import entities.ParkingSpot;
 import entities.Parkinglot;
 import entities.PartialMembership;
+import entities.PerformanceReport;
 import entities.RemoveCarRequest;
 import entities.Reservation;
+import entities.ReservationReport;
 import entities.enums.ParkingSpotStatus;
 import entities.enums.ParkinglotStatus;
 import entities.enums.ReservationStatus;
@@ -42,9 +47,14 @@ public class Tests
 	    // CustomerTest() ReservationTest() ChangeRatesTest()
 	    // EmployeeTest() ParkinglotTest() DisabledParkingSpotsTest()
 	    // GuestEntryTest()
+	    //ComplaintsReportTest();
+	    //DisabledReportTest();
+	    //PerformanceReportTest()
+	    //ReservationReportTest()
+	    //ActivityReportTest()
 	    for (int i = 0; i < 1; i++)
 	    {
-		if (EntryAndRemoveDynamicTest())
+		if (ActivityReportTest())
 		{
 		    System.out.println("Test Succeed");
 		}
@@ -330,6 +340,93 @@ public class Tests
 	CPS_Tracer.TraceInformation(serverGetRespone.toString());
 	
 	if (!serverGetRespone.GetRequestResult().equals(RequestResult.Succeed))
+	{
+	    return false;
+	}
+	
+	return true;
+    }
+    
+    private static boolean ComplaintsReportTest()
+    {
+	String id = Integer.toString(new Random().nextInt(1000000) + 3000000);
+	
+	ServerResponse<ComplaintsReport> serverResponse = RequestsSender.GetComplaintsReport();
+	
+	CPS_Tracer.TraceInformation(serverResponse.toString());
+	
+	System.out.println(serverResponse.GetResponseObject().getComplaintAmount() + " " + serverResponse.GetResponseObject().getHandledComplaints() + "\n");
+	
+	if (!serverResponse.GetRequestResult().equals(RequestResult.Succeed))
+	{
+	    return false;
+	}
+	
+	return true;
+    }
+    
+    private static boolean DisabledReportTest()
+    {
+	String id = Integer.toString(new Random().nextInt(1000000) + 3000000);
+	
+	ServerResponse<DisabledReport> serverResponse = RequestsSender.GetDisabledReport("all");
+	
+	CPS_Tracer.TraceInformation(serverResponse.toString());
+	
+	System.out.println(serverResponse.GetResponseObject().getDisabledAmount() + " \n" + serverResponse.GetResponseObject().getActiveList() + " \n" + serverResponse.GetResponseObject().getDisabledList()+"\n");
+	
+	if (!serverResponse.GetRequestResult().equals(RequestResult.Succeed))
+	{
+	    return false;
+	}
+	
+	return true;
+    }
+    
+    private static boolean PerformanceReportTest()
+    {
+	ServerResponse<PerformanceReport> serverResponse = RequestsSender.GetPerformanceReport();
+	
+	CPS_Tracer.TraceInformation(serverResponse.toString());
+	
+	System.out.println(serverResponse.GetResponseObject().getMembershipAmount() + " \n" + serverResponse.GetResponseObject().getMembersMultipleCars() + "\n");
+	
+	if (!serverResponse.GetRequestResult().equals(RequestResult.Succeed))
+	{
+	    return false;
+	}
+	
+	return true;
+    }
+    
+    private static boolean ReservationReportTest()
+    {
+	ServerResponse<ReservationReport> serverResponse = RequestsSender.GetReservationReport("all");
+	
+	CPS_Tracer.TraceInformation(serverResponse.toString());
+	
+	System.out.println(serverResponse.GetResponseObject().getReservationAmount() + " \n" + serverResponse.GetResponseObject().getReservationExcersied() + "\n" + serverResponse.GetResponseObject().getReservationCancelled() + "\n" + serverResponse.GetResponseObject().getGuestList() + "\n" + serverResponse.GetResponseObject().getInAdvanceList() + "\n");
+	
+	if (!serverResponse.GetRequestResult().equals(RequestResult.Succeed))
+	{
+	    return false;
+	}
+	
+	return true;
+    }
+    
+    private static boolean ActivityReportTest()
+    {
+    	
+    LocalDate date = LocalDate.of(2017, 12, 1);
+	ServerResponse<ActivityReport> serverResponse = RequestsSender.GetActivityReport(date);
+	
+	CPS_Tracer.TraceInformation(serverResponse.toString());
+	
+	System.out.println(serverResponse.GetResponseObject().getArrExercised() + " \n" + serverResponse.GetResponseObject().getArrCancelled() + "\n" + serverResponse.GetResponseObject().getArrDisabled() + "\n" + serverResponse.GetResponseObject().getMedianExercised() + "\n" + serverResponse.GetResponseObject().getMedianCancelled() + "\n" + 
+	serverResponse.GetResponseObject().getMedianDisabled() + " \n" + serverResponse.GetResponseObject().getDeviationExercised() + "\n" + serverResponse.GetResponseObject().getDeviationCancelled() + "\n" + serverResponse.GetResponseObject().getDeviationDisabled() + "\n");
+	
+	if (!serverResponse.GetRequestResult().equals(RequestResult.Succeed))
 	{
 	    return false;
 	}
