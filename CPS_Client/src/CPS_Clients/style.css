@@ -18,10 +18,9 @@
     -fx-text-fill: black;
 }
 
-/* .dialog-pane .label {
+.dialog-pane .label {
     -fx-text-fill: black;
-}*/
-
+}
 .menu-button .label {
  -fx-text-fill:black; 
  }
