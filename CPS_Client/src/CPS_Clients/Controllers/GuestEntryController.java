@@ -23,10 +23,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Label;
 
 public class GuestEntryController extends BaseController
-{
-    
+{  
     @FXML
     private TextField carNumber;
     
@@ -34,7 +34,11 @@ public class GuestEntryController extends BaseController
     private TextField departureTime;
     
     @FXML
+    private Label Headline;
+    
+    @FXML
     private TextField id;
+    
     
     @FXML
     private TextField email;

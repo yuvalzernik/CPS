@@ -1,6 +1,8 @@
 package CPS_Clients.Controllers;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.Period;
 import java.util.function.Consumer;
 
 import CPS_Utilities.Consts;
@@ -11,9 +13,11 @@ import clientServerCPS.RequestsSender;
 import clientServerCPS.ServerResponse;
 import entities.Customer;
 import entities.FullMembership;
+import entities.Parkinglot;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 
@@ -26,6 +30,9 @@ public class FullMembershipRegisterController extends BaseController
     private TextField carNumber;
     
     @FXML
+    private Label Headline;
+    
+    @FXML
     private TextField id;
     
     @FXML
@@ -34,6 +41,7 @@ public class FullMembershipRegisterController extends BaseController
     FullMembership fullMembership;
     
     Customer customer;
+    private final int rate=5;
     
     @FXML
     void initialize()
@@ -52,8 +60,8 @@ public class FullMembershipRegisterController extends BaseController
     @FXML
     void OnSubmitAndPay(ActionEvent event)
     {
-	// Todo : calc amount to pay.
-	float paymentAmount = 100;
+
+	float paymentAmount = 72*rate;
 	
 	if (!TryConstructFullMembership())
 	{
@@ -62,9 +70,6 @@ public class FullMembershipRegisterController extends BaseController
 	
 	Consumer<Void> afterPayment = Void ->
 	{
-	    // Todo : consider sending these requests in parallel.
-	    // + what if register succeed but add customer failed ? 
-	    
 	    ServerResponse<FullMembership> registerFullMembershipResponse = RequestsSender
 		    .RegisterFullMembership(fullMembership);
 	    
@@ -78,7 +83,7 @@ public class FullMembershipRegisterController extends BaseController
 		return;
 	    }
 	    
-	    DialogBuilder.AlertDialog(AlertType.INFORMATION, Consts.Approved, Consts.ThankYouForRegistering, null,
+	    DialogBuilder.AlertDialog(AlertType.INFORMATION, Consts.Approved, Consts.ThankYouForRegistering +"\n Your subscription ID : "+registerFullMembershipResponse.GetResponseObject().GetSubscriptionId(), null,
 		    false);
 	    
 	    myControllersManager.GoToHomePage(Consts.Payment);

@@ -6,15 +6,36 @@
 .label {
     -fx-font-size: 12px;
     -fx-font-weight: bold;
-    -fx-text-fill: #333333;
+    -fx-text-fill: #ffffff;
     -fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );
 }
+ /*  .label .text {
+   
+    -fx-stroke: white;
+    -fx-stroke-width: 0.8px;
+}*/
+.menu-item .label{
+    -fx-text-fill: black;
+}
 
+/* .dialog-pane .label {
+    -fx-text-fill: black;
+}*/
+
+.menu-button .label {
+ -fx-text-fill:black; 
+ }
+#Headline {
+   -fx-font-size: 55px;
+   -fx-font-family: "AR CENA";
+   -fx-fill: #818181;
+   -fx-effect: innershadow( three-pass-box , #ffd700 , 6, 0.0 , 0 , 2 );
+}
 .button {
-    -fx-text-fill: white;
+    -fx-text-fill: black;
     -fx-font-family: "Arial Narrow";
     -fx-font-weight: bold;
-    -fx-background-color: linear-gradient(#61a2b1, #2A5058);
+    -fx-background-color: linear-gradient(#ffd700, #2A5058);
     -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
 }
 

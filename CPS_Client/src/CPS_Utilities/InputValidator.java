@@ -79,7 +79,7 @@ public class InputValidator {
 		// format
 		dateFormat.setLenient(false); // this will not enable 25:67 for example
 		try {
-			System.out.println(dateFormat.parse(hour));
+			dateFormat.parse(hour);
 		} catch (ParseException e) {
 			return false;
 		}

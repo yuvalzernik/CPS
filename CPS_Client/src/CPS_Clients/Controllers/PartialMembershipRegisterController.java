@@ -22,6 +22,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
@@ -34,6 +35,9 @@ public class PartialMembershipRegisterController extends BaseController {
 	@FXML
 	private MenuButton parkingLot;
 
+    @FXML
+    private Label Headline;
+   
 	@FXML
 	private TextField exitHour;
 
@@ -97,10 +101,11 @@ public class PartialMembershipRegisterController extends BaseController {
 
 	@FXML
 	void OnSubmitAndPay(ActionEvent event) {
-		float paymentAmount = AmountToPay();
+		
 		if (!TryConstructPartialMembership()) {
 			return;
 		}
+		float paymentAmount = AmountToPay();
 		Consumer<Void> afterPayment = Void -> {
 			ServerResponse<PartialMembership> registerPartialMembershipResponse = RequestsSender
 					.RegisterPartialMembership(partialMembership);
@@ -112,7 +117,7 @@ public class PartialMembershipRegisterController extends BaseController {
 
 				return;
 			}
-			DialogBuilder.AlertDialog(AlertType.INFORMATION, Consts.Approved, Consts.ThankYouForRegistering, null,
+			DialogBuilder.AlertDialog(AlertType.INFORMATION, Consts.Approved, Consts.ThankYouForRegistering+"\n Your subscription ID : "+registerPartialMembershipResponse.GetResponseObject().GetSubscriptionId(), null,
 					false);
 
 			myControllersManager.GoToHomePage(Consts.Payment);

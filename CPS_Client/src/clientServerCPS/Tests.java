@@ -44,7 +44,7 @@ public class Tests
 	    // GuestEntryTest()
 	    for (int i = 0; i < 1; i++)
 	    {
-		if (EntryAndRemoveDynamicTest())
+		if (PartialMembershipTest())
 		{
 		    System.out.println("Test Succeed");
 		}

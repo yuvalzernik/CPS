@@ -23,11 +23,17 @@ import entities.Reservation;
 import entities.enums.ReservationStatus;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.ImageCursor;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.Image;
 
 public class KioskEntryController extends BaseController
 {
+    @FXML
+    private Label Headline;
+    
     private ArrayList<String> PreOrderInputs = new ArrayList<>();
     
     private ArrayList<String> MemberInputs = new ArrayList<>();
@@ -36,9 +42,9 @@ public class KioskEntryController extends BaseController
     
     private String parkinglot;
     
-    public KioskEntryController() throws IOException
+    @FXML
+    public void Initialize() throws IOException
     {
-	super();
 	
 	PreOrderInputs.add("Order id:");
 	PreOrderInputs.add("Car number:");

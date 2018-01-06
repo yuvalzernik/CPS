@@ -24,10 +24,14 @@ import entities.enums.ReservationType;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
 import javafx.scene.control.Alert.AlertType;
 
 public class KioskExitController extends BaseController
 {
+    @FXML
+    private Label Headline;
+    
     private ArrayList<String> PreOrderInputs = new ArrayList<>();
     
     private ArrayList<String> MemberInputs = new ArrayList<>();
