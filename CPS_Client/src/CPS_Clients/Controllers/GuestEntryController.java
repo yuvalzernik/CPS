@@ -65,7 +65,7 @@ public class GuestEntryController extends BaseController
     {
 	Customer customer = new Customer(id.getText(), email.getText(), 0);
 	
-	RequestsSender.AddCustomerIfNotExists(customer);
+	
 	
 	if (!InputValidator.Customer(customer) || !InputValidator.CarNumber(carNumber.getText())
 		|| !InputValidator.CheckHourFormat(departureTime.getText()))
@@ -74,6 +74,7 @@ public class GuestEntryController extends BaseController
 	    
 	    return;
 	}
+	RequestsSender.AddCustomerIfNotExists(customer);
 	
 	LocalTime exiTime = LocalTime.parse(departureTime.getText());
 	

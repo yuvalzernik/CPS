@@ -23,5 +23,6 @@
             <Font name="AR CENA" size="55.0" />
          </font>
       </Label>
+      <Label layoutX="347.0" layoutY="320.0" opacity="0.44" prefHeight="17.0" prefWidth="63.0" text="HH:MM" />
    </children>
 </AnchorPane>
