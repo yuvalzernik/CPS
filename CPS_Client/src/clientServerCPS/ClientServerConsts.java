@@ -67,4 +67,6 @@ public class ClientServerConsts
     public static final String GetDisabledReport = "GetDisabledReport";
     
     public static final String GetActivityReport = "GetActivityReport";
+    
+    public static final String GetStatusReport = "GetStatusReport";
 }

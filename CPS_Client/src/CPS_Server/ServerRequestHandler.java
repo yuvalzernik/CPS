@@ -15,6 +15,7 @@ import java.time.LocalTime;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Hashtable;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 
@@ -45,8 +46,10 @@ import entities.PerformanceReport;
 import entities.RemoveCarRequest;
 import entities.Reservation;
 import entities.ReservationReport;
+import entities.StatusReport;
 import entities.enums.ComplaintStatus;
 import entities.enums.EmployeeType;
+import entities.enums.ParkingSpotCondition;
 import entities.enums.ParkingSpotStatus;
 import entities.enums.ParkinglotStatus;
 import entities.enums.ReservationStatus;
@@ -190,6 +193,9 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	    
 	case ClientServerConsts.GetActivityReport:
 	    return GetActivityReport((LocalDate) clientRequest.GetSentObject());
+	    
+	case ClientServerConsts.GetStatusReport:
+	    return GetStatusReport();
 	
 	default:
 	    CPS_Tracer.TraceError(
@@ -2258,6 +2264,88 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
     		return new ServerResponse<>(RequestResult.Failed, null, "Failed to get activity report");
     	}
     }
+    
+    private ServerResponse<StatusReport> GetStatusReport()
+    {
+    	CPS_Tracer.TraceInformation("Trying to get status report.");
+	
+    	try
+    	{
+    		PreparedStatement preparedStatement = mySqlConnection.prepareStatement("SELECT * FROM ParkingLots WHERE status=?");
+    				
+    		preparedStatement.setString(1, "Open");
+    		
+    		ServerResponse<StatusReport> serverResponse;
+	    
+    		ResultSet resultSet = preparedStatement.executeQuery();
+    		
+    		Hashtable<String,ArrayList<ParkingSpotCondition>> table = new Hashtable<String,ArrayList<ParkingSpotCondition>>();
+	    
+    		while (resultSet.next())
+    		{
+    			PreparedStatement preparedStatement2 = mySqlConnection.prepareStatement("SELECT * FROM RealTimeParking WHERE parkingLot=?");
+    			
+    			preparedStatement2.setString(1, resultSet.getString(1));
+    			
+    			ResultSet resultSet2 = preparedStatement2.executeQuery();
+    			
+    			PreparedStatement preparedStatement3 = mySqlConnection.prepareStatement("SELECT * FROM DisabledParkingSpots WHERE parkinglotName=?");
+    			
+    			preparedStatement3.setString(1, resultSet.getString(1));
+    			
+    			ResultSet resultSet3 = preparedStatement3.executeQuery();
+    			
+    			int width = Integer.parseInt(resultSet.getString(2));
+    			
+    			int total = Integer.parseInt(resultSet.getString(6));
+    			
+    			ArrayList<ParkingSpotCondition> list= new ArrayList<ParkingSpotCondition>();
+    			
+    			for(int i=0; i<total;i++)
+    			{
+    				list.add(ParkingSpotCondition.Free);
+    			}
+    			
+    			while (resultSet2.next())
+    			{
+    				ParkingSpot parkingspot = ParkingSpot.Parse(resultSet2.getString(2));
+    				
+    				int index = (parkingspot.getWidth_X() + ((parkingspot.getDepth_Z()-1)*width) + ((parkingspot.getHeight_Y()-1)*width*3));
+    				
+    				list.set(index-1, ParkingSpotCondition.Occupied);
+    			}
+    			
+    			while (resultSet3.next())
+    			{
+    				if(resultSet3.getString(6).equals("Disabled"))
+    				{
+    					ParkingSpot parkingspot2 = ParkingSpot.Parse(resultSet3.getString(3));
+    				
+    					int index = (parkingspot2.getWidth_X() + ((parkingspot2.getDepth_Z()-1)*width) + ((parkingspot2.getHeight_Y()-1)*width*3));
+    				
+    					list.set(index-1, ParkingSpotCondition.Disabled);
+    				}
+    			}
+    			
+    			table.put(resultSet.getString(1), list);
+    		}
+	    
+    		StatusReport statusReport=new StatusReport(table);
+	    
+    		serverResponse = new ServerResponse<>(RequestResult.Succeed, statusReport, null);
+	    
+    		CPS_Tracer.TraceInformation("Server response to client after trying to get status report: \n" + serverResponse);
+	    
+    		return serverResponse;
+    	}
+    	catch (Exception e)
+    	{
+    		CPS_Tracer.TraceError("Failed in getting status report.", e);
+	    
+    		return new ServerResponse<>(RequestResult.Failed, null, "Failed to get status report");
+    	}
+    }
+    
     float median(Integer[] arr)
     {
     	if (arr.length % 2 == 0)

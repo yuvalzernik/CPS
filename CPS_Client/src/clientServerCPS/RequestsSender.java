@@ -33,6 +33,7 @@ import entities.PerformanceReport;
 import entities.RemoveCarRequest;
 import entities.Reservation;
 import entities.ReservationReport;
+import entities.StatusReport;
 import javafx.scene.control.Dialog;
 
 public class RequestsSender
@@ -239,5 +240,10 @@ public class RequestsSender
     public static ServerResponse<ActivityReport> GetActivityReport(LocalDate localDate)
     {
 	return SendRequest(localDate, ClientServerConsts.GetActivityReport);
+    }
+    
+    public static ServerResponse<StatusReport> GetStatusReport()
+    {
+	return SendRequest(null, ClientServerConsts.GetStatusReport);
     }
 }

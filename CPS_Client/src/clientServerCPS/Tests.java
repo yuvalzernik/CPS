@@ -9,6 +9,7 @@ import java.util.function.Function;
 
 import CPS_Utilities.CPS_Tracer;
 import CPS_Utilities.LoginIdentification;
+import CPS_Utilities.Pdf_Builder;
 import entities.ActivityReport;
 import entities.AddRealTimeParkingRequest;
 import entities.ChangeParkingSpotStatusRequest;
@@ -29,6 +30,7 @@ import entities.PerformanceReport;
 import entities.RemoveCarRequest;
 import entities.Reservation;
 import entities.ReservationReport;
+import entities.StatusReport;
 import entities.enums.ParkingSpotStatus;
 import entities.enums.ParkinglotStatus;
 import entities.enums.ReservationStatus;
@@ -52,6 +54,7 @@ public class Tests
 	    //PerformanceReportTest()
 	    //ReservationReportTest()
 	    //ActivityReportTest()
+	    //StatusReportTest()
 	    for (int i = 0; i < 1; i++)
 	    {
 		if (ActivityReportTest())
@@ -417,14 +420,33 @@ public class Tests
     
     private static boolean ActivityReportTest()
     {
-    	
-    LocalDate date = LocalDate.of(2017, 12, 1);
+    LocalDate date = LocalDate.of(2017, 4, 1);
 	ServerResponse<ActivityReport> serverResponse = RequestsSender.GetActivityReport(date);
 	
 	CPS_Tracer.TraceInformation(serverResponse.toString());
 	
 	System.out.println(serverResponse.GetResponseObject().getArrExercised() + " \n" + serverResponse.GetResponseObject().getArrCancelled() + "\n" + serverResponse.GetResponseObject().getArrDisabled() + "\n" + serverResponse.GetResponseObject().getMedianExercised() + "\n" + serverResponse.GetResponseObject().getMedianCancelled() + "\n" + 
 	serverResponse.GetResponseObject().getMedianDisabled() + " \n" + serverResponse.GetResponseObject().getDeviationExercised() + "\n" + serverResponse.GetResponseObject().getDeviationCancelled() + "\n" + serverResponse.GetResponseObject().getDeviationDisabled() + "\n");
+	
+	if (!serverResponse.GetRequestResult().equals(RequestResult.Succeed))
+	{
+	    return false;
+	}
+	
+	return true;
+    }
+    
+    private static boolean StatusReportTest()
+    {
+	ServerResponse<StatusReport> serverResponse = RequestsSender.GetStatusReport();
+	
+	CPS_Tracer.TraceInformation(serverResponse.toString());
+	
+	System.out.println(serverResponse.GetResponseObject().getTable() + "\n");
+	
+	Pdf_Builder pdf = new Pdf_Builder("C:\\Users\\Hashi\\Desktop\\New folder (2)");
+	
+	pdf.build(serverResponse.GetResponseObject());
 	
 	if (!serverResponse.GetRequestResult().equals(RequestResult.Succeed))
 	{
