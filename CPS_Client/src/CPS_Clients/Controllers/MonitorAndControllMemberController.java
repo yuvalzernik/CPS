@@ -7,6 +7,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -35,6 +36,10 @@ public class MonitorAndControllMemberController extends BaseController {
 		subscriptionTypes.add(Consts.Payment);
 	}
 
+    @FXML
+    private Label Headline;
+    
+    
 	@FXML // fx:id="SubscriptionRenewal"
 	private Button SubscriptionRenewal; // Value injected by FXMLLoader
 

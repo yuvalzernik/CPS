@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="484.0" prefWidth="489.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CPS_Clients.Controllers.KioskEntryController">
+<AnchorPane prefHeight="620.0" prefWidth="620.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CPS_Clients.Controllers.KioskEntryController">
    <children>
-      <Button layoutX="329.0" layoutY="68.0" mnemonicParsing="false" onAction="#OnGuestEntry" text="Guest entry" />
-      <Button layoutX="324.0" layoutY="183.0" mnemonicParsing="false" onAction="#OnPreOrderEntry" text="Pre-order entry" />
-      <Button layoutX="329.0" layoutY="318.0" mnemonicParsing="false" onAction="#OnMemberEntry" text="Member entry" />
-      <Button layoutX="39.0" layoutY="39.0" mnemonicParsing="false" onAction="#OnBack" text="back" />
+      <Button layoutX="157.0" layoutY="138.0" mnemonicParsing="false" onAction="#OnGuestEntry" prefHeight="121.0" prefWidth="306.0" text="Guest entry" />
+      <Button layoutX="157.0" layoutY="289.0" mnemonicParsing="false" onAction="#OnPreOrderEntry" prefHeight="127.0" prefWidth="306.0" text="Pre-order entry" />
+      <Button layoutX="157.0" layoutY="446.0" mnemonicParsing="false" onAction="#OnMemberEntry" prefHeight="127.0" prefWidth="306.0" text="Member entry" />
+      <Button layoutX="24.0" layoutY="581.0" mnemonicParsing="false" onAction="#OnBack" text="back" />
+      <Label fx:id="Headline" layoutX="200.0" layoutY="47.0" text="Kiosk Entry">
+         <font>
+            <Font name="AR CENA" size="55.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>
