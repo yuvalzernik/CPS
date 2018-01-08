@@ -162,7 +162,7 @@ public class CeoLoginController extends EmployeeBaseController{
     @FXML
     void OnProduceReport(ActionEvent event) 
     {
-
+    	myControllersManager.SetScene(ConstsEmployees.ProduceReport, ConstsEmployees.CeoLogin);
     }
     
     @FXML

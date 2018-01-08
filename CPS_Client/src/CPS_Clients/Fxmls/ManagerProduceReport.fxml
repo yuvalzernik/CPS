@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane prefHeight="200.0" prefWidth="491.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="CPS_Clients.Controllers.Employee.ManagerProduceReportController">
+   <children>
+      <Button layoutX="323.0" layoutY="152.0" mnemonicParsing="false" onAction="#OnBack" prefHeight="31.0" prefWidth="132.0" text="Back" />
+      <Button layoutX="14.0" layoutY="17.0" mnemonicParsing="false" onAction="#OnReservationReport" prefHeight="61.0" prefWidth="222.0" text="Reservation Report" />
+      <Button layoutX="254.0" layoutY="17.0" mnemonicParsing="false" onAction="#OnComaplaintsReport" prefHeight="61.0" prefWidth="222.0" text="Complaints Report" />
+      <Button layoutX="14.0" layoutY="91.0" mnemonicParsing="false" onAction="#OnDisabledParkingSpotReport" prefHeight="61.0" prefWidth="222.0" text="Disabled Parking Spot Report" />
+   </children>
+</AnchorPane>

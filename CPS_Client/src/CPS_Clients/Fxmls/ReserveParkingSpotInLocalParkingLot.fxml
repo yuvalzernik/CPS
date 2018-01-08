@@ -11,7 +11,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="416.0" prefWidth="422.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CPS_Clients.Controllers.Employee.ReserveParkingSpotInLocalParkingLotController">
    <children>
-      <Label layoutX="138.0" layoutY="15.0" text="order in advance">
+      <Label layoutX="88.0" layoutY="18.0" text="Reserve Parking Spot">
          <font>
             <Font name="AR DELANEY" size="31.0" />
          </font>
