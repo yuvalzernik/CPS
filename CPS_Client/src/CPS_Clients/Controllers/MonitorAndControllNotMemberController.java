@@ -16,9 +16,13 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Label;
 
 public class MonitorAndControllNotMemberController extends BaseController {
 
+    @FXML
+    private Label Headline;
+ 
 	@FXML // fx:id="Order_ID"
 	private TextField Order_ID; // Value injected by FXMLLoader
 

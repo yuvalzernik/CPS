@@ -5,11 +5,11 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="314.0" prefWidth="359.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CPS_Clients.Controllers.MonitorAndControllController">
+<AnchorPane prefHeight="620.0" prefWidth="620.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CPS_Clients.Controllers.MonitorAndControllController">
    <children>
-      <Button layoutX="54.0" layoutY="157.0" mnemonicParsing="false" onAction="#OnMember" text="Member" />
-      <Button layoutX="208.0" layoutY="157.0" mnemonicParsing="false" onAction="#OnNotAMember" text="Not a member" />
-      <Button layoutX="33.0" layoutY="271.0" mnemonicParsing="false" onAction="#OnBack" text="Back" />
-      <Label layoutX="120.0" layoutY="27.0" prefHeight="47.0" prefWidth="175.0" text="monitor and controll" />
+      <Button layoutX="157.0" layoutY="225.0" mnemonicParsing="false" onAction="#OnMember" prefHeight="150.0" prefWidth="300.0" text="Member" />
+      <Button layoutX="160.0" layoutY="388.0" mnemonicParsing="false" onAction="#OnNotAMember" prefHeight="150.0" prefWidth="300.0" text="Not a member" />
+      <Button layoutX="24.0" layoutY="573.0" mnemonicParsing="false" onAction="#OnBack" text="Back" />
+      <Label fx:id="Headline" layoutX="116.0" layoutY="67.0" prefHeight="83.0" prefWidth="479.0" text="monitor and controll" />
    </children>
 </AnchorPane>

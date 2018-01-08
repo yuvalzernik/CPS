@@ -21,6 +21,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.control.MenuButton;
@@ -31,7 +32,10 @@ public class OrderInAdvanceController extends BaseController {
 
 	@FXML // fx:id="parkingLot"
 	private MenuButton parkingLot; // Value injected by FXMLLoader
-
+   
+	@FXML
+    private Label Headline;
+	
 	@FXML // fx:id="arrivalHour"
 	private TextField arrivalHour; // Value injected by FXMLLoader
 
@@ -78,10 +82,12 @@ public class OrderInAdvanceController extends BaseController {
 	@FXML
 	void OnPayment(ActionEvent event) {
 
-		float paymentAmount = AmountToPay();
+		
 		if (!TryConstructOrderInAdvance()) {
 			return;
 		}
+		
+		float paymentAmount = AmountToPay();
 
 		Consumer<Void> afterPayment = Void -> {
 			// + what if register succeed but add customer failed ?
@@ -97,7 +103,7 @@ public class OrderInAdvanceController extends BaseController {
 				return;
 			}
 
-			DialogBuilder.AlertDialog(AlertType.INFORMATION, Consts.Approved, Consts.ThankYouForOrderInAdvance, null,
+			DialogBuilder.AlertDialog(AlertType.INFORMATION, Consts.Approved, Consts.ThankYouForOrderInAdvance+"\n Your order ID : "+OrderInAdvanceResponse.GetResponseObject().getOrderId(), null,
 					false);
 
 			myControllersManager.GoToHomePage(Consts.Payment);

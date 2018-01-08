@@ -22,6 +22,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
@@ -34,6 +35,9 @@ public class PartialMembershipRegisterController extends BaseController {
 	@FXML
 	private MenuButton parkingLot;
 
+    @FXML
+    private Label Headline;
+   
 	@FXML
 	private TextField exitHour;
 
@@ -97,10 +101,11 @@ public class PartialMembershipRegisterController extends BaseController {
 
 	@FXML
 	void OnSubmitAndPay(ActionEvent event) {
-		float paymentAmount = AmountToPay();
+		
 		if (!TryConstructPartialMembership()) {
 			return;
 		}
+		float paymentAmount = AmountToPay();
 		Consumer<Void> afterPayment = Void -> {
 			ServerResponse<PartialMembership> registerPartialMembershipResponse = RequestsSender
 					.RegisterPartialMembership(partialMembership);
@@ -112,7 +117,12 @@ public class PartialMembershipRegisterController extends BaseController {
 
 				return;
 			}
-			DialogBuilder.AlertDialog(AlertType.INFORMATION, Consts.Approved, Consts.ThankYouForRegistering, null,
+			//if(registerPartialMembershipResponse.GetRequestResult().equals(RequestResult.AlredyExist)) {
+				//DialogBuilder.AlertDialog(AlertType.ERROR, null, Consts., null, false);
+
+			//	return;
+			//}
+			DialogBuilder.AlertDialog(AlertType.INFORMATION, Consts.Approved, Consts.ThankYouForRegistering+"\n Your subscription ID : "+registerPartialMembershipResponse.GetResponseObject().GetSubscriptionId(), null,
 					false);
 
 			myControllersManager.GoToHomePage(Consts.Payment);
@@ -122,6 +132,7 @@ public class PartialMembershipRegisterController extends BaseController {
 
 		carListView.setItems(null);
 		cars.clear();
+		carList.clear();
 	}
 
 	private boolean TryConstructPartialMembership() {
@@ -153,13 +164,35 @@ public class PartialMembershipRegisterController extends BaseController {
 	@FXML
 	void OnAddCar(ActionEvent event) {
 		
-		cars.add(carNumber.getText());
+		cars.add(carNumber.getText());// insert car to list view
 		carList.add(carNumber.getText());
 
 		carNumber.clear();
 
 		carListView.setItems(cars);
 	}
+
+    @FXML
+    void OnRemoveSelected(ActionEvent event) {
+    	 final int selectedIdx = carListView.getSelectionModel().getSelectedIndex();
+         if (selectedIdx != -1) {
+           String itemToRemove = carListView.getSelectionModel().getSelectedItem();
+  
+           final int newSelectedIdx =
+             (selectedIdx == carListView.getItems().size() - 1)
+                ? selectedIdx - 1
+                : selectedIdx;
+  
+           carListView.getItems().remove(selectedIdx);
+           for(int i=0;i<carList.size();i++) {
+        	   if(carList.get(i).equals(itemToRemove))
+        		   carList.remove(i);
+           }
+           //status.setText("Removed " + itemToRemove);
+           carListView.getSelectionModel().select(newSelectedIdx);
+         }
+
+    }
 	
 	private float AmountToPay() {
 		float rate = 0;
