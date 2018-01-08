@@ -5,15 +5,11 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="CPS_Clients.Controllers.Employee.ManageComplaintsController">
+<AnchorPane prefHeight="417.0" prefWidth="538.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CPS_Clients.Controllers.Employee.ManageComplaintsController">
    <children>
-      <TableView fx:id="myTable" onMouseClicked="#OnMouseClicked" prefHeight="241.0" prefWidth="403.0">
-        <columns>
-          <TableColumn fx:id="complaintId" onEditStart="#OnEditStartComplaintId" prefWidth="150.0" text="Complaint ID" />
-          <TableColumn fx:id="date" minWidth="0.0" prefWidth="125.0" text="Date" />
-            <TableColumn fx:id="complaints" minWidth="0.0" prefWidth="125.0" text="Complaint" />
-        </columns>
-      </TableView>
+      <ListView fx:id="complaintsList" layoutX="56.0" layoutY="78.0" prefHeight="249.0" prefWidth="110.0" />
+      <Button layoutX="466.0" layoutY="368.0" mnemonicParsing="false" onAction="#OnBack" text="Back" />
+      <Button layoutX="60.0" layoutY="343.0" mnemonicParsing="false" onAction="#OnLoad" text="Load complaints" />
+      <Button layoutX="193.0" layoutY="190.0" mnemonicParsing="false" onAction="#OnHandleComplaint" text="Handle complaint" />
    </children>
 </AnchorPane>
