@@ -4,5 +4,12 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="con" path="org.eclipse.fx.ide.jdt.core.JAVAFX_CONTAINER"/>
 	<classpathentry kind="lib" path="src/CPS_Server/mysql-connector-java-3.1.11-bin.jar"/>
+	<classpathentry kind="lib" path="src/Pdf_Lib/fontbox-2.0.8.jar"/>
+	<classpathentry kind="lib" path="src/Pdf_Lib/pdfbox-2.0.8.jar"/>
+	<classpathentry kind="lib" path="src/Pdf_Lib/pdfbox-app-2.0.8.jar"/>
+	<classpathentry kind="lib" path="src/Pdf_Lib/pdfbox-tools-2.0.8.jar"/>
+	<classpathentry kind="lib" path="src/Pdf_Lib/preflight-2.0.8.jar"/>
+	<classpathentry kind="lib" path="src/Pdf_Lib/preflight-app-2.0.8.jar"/>
+	<classpathentry kind="lib" path="src/Pdf_Lib/xmpbox-2.0.8.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

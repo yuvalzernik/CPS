@@ -159,7 +159,7 @@ public class ManagerLoginController extends EmployeeBaseController{
     @FXML
     void OnProduceReport(ActionEvent event) 
     {
-
+    	myControllersManager.SetScene(ConstsEmployees.ManagerProduceReport, ConstsEmployees.ManagerLogin);
     }
     @FXML
     void OnUndisableParkingLot(ActionEvent event)
