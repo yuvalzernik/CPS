@@ -17,7 +17,7 @@
       <Label layoutX="50.0" layoutY="250.0" text="Car number" />
       <Label layoutX="50.0" layoutY="320.0" text="Departure time" />
       <Label layoutX="50.0" layoutY="390.0" text="Email" />
-      <Label layoutX="50.0" layoutY="180.0" text="Id" />
+      <Label layoutX="50.0" layoutY="180.0" text="ID" />
       <Label fx:id="Headline" layoutX="188.0" layoutY="60.0" text="Guest Entry">
          <font>
             <Font name="AR CENA" size="55.0" />

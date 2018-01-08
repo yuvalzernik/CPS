@@ -23,9 +23,10 @@
       <Label layoutX="274.0" layoutY="331.0" prefHeight="25.0" prefWidth="100.0" text="Format: HH:MM" />
       <MenuButton fx:id="parkingLot" layoutX="120.0" layoutY="259.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="144.0" text="ParkingLot" />
       <Label layoutX="12.0" layoutY="259.0" prefHeight="25.0" prefWidth="120.0" text="Parking lot:" />
-      <ListView fx:id="carListView" layoutX="362.0" layoutY="366.0" prefHeight="200.0" prefWidth="200.0" />
+      <ListView fx:id="carListView" layoutX="396.0" layoutY="366.0" prefHeight="200.0" prefWidth="200.0" />
       <Button layoutX="262.0" layoutY="365.0" mnemonicParsing="false" onAction="#OnAddCar" prefHeight="25.0" prefWidth="61.0" text="Add car" />
       <Label layoutX="421.0" layoutY="322.0" prefHeight="25.0" prefWidth="88.0" text="Cars list:" />
       <Label fx:id="Headline" layoutX="4.0" layoutY="86.0" prefHeight="17.0" prefWidth="639.0" text="Partial Membership Register" />
+      <Button layoutX="274.0" layoutY="424.0" mnemonicParsing="false" onAction="#OnRemoveSelected" prefHeight="25.0" prefWidth="114.0" text="Remove Selected" />
    </children>
 </AnchorPane>

@@ -117,6 +117,11 @@ public class PartialMembershipRegisterController extends BaseController {
 
 				return;
 			}
+			//if(registerPartialMembershipResponse.GetRequestResult().equals(RequestResult.AlredyExist)) {
+				//DialogBuilder.AlertDialog(AlertType.ERROR, null, Consts., null, false);
+
+			//	return;
+			//}
 			DialogBuilder.AlertDialog(AlertType.INFORMATION, Consts.Approved, Consts.ThankYouForRegistering+"\n Your subscription ID : "+registerPartialMembershipResponse.GetResponseObject().GetSubscriptionId(), null,
 					false);
 
@@ -127,6 +132,7 @@ public class PartialMembershipRegisterController extends BaseController {
 
 		carListView.setItems(null);
 		cars.clear();
+		carList.clear();
 	}
 
 	private boolean TryConstructPartialMembership() {
@@ -158,13 +164,35 @@ public class PartialMembershipRegisterController extends BaseController {
 	@FXML
 	void OnAddCar(ActionEvent event) {
 		
-		cars.add(carNumber.getText());
+		cars.add(carNumber.getText());// insert car to list view
 		carList.add(carNumber.getText());
 
 		carNumber.clear();
 
 		carListView.setItems(cars);
 	}
+
+    @FXML
+    void OnRemoveSelected(ActionEvent event) {
+    	 final int selectedIdx = carListView.getSelectionModel().getSelectedIndex();
+         if (selectedIdx != -1) {
+           String itemToRemove = carListView.getSelectionModel().getSelectedItem();
+  
+           final int newSelectedIdx =
+             (selectedIdx == carListView.getItems().size() - 1)
+                ? selectedIdx - 1
+                : selectedIdx;
+  
+           carListView.getItems().remove(selectedIdx);
+           for(int i=0;i<carList.size();i++) {
+        	   if(carList.get(i).equals(itemToRemove))
+        		   carList.remove(i);
+           }
+           //status.setText("Removed " + itemToRemove);
+           carListView.getSelectionModel().select(newSelectedIdx);
+         }
+
+    }
 	
 	private float AmountToPay() {
 		float rate = 0;

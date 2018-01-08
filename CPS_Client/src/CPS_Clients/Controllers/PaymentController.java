@@ -61,13 +61,13 @@ public class PaymentController extends BaseController {
 	void OnSubmit(ActionEvent event) {
 		if (IsPaymentDetailsAccepted()) {
 			
-		    Image image = new Image("file:///C:/Users/yuval/git/CPS/CPS_Client/src/CPS_Clients/Controllers/200w_d.gif");  //pass in the image path
+		    //Image image = new Image("file:///C:/Users/yuval/git/CPS/CPS_Client/src/CPS_Clients/Controllers/200w_d.gif");  //pass in the image path
 		    
-		    myControllersManager.getScene(Consts.Payment).setCursor(new ImageCursor(image));
+		  //  myControllersManager.getScene(Consts.Payment).setCursor(new ImageCursor(image));
 			
 			afterPaymentDetailsCheck.accept(null);
 			
-		    myControllersManager.getScene(Consts.Payment).setCursor(Cursor.DEFAULT);
+		   // myControllersManager.getScene(Consts.Payment).setCursor(Cursor.DEFAULT);
 
 		} else {
 			DialogBuilder.AlertDialog(AlertType.ERROR, null, Consts.InputsAreIncorrect, null, false);
