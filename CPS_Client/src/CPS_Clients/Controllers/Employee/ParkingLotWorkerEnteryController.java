@@ -20,6 +20,7 @@ import entities.enums.ParkinglotStatus;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
 import javafx.scene.control.Alert.AlertType;
 
 public class ParkingLotWorkerEnteryController extends EmployeeBaseController {
@@ -34,7 +35,8 @@ public class ParkingLotWorkerEnteryController extends EmployeeBaseController {
 		DisableParkingSpotInputs.add("Parking Spot depth:");
 		InitializeParkingSpotInputs.add("Parking Lot Width:");
 	}
-	
+    @FXML
+    private Label Headline;
     @FXML
     void OnInitializeParkingLot(ActionEvent event) 
     {

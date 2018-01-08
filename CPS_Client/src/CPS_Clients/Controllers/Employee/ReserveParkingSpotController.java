@@ -17,6 +17,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 public class ReserveParkingSpotController extends EmployeeBaseController
@@ -44,7 +45,8 @@ public class ReserveParkingSpotController extends EmployeeBaseController
     
     @FXML // fx:id="leavingDate"
     private DatePicker leavingDate; // Value injected by FXMLLoader
-    
+    @FXML
+    private Label Headline;
     Reservation reservation;
     
     Customer customer;

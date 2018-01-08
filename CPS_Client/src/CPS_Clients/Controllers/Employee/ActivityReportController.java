@@ -1,6 +1,7 @@
 package CPS_Clients.Controllers.Employee;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import CPS_Clients.ConstsEmployees;
 import CPS_Utilities.DialogBuilder;
@@ -16,6 +17,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Label;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 
@@ -77,6 +79,9 @@ public class ActivityReportController extends EmployeeBaseController{
     @FXML
     private TextField medianCancelled;
     
+    @FXML
+    private Label Test;
+    
     String mon;
     
     String yr;
@@ -90,7 +95,7 @@ public class ActivityReportController extends EmployeeBaseController{
 	    DataTable.getColumns().get(2).setCellValueFactory(new PropertyValueFactory<>("numofcanc"));
 	    DataTable.getColumns().get(3).setCellValueFactory(new PropertyValueFactory<>("numofdis"));
 	    
-	    MenuItem item = new MenuItem("january");
+	    MenuItem item = new MenuItem("January");
 		item.setOnAction(a -> {
 			mon = (item.getText());
 			month.setText(mon);
@@ -174,21 +179,15 @@ public class ActivityReportController extends EmployeeBaseController{
 		});
 		month.getItems().add(item12);
 	    
-	    
-	    MenuItem year1 = new MenuItem("2017");
-	    year1.setOnAction(a -> {
-			yr = (year1.getText());
-			year.setText(yr);
-		});
-	    year.getItems().add(year1);
-	    
-		
-		MenuItem year2 = new MenuItem("2018");
-		year2.setOnAction(a -> {
-			yr = (year2.getText());
-			year.setText(yr);
-		});
-		year.getItems().add(year2);
+		for(int i = -3 ; i<= 0; i++)
+		{
+			MenuItem year1 = new MenuItem(Integer.toString(LocalDate.now().plusYears(i).getYear()));
+		    year1.setOnAction(a -> {
+				yr = (year1.getText());
+				year.setText(yr);
+			});
+		    year.getItems().add(year1);
+		}	
 	}
 
     @FXML
