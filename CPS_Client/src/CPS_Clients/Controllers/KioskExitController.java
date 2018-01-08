@@ -24,10 +24,14 @@ import entities.enums.ReservationType;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
 import javafx.scene.control.Alert.AlertType;
 
 public class KioskExitController extends BaseController
 {
+    @FXML
+    private Label Headline;
+    
     private ArrayList<String> PreOrderInputs = new ArrayList<>();
     
     private ArrayList<String> MemberInputs = new ArrayList<>();
@@ -135,7 +139,11 @@ public class KioskExitController extends BaseController
 	    
 	    ServerResponse<RemoveCarRequest> removeRequest = RequestsSender
 		    .RemoveCar(new RemoveCarRequest(parkinglotName, inputs.get(1)));
-	    
+	    if (removeRequest.GetRequestResult().equals(RequestResult.NotFound))
+	    {
+		DialogBuilder.AlertDialog(AlertType.ERROR, null, "Order not found.", null, false);
+		return;
+	    }
 	    if (removeRequest.GetRequestResult().equals(RequestResult.Succeed))
 	    {
 		Reservation reservation = reservationResponse.GetResponseObject();
@@ -151,7 +159,7 @@ public class KioskExitController extends BaseController
 		    };
 		    
 		    float paymentAmount = LocalDateTime.of(reservation.getArrivalDate(), reservation.getArrivalHour())
-			    .until(LocalDateTime.now(), ChronoUnit.DAYS) * parkinglot.getGuestRate();
+			    .until(LocalDateTime.now(), ChronoUnit.HOURS) * parkinglot.getGuestRate();
 		    
 		    myControllersManager.Payment(reservation, paymentAmount, afterPayment, Consts.KioskExit);
 		}

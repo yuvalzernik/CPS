@@ -12,7 +12,9 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 import javafx.fxml.FXMLLoader;
+import javafx.scene.ImageCursor;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
@@ -91,5 +93,14 @@ public class ControllersManager
 	controllerMap.get(PreviousScene).ClearTextFields();
 	
 	SetScene(Consts.Payment, PreviousScene);
+    }
+    
+    public Scene getScene (String name)
+    {
+    	if(sceneMap.containsKey(name))
+    	{	
+    		return sceneMap.get(name);
+    	}
+    	return null;
     }
 }

@@ -23,10 +23,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Label;
 
 public class GuestEntryController extends BaseController
-{
-    
+{  
     @FXML
     private TextField carNumber;
     
@@ -34,7 +34,11 @@ public class GuestEntryController extends BaseController
     private TextField departureTime;
     
     @FXML
+    private Label Headline;
+    
+    @FXML
     private TextField id;
+    
     
     @FXML
     private TextField email;
@@ -61,7 +65,7 @@ public class GuestEntryController extends BaseController
     {
 	Customer customer = new Customer(id.getText(), email.getText(), 0);
 	
-	RequestsSender.AddCustomerIfNotExists(customer);
+	
 	
 	if (!InputValidator.Customer(customer) || !InputValidator.CarNumber(carNumber.getText())
 		|| !InputValidator.CheckHourFormat(departureTime.getText()))
@@ -70,6 +74,7 @@ public class GuestEntryController extends BaseController
 	    
 	    return;
 	}
+	RequestsSender.AddCustomerIfNotExists(customer);
 	
 	LocalTime exiTime = LocalTime.parse(departureTime.getText());
 	

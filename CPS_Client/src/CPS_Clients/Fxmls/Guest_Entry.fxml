@@ -1,22 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
-<AnchorPane prefHeight="528.0" prefWidth="476.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="CPS_Clients.Controllers.GuestEntryController">
+<AnchorPane prefHeight="620.0" prefWidth="620.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CPS_Clients.Controllers.GuestEntryController">
    <children>
-      <Button layoutX="48.0" layoutY="47.0" mnemonicParsing="false" onAction="#OnBack" text="Back" />
-      <Button layoutX="362.0" layoutY="379.0" mnemonicParsing="false" onAction="#OnSubmit" text="Submit" />
-      <TextField fx:id="id" layoutX="177.0" layoutY="105.0" />
-      <TextField fx:id="carNumber" layoutX="177.0" layoutY="169.0" />
-      <TextField fx:id="departureTime" layoutX="177.0" layoutY="232.0" />
-      <TextField fx:id="email" layoutX="177.0" layoutY="293.0" />
-      <Label layoutX="48.0" layoutY="175.0" text="Car number" />
-      <Label layoutX="35.0" layoutY="238.0" text="Departure time" />
-      <Label layoutX="66.0" layoutY="299.0" text="Email" />
-      <Label layoutX="66.0" layoutY="111.0" text="Id" />
+      <Button layoutX="28.0" layoutY="575.0" mnemonicParsing="false" onAction="#OnBack" text="Back" />
+      <Button layoutX="424.0" layoutY="500.0" mnemonicParsing="false" onAction="#OnSubmit" prefHeight="57.0" prefWidth="100.0" text="Submit" />
+      <TextField fx:id="id" layoutX="167.0" layoutY="176.0" />
+      <TextField fx:id="carNumber" layoutX="167.0" layoutY="246.0" />
+      <TextField fx:id="departureTime" layoutX="167.0" layoutY="316.0" />
+      <TextField fx:id="email" layoutX="167.0" layoutY="386.0" />
+      <Label layoutX="50.0" layoutY="250.0" text="Car number" />
+      <Label layoutX="50.0" layoutY="320.0" text="Departure time" />
+      <Label layoutX="50.0" layoutY="390.0" text="Email" />
+      <Label layoutX="50.0" layoutY="180.0" text="ID" />
+      <Label fx:id="Headline" layoutX="188.0" layoutY="60.0" text="Guest Entry">
+         <font>
+            <Font name="AR CENA" size="55.0" />
+         </font>
+      </Label>
+      <Label layoutX="347.0" layoutY="320.0" opacity="0.44" prefHeight="17.0" prefWidth="63.0" text="HH:MM" />
    </children>
 </AnchorPane>

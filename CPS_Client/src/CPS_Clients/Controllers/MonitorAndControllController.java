@@ -3,9 +3,13 @@ package CPS_Clients.Controllers;
 import CPS_Utilities.Consts;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 
 public class MonitorAndControllController extends BaseController
 {
+    @FXML
+    private Label Headline;
+    
     @FXML
     void OnMember(ActionEvent event)
     {

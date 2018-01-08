@@ -7,6 +7,7 @@ import CPS_Utilities.DialogBuilder;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Label;
 
 public class WebController extends BaseController {
 	
@@ -16,6 +17,10 @@ public class WebController extends BaseController {
 		subscriptionTypes.add(Consts.FullMembership);
 		subscriptionTypes.add(Consts.PartialMembership);
 	}
+
+    @FXML
+    private Label Headline;
+    
     @FXML
     void OnComplaines(ActionEvent event) {
     	 myControllersManager.SetScene(ConstsWeb.Complaints, ConstsWeb.Web);

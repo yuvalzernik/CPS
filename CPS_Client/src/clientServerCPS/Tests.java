@@ -57,7 +57,11 @@ public class Tests
 	    //StatusReportTest()
 	    for (int i = 0; i < 1; i++)
 	    {
+<<<<<<< HEAD
 		if (ActivityReportTest())
+=======
+		if (PartialMembershipTest())
+>>>>>>> refs/heads/final_phase
 		{
 		    System.out.println("Test Succeed");
 		}
