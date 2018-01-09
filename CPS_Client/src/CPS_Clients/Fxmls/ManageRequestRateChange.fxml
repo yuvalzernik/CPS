@@ -5,11 +5,11 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="328.0" prefWidth="474.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CPS_Clients.Controllers.Employee.ManageRequestRateChangeController">
+<AnchorPane prefHeight="620.0" prefWidth="620.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CPS_Clients.Controllers.Employee.ManageRequestRateChangeController">
    <children>
-      <ListView fx:id="RequestsList" layoutX="49.0" layoutY="42.0" prefHeight="217.0" prefWidth="122.0" />
-      <Button layoutX="64.0" layoutY="277.0" mnemonicParsing="false" onAction="#OnLoadRequests" text="Load Requests" />
-      <Button layoutX="199.0" layoutY="277.0" mnemonicParsing="false" onAction="#OnHandleRequests" text="Handle Request" />
-      <Button layoutX="404.0" layoutY="277.0" mnemonicParsing="false" onAction="#OnBack" text="Back" />
+      <ListView fx:id="RequestsList" layoutX="64.0" layoutY="141.0" prefHeight="360.0" prefWidth="310.0" />
+      <Button layoutX="64.0" layoutY="524.0" mnemonicParsing="false" onAction="#OnLoadRequests" prefHeight="25.0" prefWidth="146.0" text="Load Requests" />
+      <Button layoutX="233.0" layoutY="524.0" mnemonicParsing="false" onAction="#OnHandleRequests" prefHeight="25.0" prefWidth="141.0" text="Handle Request" />
+      <Button layoutX="23.0" layoutY="581.0" mnemonicParsing="false" onAction="#OnBack" text="Back" />
    </children>
 </AnchorPane>

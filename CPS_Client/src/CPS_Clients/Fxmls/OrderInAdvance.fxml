@@ -18,7 +18,7 @@
       </Label>
       <Label layoutX="85.0" layoutY="330.0" text="Arrival Hour" />
       <Label layoutX="85.0" layoutY="290.0" text="Arrival Date" />
-      <Label layoutX="85.0" layoutY="250.0" text="Parking lot:" />
+      <Label layoutX="85.0" layoutY="250.0" text="Parking Lot" />
       <Label layoutX="85.0" layoutY="210.0" text="Car Number" />
       <Label layoutX="85.0" layoutY="170.0" text="ID" />
       <Label layoutX="85.0" layoutY="370.0" text="Leaving Date" />

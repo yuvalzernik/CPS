@@ -4,9 +4,13 @@ import CPS_Clients.ConstsEmployees;
 import CPS_Clients.ConstsMor;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 
 public class CustomerServiceEnteryController  extends EmployeeBaseController{
 
+	@FXML
+    private Label Headline;
+	
     @FXML
     void OnManageComplaints(ActionEvent event) 
     {
