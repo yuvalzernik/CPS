@@ -20,6 +20,7 @@ import entities.enums.ParkinglotStatus;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
 import javafx.scene.control.Alert.AlertType;
 
 public class ManagerLoginController extends EmployeeBaseController{
@@ -38,7 +39,10 @@ public class ManagerLoginController extends EmployeeBaseController{
 		RequestUpdatePricesInputs.add("New guest rate:");
 		RequestUpdatePricesInputs.add("New in advance rate:");
 	}
-	
+
+    @FXML
+    private Label Headline;
+    
     @FXML
     void OnInitializeParkingLot(ActionEvent event)
     {

@@ -8,8 +8,8 @@
 
 <AnchorPane prefHeight="620.0" prefWidth="620.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CPS_Clients.Controllers.KioskExitController">
    <children>
-      <Button layoutX="159.0" layoutY="218.0" mnemonicParsing="false" onAction="#OnMemberExit" prefHeight="156.0" prefWidth="302.0" text="Member exit" />
-      <Button layoutX="159.0" layoutY="411.0" mnemonicParsing="false" onAction="#OnGuestExit" prefHeight="156.0" prefWidth="302.0" text="Guest exit" />
+      <Button layoutX="47.0" layoutY="223.0" mnemonicParsing="false" onAction="#OnMemberExit" prefHeight="50.0" prefWidth="150.0" text="Member Exit" />
+      <Button layoutX="47.0" layoutY="327.0" mnemonicParsing="false" onAction="#OnGuestExit" prefHeight="50.0" prefWidth="150.0" text="Guest Exit" />
       <Button layoutX="26.0" layoutY="575.0" mnemonicParsing="false" onAction="#OnBack" text="Back" />
       <Label fx:id="Headline" layoutX="215.0" layoutY="87.0" text="Kiosk Exit">
          <font>

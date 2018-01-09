@@ -19,6 +19,7 @@ import entities.enums.ParkinglotStatus;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
 import javafx.scene.control.Alert.AlertType;
 
 public class CeoLoginController extends EmployeeBaseController{
@@ -39,6 +40,8 @@ public class CeoLoginController extends EmployeeBaseController{
 		
 		DisableParkingLotInputs.add("Parking Lot Name:");
 	}
+    @FXML
+    private Label Headline;
 	
     @FXML
     void OnInitializeParkingLot(ActionEvent event)

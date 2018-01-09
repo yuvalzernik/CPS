@@ -30,6 +30,11 @@
    -fx-fill: #818181;
    -fx-effect: innershadow( three-pass-box , #ffd700 , 6, 0.0 , 0 , 2 );
 }
+
+#test {
+	-fx-font-size: 15px;
+}
+
 .button {
     -fx-text-fill: black;
     -fx-font-family: "Arial Narrow";

@@ -10,14 +10,14 @@
    <children>
       <Button layoutX="21.0" layoutY="579.0" mnemonicParsing="false" onAction="#OnBack" text="Back" />
       <TextField fx:id="id" layoutX="150.0" layoutY="228.0" prefHeight="25.0" prefWidth="174.0" />
-      <Label layoutX="47.0" layoutY="228.0" prefHeight="25.0" prefWidth="31.0" text="ID:" />
-      <Label layoutX="20.0" layoutY="271.0" prefHeight="34.0" prefWidth="124.0" text="Statring Date:" />
+      <Label layoutX="35.0" layoutY="228.0" prefHeight="25.0" prefWidth="31.0" text="ID:" />
+      <Label layoutX="35.0" layoutY="271.0" prefHeight="34.0" prefWidth="124.0" text="Statring Date:" />
       <DatePicker fx:id="startingDatePicker" layoutX="150.0" layoutY="275.0" />
-      <Label layoutX="36.0" layoutY="327.0" prefHeight="25.0" prefWidth="52.0" text="Car No." />
+      <Label layoutX="35.0" layoutY="327.0" prefHeight="25.0" prefWidth="52.0" text="Car No." />
       <TextField fx:id="carNumber" layoutX="150.0" layoutY="327.0" prefHeight="25.0" prefWidth="174.0" />
-      <Label layoutX="45.0" layoutY="384.0" prefHeight="25.0" prefWidth="52.0" text="Email:" />
+      <Label layoutX="35.0" layoutY="384.0" prefHeight="25.0" prefWidth="52.0" text="Email:" />
       <TextField fx:id="email" layoutX="150.0" layoutY="384.0" prefHeight="25.0" prefWidth="174.0" />
       <Button layoutX="219.0" layoutY="452.0" mnemonicParsing="false" onAction="#OnSubmitAndPay" prefHeight="67.0" prefWidth="182.0" text="Submit and pay" />
-      <Label fx:id="Headline" layoutX="20.0" layoutY="102.0" prefHeight="25.0" prefWidth="596.0" text="Full Memberhip Register" />
+      <Label fx:id="Headline" layoutX="83.0" layoutY="109.0" prefHeight="25.0" prefWidth="501.0" text="Full Memberhip Register" />
    </children>
 </AnchorPane>
