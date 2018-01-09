@@ -1,5 +1,7 @@
 package CPS_Server;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -12,7 +14,6 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
@@ -55,9 +56,21 @@ import entities.enums.ParkinglotStatus;
 import entities.enums.ReservationStatus;
 import entities.enums.ReservationType;
 
-public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
-
+public class ServerRequestHandler implements Closeable// pLw9Zaqp{ey`2,Ve
 {
+    @Override
+    public void close() throws IOException
+    {
+	try
+	{
+	    mySqlConnection.close();
+	}
+	catch (SQLException e)
+	{
+	}
+	
+    }
+    
     Connection mySqlConnection;
     
     CPSRobot myRobot;
@@ -91,7 +104,11 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	    {
 		ClientRequest clientRequest = (ClientRequest) inputStream.readObject();
 		
-		outputStream.writeObject(new ServerRequestHandler().ExtractAndApplyRequest(clientRequest));
+		ServerRequestHandler serverRequestHandler = new ServerRequestHandler();
+		
+		outputStream.writeObject(serverRequestHandler.ExtractAndApplyRequest(clientRequest));
+		
+		serverRequestHandler.close();
 	    }
 	    catch (Exception e)
 	    {
@@ -178,22 +195,22 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	
 	case ClientServerConsts.RemoveCar:
 	    return RemoveCar((RemoveCarRequest) clientRequest.GetSentObject());
-	    
+	
 	case ClientServerConsts.GetComplaintsReport:
 	    return GetComplaintsReport();
-	    
+	
 	case ClientServerConsts.GetPerformanceReport:
 	    return GetPerformanceReport();
-	    
+	
 	case ClientServerConsts.GetReservationReport:
 	    return GetReservationReport((String) clientRequest.GetSentObject());
-	    
+	
 	case ClientServerConsts.GetDisabledReport:
 	    return GetDisabledReport((String) clientRequest.GetSentObject());
-	    
+	
 	case ClientServerConsts.GetActivityReport:
 	    return GetActivityReport((LocalDate) clientRequest.GetSentObject());
-	    
+	
 	case ClientServerConsts.GetStatusReport:
 	    return GetStatusReport();
 	
@@ -455,6 +472,47 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	    
 	    throw e;
 	}
+    }
+    
+    void UpdateReservationsStatus()
+    {
+	CPS_Tracer.TraceInformation("Trying to update reservations ");
+	
+	try
+	{
+	    
+	    String preparedStatementString = "SELECT * FROM Reservations";
+	    
+	    PreparedStatement preparedStatement = mySqlConnection.prepareStatement(preparedStatementString,
+		    ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+	    
+	    ResultSet resultSet = preparedStatement.executeQuery();
+	    
+	    while (resultSet.next())
+	    {
+		if (ReservationStatus.valueOf(resultSet.getString(10)).equals(ReservationStatus.NotStarted))
+		{
+		    LocalDateTime endingTime = LocalDateTime.of(LocalDate.parse(resultSet.getString(7)),
+			    LocalTime.parse(resultSet.getString(9)));
+		    
+		    if(LocalDateTime.now().isAfter(endingTime))
+		    {
+			CPS_Tracer.TraceInformation("Reservation number: "+ resultSet.getString(1) +" has closed");
+
+			
+			resultSet.updateString(10, ReservationStatus.NotFullfilled.toString());
+			resultSet.updateRow();
+			
+		    }
+		}
+	    }
+	    
+	}
+	catch (Exception e)
+	{
+	    CPS_Tracer.TraceError("Failed to update reservations");
+	}
+	
     }
     
     private ServerResponse<CloseComplaintRequest> CloseComplaint(CloseComplaintRequest closeComplaintRequest)
@@ -895,9 +953,9 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 	    
 	    while (resultSet.next())
 	    {
-		LocalDateTime expiryDateTime = LocalDateTime.parse(resultSet.getString(4));
+		LocalDate expiryDateTime = LocalDate.parse(resultSet.getString(4));
 		
-		if (expiryDateTime.isAfter(LocalDateTime.now()))
+		if (expiryDateTime.isAfter(LocalDate.now()))
 		{
 		    totalPartialMemberships++;
 		}
@@ -1662,11 +1720,11 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
 		
 		resultSet = preparedStatement.executeQuery();
 		
-		while(resultSet.next())
+		while (resultSet.next())
 		{
 		    LocalDate reservationStartingTime = LocalDate.parse(resultSet.getString(6));
 		    
-		    if(reservationStartingTime.equals(LocalDate.now()))
+		    if (reservationStartingTime.equals(LocalDate.now()))
 		    {
 			resultSet.updateString(10, ReservationStatus.Fullfilled.toString());
 			
@@ -1761,644 +1819,657 @@ public class ServerRequestHandler // pLw9Zaqp{ey`2,Ve
     
     private ServerResponse<PerformanceReport> GetPerformanceReport()
     {
-    	CPS_Tracer.TraceInformation("Trying to get performance report.");
-    	
-    	try 
-    	{
-    		PreparedStatement preparedStatement = mySqlConnection.prepareStatement("SELECT * FROM FullMemberships");
-    		
-    	    ServerResponse<PerformanceReport> serverResponse;
-    	    
-    	    ResultSet resultSet = preparedStatement.executeQuery();
-    	    
-    	    int membershipAmount=0;
-    	    
-    	    int membersMultipleCars=0;
-    	    
-    	    while (resultSet.next())
-    	    {
-    	    	membershipAmount++;
-    	    }
-    	    PreparedStatement preparedStatement2 = mySqlConnection.prepareStatement("SELECT * FROM PartialMemberships");
-    	    
-    	    ResultSet resultSet2 = preparedStatement2.executeQuery();
-    	    
-    	    while (resultSet2.next())
-    	    {
-    	    	membershipAmount++;
-    	    	
-    	    	if(resultSet2.getString(6).length() > 9)
-    	    	{
-    	    		membersMultipleCars++;
-    	    	}
-    	    	
-    	    }
-    	    
-    	    PerformanceReport performanceReport=new PerformanceReport(membershipAmount,membersMultipleCars);
-    	    
-    	    serverResponse = new ServerResponse<>(RequestResult.Succeed, performanceReport, null);
-    	    
-    	    CPS_Tracer.TraceInformation(
-    		    "Server response to client after trying to get performance report: \n" + serverResponse);
-    	    
-    	    return serverResponse;
-    	}
-    	catch (Exception e)
-    	{
-    	    CPS_Tracer.TraceError("Failed in getting performance report.", e);
-    	    
-    	    return new ServerResponse<>(RequestResult.Failed, null, "Failed to get performance report");
-    	}
+	CPS_Tracer.TraceInformation("Trying to get performance report.");
+	
+	try
+	{
+	    PreparedStatement preparedStatement = mySqlConnection.prepareStatement("SELECT * FROM FullMemberships");
+	    
+	    ServerResponse<PerformanceReport> serverResponse;
+	    
+	    ResultSet resultSet = preparedStatement.executeQuery();
+	    
+	    int membershipAmount = 0;
+	    
+	    int membersMultipleCars = 0;
+	    
+	    while (resultSet.next())
+	    {
+		membershipAmount++;
+	    }
+	    PreparedStatement preparedStatement2 = mySqlConnection.prepareStatement("SELECT * FROM PartialMemberships");
+	    
+	    ResultSet resultSet2 = preparedStatement2.executeQuery();
+	    
+	    while (resultSet2.next())
+	    {
+		membershipAmount++;
+		
+		if (resultSet2.getString(6).length() > 9)
+		{
+		    membersMultipleCars++;
+		}
+		
+	    }
+	    
+	    PerformanceReport performanceReport = new PerformanceReport(membershipAmount, membersMultipleCars);
+	    
+	    serverResponse = new ServerResponse<>(RequestResult.Succeed, performanceReport, null);
+	    
+	    CPS_Tracer.TraceInformation(
+		    "Server response to client after trying to get performance report: \n" + serverResponse);
+	    
+	    return serverResponse;
+	}
+	catch (Exception e)
+	{
+	    CPS_Tracer.TraceError("Failed in getting performance report.", e);
+	    
+	    return new ServerResponse<>(RequestResult.Failed, null, "Failed to get performance report");
+	}
     }
     
     private ServerResponse<ComplaintsReport> GetComplaintsReport()
     {
-    	CPS_Tracer.TraceInformation("Trying to get complaints report.");
+	CPS_Tracer.TraceInformation("Trying to get complaints report.");
 	
-    	try (PreparedStatement preparedStatement = mySqlConnection.prepareStatement("SELECT * FROM Complaints"))
-    	{
-    		ServerResponse<ComplaintsReport> serverResponse;
+	try (PreparedStatement preparedStatement = mySqlConnection.prepareStatement("SELECT * FROM Complaints"))
+	{
+	    ServerResponse<ComplaintsReport> serverResponse;
 	    
-    		ResultSet resultSet = preparedStatement.executeQuery();
+	    ResultSet resultSet = preparedStatement.executeQuery();
 	    
-    		int handledComplaints=0;
+	    int handledComplaints = 0;
 	    
-    		int complaintsAmount=0;
+	    int complaintsAmount = 0;
 	    
-    		LocalDateTime currentDateTime = LocalDateTime.now();
+	    LocalDateTime currentDateTime = LocalDateTime.now();
 	    
-    		LocalDateTime oldDateTime = currentDateTime.minusMonths(3);
+	    LocalDateTime oldDateTime = currentDateTime.minusMonths(3);
 	    
-    		while (resultSet.next())
-    		{
-    			LocalDateTime complaintDateTime = LocalDateTime.parse(resultSet.getString(3));
-	    	
-    			if(complaintDateTime.isAfter(oldDateTime) && complaintDateTime.isBefore(currentDateTime))
-    			{
-    				complaintsAmount++;
-	    		
-    				if(resultSet.getString(5).equals("Closed"))
-    				{
-    					handledComplaints++;
-    				}
-    			}
-
-    		}
+	    while (resultSet.next())
+	    {
+		LocalDateTime complaintDateTime = LocalDateTime.parse(resultSet.getString(3));
+		
+		if (complaintDateTime.isAfter(oldDateTime) && complaintDateTime.isBefore(currentDateTime))
+		{
+		    complaintsAmount++;
+		    
+		    if (resultSet.getString(5).equals("Closed"))
+		    {
+			handledComplaints++;
+		    }
+		}
+		
+	    }
 	    
-    		ComplaintsReport complaintsReport=new ComplaintsReport(complaintsAmount,handledComplaints);
+	    ComplaintsReport complaintsReport = new ComplaintsReport(complaintsAmount, handledComplaints);
 	    
-    		serverResponse = new ServerResponse<>(RequestResult.Succeed, complaintsReport, null);
+	    serverResponse = new ServerResponse<>(RequestResult.Succeed, complaintsReport, null);
 	    
-    		CPS_Tracer.TraceInformation("Server response to client after trying to get complaints report: \n" + serverResponse);
+	    CPS_Tracer.TraceInformation(
+		    "Server response to client after trying to get complaints report: \n" + serverResponse);
 	    
-    		return serverResponse;
-    	}
-    	catch (Exception e)
-    	{
-    		CPS_Tracer.TraceError("Failed in getting complaints report.", e);
+	    return serverResponse;
+	}
+	catch (Exception e)
+	{
+	    CPS_Tracer.TraceError("Failed in getting complaints report.", e);
 	    
-    		return new ServerResponse<>(RequestResult.Failed, null, "Failed to get complaints report");
-    	}
+	    return new ServerResponse<>(RequestResult.Failed, null, "Failed to get complaints report");
+	}
     }
     
     private ServerResponse<ReservationReport> GetReservationReport(String parkingLot)
     {
-    	CPS_Tracer.TraceInformation("Trying to get reservation report.");
+	CPS_Tracer.TraceInformation("Trying to get reservation report.");
 	
-    	try
-    	{
-    		PreparedStatement preparedStatement;
-    		
-    		if(parkingLot.equals("all"))
-    		{
-    			preparedStatement = mySqlConnection.prepareStatement("SELECT * FROM Reservations");
-    		}
-    		else
-    		{
-    			preparedStatement = mySqlConnection.prepareStatement("SELECT * FROM Reservations Where parkingLot=?");
+	try
+	{
+	    PreparedStatement preparedStatement;
+	    
+	    if (parkingLot.equals("all"))
+	    {
+		preparedStatement = mySqlConnection.prepareStatement("SELECT * FROM Reservations");
+	    }
+	    else
+	    {
+		preparedStatement = mySqlConnection.prepareStatement("SELECT * FROM Reservations Where parkingLot=?");
+		
+		preparedStatement.setString(1, parkingLot);
+	    }
+	    
+	    ServerResponse<ReservationReport> serverResponse;
+	    
+	    ResultSet resultSet = preparedStatement.executeQuery();
+	    
+	    int reservationAmount = 0;
+	    
+	    int reservationExcersied = 0;
+	    
+	    int reservationCancelled = 0;
+	    
+	    ArrayList<Reservation> guestList = new ArrayList<Reservation>();
+	    
+	    ArrayList<Reservation> inAdvanceList = new ArrayList<Reservation>();
+	    
+	    LocalDate currentDate = LocalDate.now();
+	    
+	    LocalDate oldDate = currentDate.minusMonths(3);
+	    
+	    while (resultSet.next())
+	    {
+		if (!(resultSet.getString(2).equals("Employee")))
+		{
+		    LocalDate reservationStartDate = LocalDate.parse(resultSet.getString(6));
+		    
+		    // LocalDate reservationEndingDate =
+		    // LocalDate.parse(resultSet.getString(7));
+		    
+		    if (reservationStartDate.isAfter(oldDate) && reservationStartDate.isBefore(currentDate))
+		    {
+			reservationAmount++;
 			
-    			preparedStatement.setString(1, parkingLot);
-    		}
-    		
-    		ServerResponse<ReservationReport> serverResponse;
+			String status = resultSet.getString(10);
+			
+			if (status.equals("Fullfilled") || status.equals("InProgress"))
+			{
+			    reservationExcersied++;
+			}
+			else if (status.equals("NotFullfilled"))
+			{
+			    reservationCancelled++;
+			}
+			
+			String orderId = resultSet.getString(1);
+			
+			String customerId = resultSet.getString(3);
+			
+			String parkingLot2 = resultSet.getString(4);
+			
+			String carNumber = resultSet.getString(5);
+			
+			LocalDate arrivalDate = LocalDate.parse(resultSet.getString(6));
+			
+			LocalDate leavingDate = LocalDate.parse(resultSet.getString(7));
+			
+			LocalTime arrivalHour = LocalTime.parse(resultSet.getString(8));
+			
+			LocalTime leavingHour = LocalTime.parse(resultSet.getString(9));
+			
+			ReservationType reservationType = ReservationType.valueOf(resultSet.getString(2));
+			
+			ReservationStatus reservationStatus = ReservationStatus.valueOf(resultSet.getString(10));
+			
+			Reservation reservation = new Reservation(reservationType, customerId, parkingLot2, carNumber,
+				arrivalDate, leavingDate, arrivalHour, leavingHour, reservationStatus);
+			
+			reservation.setOrderId(orderId);
+			
+			if (resultSet.getString(2).equals("Local"))
+			{
+			    guestList.add(reservation);
+			}
+			else if (resultSet.getString(2).equals("Web"))
+			{
+			    inAdvanceList.add(reservation);
+			}
+			
+		    }
+		}
+	    }
 	    
-    		ResultSet resultSet = preparedStatement.executeQuery();
+	    ReservationReport reservationReport = new ReservationReport(reservationAmount, reservationExcersied,
+		    reservationCancelled, guestList, inAdvanceList);
 	    
-    		int reservationAmount=0;
-		
-    		int reservationExcersied=0;
-		
-    		int reservationCancelled=0;
-    		
-    		ArrayList<Reservation> guestList=new ArrayList<Reservation>();
-    		
-    		ArrayList<Reservation> inAdvanceList=new ArrayList<Reservation>();
-		
-    		LocalDate currentDate = LocalDate.now();
-		
-    		LocalDate oldDate = currentDate.minusMonths(3);
+	    serverResponse = new ServerResponse<>(RequestResult.Succeed, reservationReport, null);
 	    
-    		while (resultSet.next())
-    		{
-    			if(!(resultSet.getString(2).equals("Employee")))
-    			{
-    				LocalDate reservationStartDate = LocalDate.parse(resultSet.getString(6));
-	    	
-    				LocalDate reservationEndingDate = LocalDate.parse(resultSet.getString(7));
-	    	
-    				if(reservationStartDate.isAfter(oldDate) && reservationStartDate.isBefore(currentDate))
-    				{
-    					reservationAmount++;
-	    	
-    					String status = resultSet.getString(10);
-	    	
-    					if(status.equals("Fullfilled") || status.equals("InProgress"))
-    					{
-    						reservationExcersied++;
-    					}
-    					else if(status.equals("NotFullfilled"))
-	    				{
-    						reservationCancelled++;
-	    				}
-    				
-    					String orderId=resultSet.getString(1);
-    				
-    					String customerId=resultSet.getString(3);
-    				
-    					String parkingLot2=resultSet.getString(4);
-    				
-    					String carNumber=resultSet.getString(5);
-    				
-    					LocalDate arrivalDate=LocalDate.parse(resultSet.getString(6));
-    				
-    					LocalDate leavingDate=LocalDate.parse(resultSet.getString(7));
-    				
-    					LocalTime arrivalHour=LocalTime.parse(resultSet.getString(8));
-    				
-    					LocalTime leavingHour=LocalTime.parse(resultSet.getString(9));
-    				
-    					ReservationType reservationType=ReservationType.valueOf(resultSet.getString(2));
-    				
-    					ReservationStatus reservationStatus=ReservationStatus.valueOf(resultSet.getString(10));
-    				
-    					Reservation reservation=new Reservation(reservationType, customerId, parkingLot2, carNumber, arrivalDate, leavingDate, arrivalHour, leavingHour, reservationStatus);
-    				
-    					reservation.setOrderId(orderId);
-    				
-    					if(resultSet.getString(2).equals("Local"))
-    					{
-    						guestList.add(reservation);
-    					}
-    					else if(resultSet.getString(2).equals("Web"))
-    					{
-    						inAdvanceList.add(reservation);
-    					}
-    				
-    				}
-    			}
-    		}
+	    CPS_Tracer.TraceInformation(
+		    "Server response to client after trying to get reservation report: \n" + serverResponse);
 	    
-    		ReservationReport reservationReport=new ReservationReport(reservationAmount, reservationExcersied, reservationCancelled, guestList, inAdvanceList);
+	    return serverResponse;
+	}
+	catch (Exception e)
+	{
+	    CPS_Tracer.TraceError("Failed in getting reservation report.", e);
 	    
-    		serverResponse = new ServerResponse<>(RequestResult.Succeed, reservationReport, null);
-	    
-    		CPS_Tracer.TraceInformation("Server response to client after trying to get reservation report: \n" + serverResponse);
-	    
-    		return serverResponse;
-    	}
-    	catch (Exception e)
-    	{
-    		CPS_Tracer.TraceError("Failed in getting reservation report.", e);
-	    
-    		return new ServerResponse<>(RequestResult.Failed, null, "Failed to get reservation report");
-    	}
+	    return new ServerResponse<>(RequestResult.Failed, null, "Failed to get reservation report");
+	}
     }
     
     private ServerResponse<DisabledReport> GetDisabledReport(String parkingLot)
     {
-    	CPS_Tracer.TraceInformation("Trying to get disabled report.");
+	CPS_Tracer.TraceInformation("Trying to get disabled report.");
 	
-    	try
-    	{
-    		PreparedStatement preparedStatement;
-    		
-    		if(parkingLot.equals("all"))
-    		{
-    			preparedStatement = mySqlConnection.prepareStatement("SELECT * FROM DisabledParkingSpots");
-    		}
-    		else
-    		{
-    			preparedStatement = mySqlConnection.prepareStatement("SELECT * FROM DisabledParkingSpots Where parkinglotName=?");
+	try
+	{
+	    PreparedStatement preparedStatement;
+	    
+	    if (parkingLot.equals("all"))
+	    {
+		preparedStatement = mySqlConnection.prepareStatement("SELECT * FROM DisabledParkingSpots");
+	    }
+	    else
+	    {
+		preparedStatement = mySqlConnection
+			.prepareStatement("SELECT * FROM DisabledParkingSpots Where parkinglotName=?");
+		
+		preparedStatement.setString(1, parkingLot);
+	    }
+	    
+	    ServerResponse<DisabledReport> serverResponse;
+	    
+	    ResultSet resultSet = preparedStatement.executeQuery();
+	    
+	    int disabledAmount = 0;
+	    
+	    ArrayList<DisabledParkingSpot> activeList = new ArrayList<DisabledParkingSpot>();
+	    
+	    ArrayList<DisabledParkingSpot> disabledList = new ArrayList<DisabledParkingSpot>();
+	    
+	    LocalDateTime currentDateTime = LocalDateTime.now();
+	    
+	    LocalDateTime oldDateTime = currentDateTime.minusMonths(3);
+	    
+	    while (resultSet.next())
+	    {
+		if (resultSet.getString(6).equals("Active"))
+		{
+		    LocalDateTime disabledStartDateTime = LocalDateTime.parse(resultSet.getString(4));
+		    
+		    LocalDateTime disabledEndDateTime = LocalDateTime.parse(resultSet.getString(5));
+		    
+		    if (disabledEndDateTime.isAfter(oldDateTime))
+		    {
+			disabledAmount++;
 			
-    			preparedStatement.setString(1, parkingLot);
-    		}
-    		
-    		ServerResponse<DisabledReport> serverResponse;
+			String parkingLotName = resultSet.getString(2);
+			
+			ParkingSpot parkingSpot = ParkingSpot.Parse(resultSet.getString(3));
+			
+			ParkingSpotStatus status = ParkingSpotStatus.valueOf(resultSet.getString(6));
+			
+			DisabledParkingSpot activeSpot = new DisabledParkingSpot(parkingLotName, parkingSpot,
+				disabledStartDateTime, disabledEndDateTime, status);
+			
+			activeList.add(activeSpot);
+		    }
+		}
+		else
+		{
+		    disabledAmount++;
+		    
+		    String parkingLotName = resultSet.getString(2);
+		    
+		    ParkingSpot parkingSpot = ParkingSpot.Parse(resultSet.getString(3));
+		    
+		    ParkingSpotStatus status = ParkingSpotStatus.valueOf(resultSet.getString(6));
+		    
+		    LocalDateTime disabledStartDateTime = LocalDateTime.parse(resultSet.getString(4));
+		    
+		    LocalDateTime disabledEndDateTime = LocalDateTime.now();
+		    
+		    DisabledParkingSpot disabledSpot = new DisabledParkingSpot(parkingLotName, parkingSpot,
+			    disabledStartDateTime, disabledEndDateTime, status);
+		    
+		    disabledList.add(disabledSpot);
+		}
+	    }
 	    
-    		ResultSet resultSet = preparedStatement.executeQuery();
+	    DisabledReport disabledReport = new DisabledReport(disabledAmount, activeList, disabledList);
 	    
-    		int disabledAmount=0;
-		
-    		ArrayList<DisabledParkingSpot> activeList=new ArrayList<DisabledParkingSpot>();
-    		
-    		ArrayList<DisabledParkingSpot> disabledList=new ArrayList<DisabledParkingSpot>();
-		
-    		LocalDateTime currentDateTime = LocalDateTime.now();
-		
-    		LocalDateTime oldDateTime = currentDateTime.minusMonths(3);
+	    serverResponse = new ServerResponse<>(RequestResult.Succeed, disabledReport, null);
 	    
-    		while (resultSet.next())
-    		{
-    			if(resultSet.getString(6).equals("Active"))
-    			{
-    				LocalDateTime disabledStartDateTime = LocalDateTime.parse(resultSet.getString(4));
-	    	
-    				LocalDateTime disabledEndDateTime = LocalDateTime.parse(resultSet.getString(5));
-	    	
-    				if(disabledEndDateTime.isAfter(oldDateTime))
-    				{
-    					disabledAmount++;
-    					
-    					String parkingLotName=resultSet.getString(2);
-    					
-    					ParkingSpot parkingSpot=ParkingSpot.Parse(resultSet.getString(3));
-    					
-    					ParkingSpotStatus status=ParkingSpotStatus.valueOf(resultSet.getString(6));
-    					
-    					DisabledParkingSpot activeSpot =new DisabledParkingSpot(parkingLotName, parkingSpot, disabledStartDateTime, disabledEndDateTime, status);
-    					
-    					activeList.add(activeSpot);
-    				}
-    			}
-    			else
-    			{
-    				disabledAmount++;
-					
-					String parkingLotName=resultSet.getString(2);
-					
-					ParkingSpot parkingSpot=ParkingSpot.Parse(resultSet.getString(3));
-					
-					ParkingSpotStatus status=ParkingSpotStatus.valueOf(resultSet.getString(6));
-					
-					LocalDateTime disabledStartDateTime = LocalDateTime.parse(resultSet.getString(4));
-					
-					LocalDateTime disabledEndDateTime = LocalDateTime.now();
-					
-					DisabledParkingSpot disabledSpot =new DisabledParkingSpot(parkingLotName, parkingSpot, disabledStartDateTime, disabledEndDateTime, status);
-					
-					disabledList.add(disabledSpot);
-    			}
-    		}
+	    CPS_Tracer.TraceInformation(
+		    "Server response to client after trying to get disabled report: \n" + serverResponse);
 	    
-    		DisabledReport disabledReport=new DisabledReport(disabledAmount, activeList, disabledList);
+	    return serverResponse;
+	}
+	catch (Exception e)
+	{
+	    CPS_Tracer.TraceError("Failed in getting disabled report.", e);
 	    
-    		serverResponse = new ServerResponse<>(RequestResult.Succeed, disabledReport, null);
-	    
-    		CPS_Tracer.TraceInformation("Server response to client after trying to get disabled report: \n" + serverResponse);
-	    
-    		return serverResponse;
-    	}
-    	catch (Exception e)
-    	{
-    		CPS_Tracer.TraceError("Failed in getting disabled report.", e);
-	    
-    		return new ServerResponse<>(RequestResult.Failed, null, "Failed to get disabled report");
-    	}
+	    return new ServerResponse<>(RequestResult.Failed, null, "Failed to get disabled report");
+	}
     }
     
     private ServerResponse<ActivityReport> GetActivityReport(LocalDate localDate)
     {
-    	CPS_Tracer.TraceInformation("Trying to get activity report.");
+	CPS_Tracer.TraceInformation("Trying to get activity report.");
 	
-    	try
-    	{
-    		PreparedStatement preparedStatement;
-    		
-    		preparedStatement = mySqlConnection.prepareStatement("SELECT * FROM Reservations");
-    		
-    		ServerResponse<ActivityReport> serverResponse;
+	try
+	{
+	    PreparedStatement preparedStatement;
 	    
-    		ResultSet resultSet = preparedStatement.executeQuery();
+	    preparedStatement = mySqlConnection.prepareStatement("SELECT * FROM Reservations");
+	    
+	    ServerResponse<ActivityReport> serverResponse;
+	    
+	    ResultSet resultSet = preparedStatement.executeQuery();
+	    
+	    ArrayList<Integer> arrExercised = new ArrayList<Integer>();
+	    
+	    ArrayList<Integer> arrCancelled = new ArrayList<Integer>();
+	    
+	    ArrayList<Float> arrDisabled = new ArrayList<Float>();
+	    
+	    float medianExercised = 0;
+	    
+	    float medianCancelled = 0;
+	    
+	    float medianDisabled = 0;
+	    
+	    float deviationExercised = 0;
+	    
+	    float deviationCancelled = 0;
+	    
+	    float deviationDisabled = 0;
+	    
+	    LocalDate monthForward = localDate.plusMonths(1);
+	    
+	    LocalDate tempDate = localDate;
+	    
+	    resultSet.next();
+	    
+	    while (!(tempDate.equals(monthForward)))
+	    {
+		int exercised = 0;
 		
-    		ArrayList<Integer> arrExercised=new ArrayList<Integer>();
-    		
-    		ArrayList<Integer> arrCancelled=new ArrayList<Integer>();
-    		
-    		ArrayList<Float> arrDisabled=new ArrayList<Float>();
-    		
-    		float medianExercised=0;
-    		
-    		float medianCancelled=0;
-    		
-    		float medianDisabled=0;
-    		
-    		float deviationExercised=0;
-    		
-    		float deviationCancelled=0;
-    		
-    		float deviationDisabled=0;
-    		
-    		LocalDate monthForward = localDate.plusMonths(1);
-    		
-    		LocalDate tempDate = localDate;
-    		
-			resultSet.next();
+		int cancelled = 0;
+		
+		do
+		{
+		    LocalDate startDate = LocalDate.parse(resultSet.getString(6));
+		    
+		    if (startDate.equals(tempDate))
+		    {
+			if (resultSet.getString(10).equals("Fullfilled"))
+			{
+			    if (!(resultSet.getString(2).equals("Employee"))) exercised++;
+			}
+			
+			else if (resultSet.getString(10).equals("NotFullfilled"))
+			{
+			    if (!(resultSet.getString(2).equals("Employee"))) cancelled++;
+			}
+		    }
+		}
+		while (resultSet.next());
+		
+		arrExercised.add(exercised);
+		
+		arrCancelled.add(cancelled);
+		
+		resultSet.first();
+		
+		tempDate = tempDate.plusDays(1);
+	    }
 	    
-    		while(!(tempDate.equals(monthForward)))
-    		{
-    			int exercised=0;
-    			
-    			int cancelled=0;
-    			
-    			do
-    			{
-    				LocalDate startDate=LocalDate.parse(resultSet.getString(6));
-    				
-    				if(startDate.equals(tempDate))
-    				{
-    					if(resultSet.getString(10).equals("Fullfilled"))
-    					{
-    						if(!(resultSet.getString(2).equals("Employee")))
-    							exercised++;
-    					}
-    					
-    					else if(resultSet.getString(10).equals("NotFullfilled"))
-    					{
-    						if(!(resultSet.getString(2).equals("Employee")))
-    							cancelled++;
-    					}
-    				}
-    			}
-    			while (resultSet.next());
-
-    			
-    			arrExercised.add(exercised);
-    			
-    			arrCancelled.add(cancelled);
-    			
-    			resultSet.first();
-    			
-    			tempDate=tempDate.plusDays(1);
-    		}
-    		
-    		PreparedStatement preparedStatement2;
-    		
-    		preparedStatement2 = mySqlConnection.prepareStatement("SELECT * FROM DisabledParkingSpots");
-    		
-    		ResultSet resultSet2 = preparedStatement2.executeQuery();
-    		
-    		LocalDateTime localDateTime = localDate.atStartOfDay();
-    		
-    		LocalDateTime tempDateTime = localDateTime;
-    		
-    		LocalDateTime monthForwardDT = localDateTime.plusMonths(1);
-    		
-    		resultSet2.next();
-    		
-    		while(!(tempDateTime.equals(monthForwardDT)))
-    		{
-    			float disabled=0;
-    			
-    			do
-    			{
-    				LocalDateTime startDateTime = LocalDateTime.parse(resultSet2.getString(4));
-    				
-    				Duration duration=Duration.ZERO;
-    				
-    				if(resultSet2.getString(6).equals("Active"))
-    				{
-    					LocalDateTime endDateTime = LocalDateTime.parse(resultSet2.getString(5));
-    					
-    					if(startDateTime.isBefore(tempDateTime.plusDays(1)) && endDateTime.isAfter(tempDateTime))
-        				{
-    						if(startDateTime.isAfter(tempDateTime) && endDateTime.isBefore(tempDateTime.plusDays(1)))
-    						{
-    							duration = Duration.between(startDateTime, endDateTime);
-    						}
-    						else if(endDateTime.isBefore(tempDateTime.plusDays(1)))
-    						{
-    							duration = Duration.between(tempDateTime, endDateTime);
-    						}
-    						else if(startDateTime.isAfter(tempDateTime))
-            				{
-            					duration = Duration.between(startDateTime, tempDateTime.plusDays(1));
-            				}
-        				}
-    				}
-    				else
-    				{
-    					if(startDateTime.isBefore(tempDateTime.plusDays(1)))
-    					{
-    						if(startDateTime.isBefore(tempDateTime))
-    						{
-    							duration = Duration.between(tempDateTime, tempDateTime.plusDays(1));
-    						}
-    						else
-    						{
-    							duration = Duration.between(startDateTime, tempDateTime.plusDays(1));
-    						}
-    					}
-    				}
-    				disabled+=(float)duration.getSeconds();
-    			}
-    			while(resultSet2.next());
-
-    			
-    			disabled/=3600;
-    			
-    			arrDisabled.add(disabled);
-    			
-    			resultSet2.first();
-    			
-    			tempDateTime=tempDateTime.plusDays(1);
-    		}
-    		
-    		Integer[] arrayEx = arrExercised.toArray(new Integer[arrExercised.size()]) ;
-    		
-    		Integer[] arrayCa = arrCancelled.toArray(new Integer[arrCancelled.size()]) ;
-    		
-    		Float[] arrayDi = arrDisabled.toArray(new Float[arrDisabled.size()]) ;
-    		
-    		Arrays.sort(arrayEx);
-    		
-    		Arrays.sort(arrayCa);
-    		
-    		Arrays.sort(arrayDi);
-    		
-    		medianExercised = median(arrayEx);
-    		
-    		medianCancelled = median(arrayCa);
-    				
-    		medianDisabled = median(arrayDi);
-    		
-    		int sumExercised=sum(arrayEx);
-    		
-    		int sumCancelled=sum(arrayCa);
-    		
-    		float sumDisabled=sum(arrayDi);
-    		
-    		float meanExercised=(sumExercised/(float)arrayEx.length);
-    		
-    		float meanCancelled=(sumCancelled/(float)arrayCa.length);
-    		
-    		float meanDisabled=(sumDisabled/(float)arrayDi.length);
-    		
-    		deviationExercised=sd(arrayEx,meanExercised);
-    		
-    		deviationCancelled=sd(arrayCa,meanCancelled);
-    		
-    		deviationDisabled=sd(arrayDi,meanDisabled);
+	    PreparedStatement preparedStatement2;
 	    
-    		ActivityReport activityReport=new ActivityReport(arrExercised, arrCancelled, arrDisabled, medianExercised, medianCancelled, medianDisabled, deviationExercised, deviationCancelled, deviationDisabled);
+	    preparedStatement2 = mySqlConnection.prepareStatement("SELECT * FROM DisabledParkingSpots");
 	    
-    		serverResponse = new ServerResponse<>(RequestResult.Succeed, activityReport, null);
+	    ResultSet resultSet2 = preparedStatement2.executeQuery();
 	    
-    		CPS_Tracer.TraceInformation("Server response to client after trying to get activity report: \n" + serverResponse);
+	    LocalDateTime localDateTime = localDate.atStartOfDay();
 	    
-    		return serverResponse;
-    	}
-    	catch (Exception e)
-    	{
-    		CPS_Tracer.TraceError("Failed in getting activity report.", e);
+	    LocalDateTime tempDateTime = localDateTime;
 	    
-    		return new ServerResponse<>(RequestResult.Failed, null, "Failed to get activity report");
-    	}
+	    LocalDateTime monthForwardDT = localDateTime.plusMonths(1);
+	    
+	    resultSet2.next();
+	    
+	    while (!(tempDateTime.equals(monthForwardDT)))
+	    {
+		float disabled = 0;
+		
+		do
+		{
+		    LocalDateTime startDateTime = LocalDateTime.parse(resultSet2.getString(4));
+		    
+		    Duration duration = Duration.ZERO;
+		    
+		    if (resultSet2.getString(6).equals("Active"))
+		    {
+			LocalDateTime endDateTime = LocalDateTime.parse(resultSet2.getString(5));
+			
+			if (startDateTime.isBefore(tempDateTime.plusDays(1)) && endDateTime.isAfter(tempDateTime))
+			{
+			    if (startDateTime.isAfter(tempDateTime) && endDateTime.isBefore(tempDateTime.plusDays(1)))
+			    {
+				duration = Duration.between(startDateTime, endDateTime);
+			    }
+			    else if (endDateTime.isBefore(tempDateTime.plusDays(1)))
+			    {
+				duration = Duration.between(tempDateTime, endDateTime);
+			    }
+			    else if (startDateTime.isAfter(tempDateTime))
+			    {
+				duration = Duration.between(startDateTime, tempDateTime.plusDays(1));
+			    }
+			}
+		    }
+		    else
+		    {
+			if (startDateTime.isBefore(tempDateTime.plusDays(1)))
+			{
+			    if (startDateTime.isBefore(tempDateTime))
+			    {
+				duration = Duration.between(tempDateTime, tempDateTime.plusDays(1));
+			    }
+			    else
+			    {
+				duration = Duration.between(startDateTime, tempDateTime.plusDays(1));
+			    }
+			}
+		    }
+		    disabled += (float) duration.getSeconds();
+		}
+		while (resultSet2.next());
+		
+		disabled /= 3600;
+		
+		arrDisabled.add(disabled);
+		
+		resultSet2.first();
+		
+		tempDateTime = tempDateTime.plusDays(1);
+	    }
+	    
+	    Integer[] arrayEx = arrExercised.toArray(new Integer[arrExercised.size()]);
+	    
+	    Integer[] arrayCa = arrCancelled.toArray(new Integer[arrCancelled.size()]);
+	    
+	    Float[] arrayDi = arrDisabled.toArray(new Float[arrDisabled.size()]);
+	    
+	    Arrays.sort(arrayEx);
+	    
+	    Arrays.sort(arrayCa);
+	    
+	    Arrays.sort(arrayDi);
+	    
+	    medianExercised = median(arrayEx);
+	    
+	    medianCancelled = median(arrayCa);
+	    
+	    medianDisabled = median(arrayDi);
+	    
+	    int sumExercised = sum(arrayEx);
+	    
+	    int sumCancelled = sum(arrayCa);
+	    
+	    float sumDisabled = sum(arrayDi);
+	    
+	    float meanExercised = (sumExercised / (float) arrayEx.length);
+	    
+	    float meanCancelled = (sumCancelled / (float) arrayCa.length);
+	    
+	    float meanDisabled = (sumDisabled / (float) arrayDi.length);
+	    
+	    deviationExercised = sd(arrayEx, meanExercised);
+	    
+	    deviationCancelled = sd(arrayCa, meanCancelled);
+	    
+	    deviationDisabled = sd(arrayDi, meanDisabled);
+	    
+	    ActivityReport activityReport = new ActivityReport(arrExercised, arrCancelled, arrDisabled, medianExercised,
+		    medianCancelled, medianDisabled, deviationExercised, deviationCancelled, deviationDisabled);
+	    
+	    serverResponse = new ServerResponse<>(RequestResult.Succeed, activityReport, null);
+	    
+	    CPS_Tracer.TraceInformation(
+		    "Server response to client after trying to get activity report: \n" + serverResponse);
+	    
+	    return serverResponse;
+	}
+	catch (Exception e)
+	{
+	    CPS_Tracer.TraceError("Failed in getting activity report.", e);
+	    
+	    return new ServerResponse<>(RequestResult.Failed, null, "Failed to get activity report");
+	}
     }
     
     private ServerResponse<StatusReport> GetStatusReport()
     {
-    	CPS_Tracer.TraceInformation("Trying to get status report.");
+	CPS_Tracer.TraceInformation("Trying to get status report.");
 	
-    	try
-    	{
-    		PreparedStatement preparedStatement = mySqlConnection.prepareStatement("SELECT * FROM ParkingLots WHERE status=?");
-    				
-    		preparedStatement.setString(1, "Open");
-    		
-    		ServerResponse<StatusReport> serverResponse;
+	try
+	{
+	    PreparedStatement preparedStatement = mySqlConnection
+		    .prepareStatement("SELECT * FROM ParkingLots WHERE status=?");
 	    
-    		ResultSet resultSet = preparedStatement.executeQuery();
-    		
-    		Hashtable<String,ArrayList<ParkingSpotCondition>> table = new Hashtable<String,ArrayList<ParkingSpotCondition>>();
+	    preparedStatement.setString(1, "Open");
 	    
-    		while (resultSet.next())
-    		{
-    			PreparedStatement preparedStatement2 = mySqlConnection.prepareStatement("SELECT * FROM RealTimeParking WHERE parkingLot=?");
-    			
-    			preparedStatement2.setString(1, resultSet.getString(1));
-    			
-    			ResultSet resultSet2 = preparedStatement2.executeQuery();
-    			
-    			PreparedStatement preparedStatement3 = mySqlConnection.prepareStatement("SELECT * FROM DisabledParkingSpots WHERE parkinglotName=?");
-    			
-    			preparedStatement3.setString(1, resultSet.getString(1));
-    			
-    			ResultSet resultSet3 = preparedStatement3.executeQuery();
-    			
-    			int width = Integer.parseInt(resultSet.getString(2));
-    			
-    			int total = Integer.parseInt(resultSet.getString(6));
-    			
-    			ArrayList<ParkingSpotCondition> list= new ArrayList<ParkingSpotCondition>();
-    			
-    			for(int i=0; i<total;i++)
-    			{
-    				list.add(ParkingSpotCondition.Free);
-    			}
-    			
-    			while (resultSet2.next())
-    			{
-    				ParkingSpot parkingspot = ParkingSpot.Parse(resultSet2.getString(2));
-    				
-    				int index = (parkingspot.getWidth_X() + ((parkingspot.getDepth_Z()-1)*width) + ((parkingspot.getHeight_Y()-1)*width*3));
-    				
-    				list.set(index-1, ParkingSpotCondition.Occupied);
-    			}
-    			
-    			while (resultSet3.next())
-    			{
-    				if(resultSet3.getString(6).equals("Disabled"))
-    				{
-    					ParkingSpot parkingspot2 = ParkingSpot.Parse(resultSet3.getString(3));
-    				
-    					int index = (parkingspot2.getWidth_X() + ((parkingspot2.getDepth_Z()-1)*width) + ((parkingspot2.getHeight_Y()-1)*width*3));
-    				
-    					list.set(index-1, ParkingSpotCondition.Disabled);
-    				}
-    			}
-    			
-    			table.put(resultSet.getString(1), list);
-    		}
+	    ServerResponse<StatusReport> serverResponse;
 	    
-    		StatusReport statusReport=new StatusReport(table);
+	    ResultSet resultSet = preparedStatement.executeQuery();
 	    
-    		serverResponse = new ServerResponse<>(RequestResult.Succeed, statusReport, null);
+	    Hashtable<String, ArrayList<ParkingSpotCondition>> table = new Hashtable<String, ArrayList<ParkingSpotCondition>>();
 	    
-    		CPS_Tracer.TraceInformation("Server response to client after trying to get status report: \n" + serverResponse);
+	    while (resultSet.next())
+	    {
+		PreparedStatement preparedStatement2 = mySqlConnection
+			.prepareStatement("SELECT * FROM RealTimeParking WHERE parkingLot=?");
+		
+		preparedStatement2.setString(1, resultSet.getString(1));
+		
+		ResultSet resultSet2 = preparedStatement2.executeQuery();
+		
+		PreparedStatement preparedStatement3 = mySqlConnection
+			.prepareStatement("SELECT * FROM DisabledParkingSpots WHERE parkinglotName=?");
+		
+		preparedStatement3.setString(1, resultSet.getString(1));
+		
+		ResultSet resultSet3 = preparedStatement3.executeQuery();
+		
+		int width = Integer.parseInt(resultSet.getString(2));
+		
+		int total = Integer.parseInt(resultSet.getString(6));
+		
+		ArrayList<ParkingSpotCondition> list = new ArrayList<ParkingSpotCondition>();
+		
+		for (int i = 0; i < total; i++)
+		{
+		    list.add(ParkingSpotCondition.Free);
+		}
+		
+		while (resultSet2.next())
+		{
+		    ParkingSpot parkingspot = ParkingSpot.Parse(resultSet2.getString(2));
+		    
+		    int index = (parkingspot.getWidth_X() + ((parkingspot.getDepth_Z() - 1) * width)
+			    + ((parkingspot.getHeight_Y() - 1) * width * 3));
+		    
+		    list.set(index - 1, ParkingSpotCondition.Occupied);
+		}
+		
+		while (resultSet3.next())
+		{
+		    if (resultSet3.getString(6).equals("Disabled"))
+		    {
+			ParkingSpot parkingspot2 = ParkingSpot.Parse(resultSet3.getString(3));
+			
+			int index = (parkingspot2.getWidth_X() + ((parkingspot2.getDepth_Z() - 1) * width)
+				+ ((parkingspot2.getHeight_Y() - 1) * width * 3));
+			
+			list.set(index - 1, ParkingSpotCondition.Disabled);
+		    }
+		}
+		
+		table.put(resultSet.getString(1), list);
+	    }
 	    
-    		return serverResponse;
-    	}
-    	catch (Exception e)
-    	{
-    		CPS_Tracer.TraceError("Failed in getting status report.", e);
+	    StatusReport statusReport = new StatusReport(table);
 	    
-    		return new ServerResponse<>(RequestResult.Failed, null, "Failed to get status report");
-    	}
+	    serverResponse = new ServerResponse<>(RequestResult.Succeed, statusReport, null);
+	    
+	    CPS_Tracer.TraceInformation(
+		    "Server response to client after trying to get status report: \n" + serverResponse);
+	    
+	    return serverResponse;
+	}
+	catch (Exception e)
+	{
+	    CPS_Tracer.TraceError("Failed in getting status report.", e);
+	    
+	    return new ServerResponse<>(RequestResult.Failed, null, "Failed to get status report");
+	}
     }
     
     float median(Integer[] arr)
     {
-    	if (arr.length % 2 == 0)
-			return ((float)arr[arr.length/2] + (float)arr[arr.length/2 - 1])/2;
-		else
-			return (float)arr[arr.length/2];
+	if (arr.length % 2 == 0)
+	    return ((float) arr[arr.length / 2] + (float) arr[arr.length / 2 - 1]) / 2;
+	else
+	    return (float) arr[arr.length / 2];
     }
     
     float median(Float[] arr)
     {
-    	if (arr.length % 2 == 0)
-			return ((float)arr[arr.length/2] + (float)arr[arr.length/2 - 1])/2;
-		else
-			return (float)arr[arr.length/2];
+	if (arr.length % 2 == 0)
+	    return ((float) arr[arr.length / 2] + (float) arr[arr.length / 2 - 1]) / 2;
+	else
+	    return (float) arr[arr.length / 2];
     }
     
     int sum(Integer[] arr)
     {
-    	int tempSum=0;
-    	for(int i = 0 ; i < arr.length ; i++)
-    	{
-    		tempSum+=arr[i];
-    	}
-    	return tempSum;
+	int tempSum = 0;
+	for (int i = 0; i < arr.length; i++)
+	{
+	    tempSum += arr[i];
+	}
+	return tempSum;
     }
     
     float sum(Float[] arr)
     {
-    	int tempSum=0;
-    	for(int i = 0 ; i < arr.length  ;i++)
-    	{
-    		tempSum+=arr[i];
-    	}
-    	return tempSum;
+	int tempSum = 0;
+	for (int i = 0; i < arr.length; i++)
+	{
+	    tempSum += arr[i];
+	}
+	return tempSum;
     }
     
-    float sd(Integer[] arr,float mean)
+    float sd(Integer[] arr, float mean)
     {
-    	double sum=0;
-    	for(int i = 0 ; i < arr.length ; i++)
-    	{
-    		sum += Math.pow((arr[i] - mean), 2);
-    	}
-    	return (float)Math.sqrt(sum/arr.length);
+	double sum = 0;
+	for (int i = 0; i < arr.length; i++)
+	{
+	    sum += Math.pow((arr[i] - mean), 2);
+	}
+	return (float) Math.sqrt(sum / arr.length);
     }
     
-    float sd(Float[] arr,float mean)
+    float sd(Float[] arr, float mean)
     {
-    	double sum=0;
-    	for(int i = 0 ; i < arr.length ; i++)
-    	{
-    		sum += Math.pow((arr[i] - mean), 2);
-    	}
-    	return (float)Math.sqrt(sum/arr.length);
+	double sum = 0;
+	for (int i = 0; i < arr.length; i++)
+	{
+	    sum += Math.pow((arr[i] - mean), 2);
+	}
+	return (float) Math.sqrt(sum / arr.length);
     }
 }

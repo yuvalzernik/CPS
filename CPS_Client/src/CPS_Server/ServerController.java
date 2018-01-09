@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import CPS_Utilities.CPS_Tracer;
 import clientServerCPS.ClientServerConsts;
@@ -43,8 +45,32 @@ public class ServerController
 	CPS_Tracer.TraceInformation("Server is shutting down.");
     }
     
+    private void RegisterTimers()
+    {
+	Timer timer = new Timer ();
+	TimerTask hourlyTask = new TimerTask () {
+	    @Override
+	    public void run () {
+	        try(ServerRequestHandler serverRequestHandler = new ServerRequestHandler())
+		{
+		    serverRequestHandler.UpdateReservationsStatus();
+		}
+		catch (Exception e)
+		{
+		    System.out.println(e);
+		}
+	    }
+	};
+	
+	timer.schedule(hourlyTask, 0, 1000*60*60);
+    }
+    
     public static void main(String[] args) throws Exception
     {
-	new ServerController().ListenAndResponse();
+	ServerController serverController = new ServerController();
+	
+	serverController.RegisterTimers();
+	
+	serverController.ListenAndResponse();
     }
 }
