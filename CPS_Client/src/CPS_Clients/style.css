@@ -17,6 +17,9 @@
 .menu-item .label{
     -fx-text-fill: black;
 }
+.table-view .label{
+    -fx-text-fill: black;
+}
 
 .dialog-pane .label {
     -fx-text-fill: black;

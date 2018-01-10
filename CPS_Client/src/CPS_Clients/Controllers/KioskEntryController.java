@@ -23,8 +23,8 @@ import entities.Reservation;
 import entities.enums.ReservationStatus;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Dialog;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Dialog;
 
 public class KioskEntryController extends BaseController
 {
@@ -266,6 +266,17 @@ public class KioskEntryController extends BaseController
 			false);
 		return;
 	    }
+	    
+	
+	    if (partialMembershipResponse.GetRequestResult().equals(RequestResult.Succeed)
+			    &&(LocalDate.now().getDayOfWeek().name().equals("FRIDAY")||(LocalDate.now().getDayOfWeek().name().equals("SATURDAY"))))
+		    {
+	    
+			DialogBuilder.AlertDialog(AlertType.ERROR, null,
+				"You can not enter the parking lot during the weekend.", null,
+				false);
+			return;
+		    }
 	    
 	    if (partialMembershipResponse.GetRequestResult().equals(RequestResult.Succeed))
 	    {
