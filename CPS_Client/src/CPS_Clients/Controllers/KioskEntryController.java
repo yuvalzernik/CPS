@@ -12,9 +12,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import com.sun.javafx.css.CalculatedValue;
-
-import CPS_Clients.Web;
 import CPS_Utilities.Consts;
 import CPS_Utilities.DialogBuilder;
 import clientServerCPS.RequestResult;
