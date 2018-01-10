@@ -30,14 +30,14 @@ public class ManagerLoginController extends EmployeeBaseController{
 	public ManagerLoginController()
 	{
 		super();
-		DisableParkingSpotInputs.add("Parking Spot Width:");
-		DisableParkingSpotInputs.add("Parking Spot height:");
-		DisableParkingSpotInputs.add("Parking Spot depth:");
+		DisableParkingSpotInputs.add("Parking spot width:");
+		DisableParkingSpotInputs.add("Parking spot height:");
+		DisableParkingSpotInputs.add("Parking spot depth:");
 		
-		InitializeParkingSpotInputs.add("Parking Lot Width:");
+		InitializeParkingSpotInputs.add("Parking lot width:");
 		
 		RequestUpdatePricesInputs.add("New guest rate:");
-		RequestUpdatePricesInputs.add("New in advance rate:");
+		RequestUpdatePricesInputs.add("New in-advance rate:");
 	}
 
     @FXML

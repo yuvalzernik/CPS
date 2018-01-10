@@ -75,7 +75,7 @@ public class EmployeesLoginController extends EmployeeBaseController
 		    if (employeeRes.GetResponseObject().getLogedStatus().equals(LogedStatus.LogedIn))
 		    {
 			DialogBuilder.AlertDialog(AlertType.ERROR, null,
-				"You are alredy loged in.\nPlease log out first.", null, false);
+				"You are already logged in.\nPlease log out first.", null, false);
 			return;
 		    }
 		    

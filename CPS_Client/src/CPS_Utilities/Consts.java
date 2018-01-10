@@ -6,9 +6,9 @@ public class Consts
     
     public static final String InputsAreIncorrect = "Please fill in all fields as required";
     
-    public static final String ThankYouForRegistering = "Thank you for registering the system. \nWe hope you enjoy!";
+    public static final String ThankYouForRegistering = "Thank you for registering!";
     
-    public static final String ThankYouForOrderInAdvance = "Thank you for order id advance the system. \nWe hope you enjoy!";
+    public static final String ThankYouForOrderInAdvance = "Thank you for ordering in-advance!";
     
     public static final String ParkinglotNamePathFromController = "..\\ParkinglotName.txt";
     
@@ -74,6 +74,6 @@ public class Consts
     
     public static final String ComplaintRegistered = "Your complaint has been successfully recorded";
     
-    public static final String SubscriptionRenewal = "Thank you for renewal your subscription";
+    public static final String SubscriptionRenewal = "Thank you for renewing your subscription!";
     
 }

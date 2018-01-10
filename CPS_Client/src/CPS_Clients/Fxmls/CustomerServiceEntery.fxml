@@ -11,5 +11,6 @@
       <Button layoutX="50.0" layoutY="327.0" mnemonicParsing="false" onAction="#OnManageComplaints" prefHeight="50.0" prefWidth="150.0" text="Manage Complaints" />
       <Button layoutX="50.0" layoutY="223.0" mnemonicParsing="false" onAction="#OnSaveParkingSpot" prefHeight="50.0" prefWidth="150.0" text="Save Parking Spot" />
       <Label fx:id="Headline" layoutX="84.0" layoutY="100.0" text="Customer Service Menu" />
+      <Button layoutX="50.0" layoutY="428.0" mnemonicParsing="false" onAction="#OnManageCustomer" prefHeight="50.0" prefWidth="150.0" text="Manage Customer" />
    </children>
 </AnchorPane>

@@ -30,10 +30,10 @@ public class ParkingLotWorkerEnteryController extends EmployeeBaseController {
 	public ParkingLotWorkerEnteryController()
 	{
 		super();
-		DisableParkingSpotInputs.add("Parking Spot Width:");
-		DisableParkingSpotInputs.add("Parking Spot height:");
-		DisableParkingSpotInputs.add("Parking Spot depth:");
-		InitializeParkingSpotInputs.add("Parking Lot Width:");
+		DisableParkingSpotInputs.add("Parking spot width:");
+		DisableParkingSpotInputs.add("Parking spot height:");
+		DisableParkingSpotInputs.add("Parking spot depth:");
+		InitializeParkingSpotInputs.add("Parking lot width:");
 	}
     @FXML
     private Label Headline;
@@ -45,7 +45,6 @@ public class ParkingLotWorkerEnteryController extends EmployeeBaseController {
     	result.ifPresent(inputs->
 	    {
 	    	String parkinglotName=MyEmployee.getOrgAffiliation();
-	    	//parkinglotName= parkinglotName.toLowerCase();
 	    	boolean IsValid= Pattern.matches("[0-9]+",inputs.get(0)) && 4 <= Integer.parseInt(inputs.get(0)) && Integer.parseInt(inputs.get(0))<=8 ;
 	    	if (IsValid) 
 	    	{
@@ -71,7 +70,6 @@ public class ParkingLotWorkerEnteryController extends EmployeeBaseController {
     	if (result.equals("OK"))
     	{
     		String parkinglotName=MyEmployee.getOrgAffiliation();
-    		//parkinglotName= parkinglotName.toLowerCase();
     		ServerResponse<Parkinglot>ParkinglotRes= RequestsSender.GetParkinglot(parkinglotName);
     		Parkinglot parkinglot=ParkinglotRes.GetResponseObject();
     		ParkinglotStatus status=parkinglot.getStatus();
@@ -109,7 +107,6 @@ public class ParkingLotWorkerEnteryController extends EmployeeBaseController {
     	result.ifPresent(inputs->
     	{
     		String parkinglotName=MyEmployee.getOrgAffiliation();
-    		//parkinglotName= parkinglotName.toLowerCase();
     		ServerResponse<Parkinglot>ParkinglotRes= RequestsSender.GetParkinglot(parkinglotName);
     		Parkinglot parkinglot=ParkinglotRes.GetResponseObject();
     		ParkinglotStatus status=parkinglot.getStatus();
@@ -143,7 +140,6 @@ public class ParkingLotWorkerEnteryController extends EmployeeBaseController {
     	if (result.equals("OK"))
     	{
     		String parkinglotName=MyEmployee.getOrgAffiliation();
-    		//parkinglotName= parkinglotName.toLowerCase();
     		ServerResponse<Parkinglot>ParkinglotRes= RequestsSender.GetParkinglot(parkinglotName);
     		Parkinglot parkinglot=ParkinglotRes.GetResponseObject();
     		ParkinglotStatus status=parkinglot.getStatus();
@@ -174,7 +170,6 @@ public class ParkingLotWorkerEnteryController extends EmployeeBaseController {
     	result.ifPresent(inputs->
     	{
     		String parkinglotName=MyEmployee.getOrgAffiliation();
-    		//parkinglotName= parkinglotName.toLowerCase();
     		ServerResponse<Parkinglot>ParkinglotRes= RequestsSender.GetParkinglot(parkinglotName);
     		Parkinglot parkinglot=ParkinglotRes.GetResponseObject();
     		ParkinglotStatus status=parkinglot.getStatus();
