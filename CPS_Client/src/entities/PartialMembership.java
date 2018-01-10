@@ -42,7 +42,7 @@ public class PartialMembership extends MembershipBase
     @Override
     public String toString()
     {
-	return "                          Partial Membership: \n\n"+super.toString() + "Parkinglot: " + parkinglot + "\nExit time: "
+	return "Partial Membership: \n\n"+super.toString() + "Parkinglot: " + parkinglot + "\nExit time: "
 		+ exitTime + "\n" +"Cars: "+ CarListString();
     }
     
