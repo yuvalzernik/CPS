@@ -4,12 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URISyntaxException;
-import java.text.SimpleDateFormat;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -26,8 +23,8 @@ import entities.Reservation;
 import entities.enums.ReservationStatus;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Dialog;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Dialog;
 
 public class KioskEntryController extends BaseController
 {
