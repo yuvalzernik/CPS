@@ -59,27 +59,27 @@ public class ReserveParkingSpotInLocalParkingLotController extends EmployeeBaseC
     @FXML
     void OnSubmit(ActionEvent event)
     {
-
-		//float paymentAmount = 0;
-		
-		if (!TryConstructOrderInAdvance())
-		{
-		    return;
-		}
-		    ServerResponse<Reservation> OrderInAdvanceResponse = RequestsSender.Reservation(reservation);
-		    ServerResponse<Customer> AddCustomerIfNotExist = RequestsSender.AddCustomerIfNotExists(customer);
-		    
-		    if (OrderInAdvanceResponse.GetRequestResult().equals(RequestResult.Failed)
-			    || AddCustomerIfNotExist.GetRequestResult().equals(RequestResult.Failed))
-		    {
-				DialogBuilder.AlertDialog(AlertType.ERROR, null, Consts.ServerProblemMessage, null, false);
-				return;
-		    }
-		    
-		    DialogBuilder.AlertDialog(AlertType.INFORMATION, Consts.Approved, ConstsEmployees.ReservationSubmitted, null,
-			    false);
-		    myControllersManager.Back(PreviousScene, ConstsEmployees.ReserveParkingSpot);
-		    
+	
+	// float paymentAmount = 0;
+	
+	if (!TryConstructOrderInAdvance())
+	{
+	    return;
+	}
+	ServerResponse<Reservation> OrderInAdvanceResponse = RequestsSender.Reservation(reservation);
+	ServerResponse<Customer> AddCustomerIfNotExist = RequestsSender.AddCustomerIfNotExists(customer);
+	
+	if (OrderInAdvanceResponse.GetRequestResult().equals(RequestResult.Failed)
+		|| AddCustomerIfNotExist.GetRequestResult().equals(RequestResult.Failed))
+	{
+	    DialogBuilder.AlertDialog(AlertType.ERROR, null, Consts.ServerProblemMessage, null, false);
+	    return;
+	}
+	
+	DialogBuilder.AlertDialog(AlertType.INFORMATION, Consts.Approved, ConstsEmployees.ReservationSubmitted, null,
+		false);
+	myControllersManager.Back(PreviousScene, ConstsEmployees.ReserveParkingSpot);
+	
     }
     
     @FXML
@@ -87,10 +87,10 @@ public class ReserveParkingSpotInLocalParkingLotController extends EmployeeBaseC
     {
 	myControllersManager.Back(PreviousScene, ConstsEmployees.ReserveParkingSpot);
     }
-   
+    
     private boolean TryConstructOrderInAdvance()
     {
-    	
+	
 	customer = new Customer(customerId.getText(), email.getText(), 0);
 	
 	if (!InputValidator.OrderInAdvance(carNumber.getText(), arrivalDate.getValue(), leavingDate.getValue(),
@@ -104,7 +104,7 @@ public class ReserveParkingSpotInLocalParkingLotController extends EmployeeBaseC
 	reservation = new Reservation(ReservationType.Employee, customerId.getText(), MyEmployee.getOrgAffiliation(),
 		carNumber.getText(), arrivalDate.getValue(), leavingDate.getValue(),
 		LocalTime.parse(arrivalHour.getText()), LocalTime.parse(leavingHour.getText()),
-		ReservationStatus.NotStarted);
+		ReservationStatus.NotStarted, 0);
 	
 	customer = new Customer(customerId.getText(), email.getText(), 0);
 	

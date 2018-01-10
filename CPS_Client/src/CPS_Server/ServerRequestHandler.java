@@ -35,6 +35,7 @@ import entities.ChangeRatesResponse;
 import entities.CloseComplaintRequest;
 import entities.Complaint;
 import entities.ComplaintsReport;
+import entities.CreditCustomerRequest;
 import entities.Customer;
 import entities.DisabledParkingSpot;
 import entities.DisabledReport;
@@ -220,6 +221,12 @@ public class ServerRequestHandler implements Closeable// pLw9Zaqp{ey`2,Ve
 	
 	case ClientServerConsts.LogoutUser:
 	    return LogoutUser((String) clientRequest.GetSentObject());
+	
+	case ClientServerConsts.CloseReservation:
+	    return CloseReservation((String) clientRequest.GetSentObject());
+	
+	case ClientServerConsts.AddCreditToCustomer:
+	    return CreditCustomer((CreditCustomerRequest) clientRequest.GetSentObject());
 	
 	default:
 	    CPS_Tracer.TraceError(
@@ -1098,7 +1105,7 @@ public class ServerRequestHandler implements Closeable// pLw9Zaqp{ey`2,Ve
 	    }
 	    else
 	    {
-		String preparedStatementString = "INSERT INTO Reservations(orderId, type, customerId, parkingLot, carNumber, startingDate, endingDate, startHour, endHour, status) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		String preparedStatementString = "INSERT INTO Reservations(orderId, type, customerId, parkingLot, carNumber, startingDate, endingDate, startHour, endHour, status, price) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		
 		ArrayList<String> values = new ArrayList<>();
 		
@@ -1114,6 +1121,7 @@ public class ServerRequestHandler implements Closeable// pLw9Zaqp{ey`2,Ve
 		values.add(reservation.getArrivalHour().toString());
 		values.add(reservation.getLeavingHour().toString());
 		values.add(reservation.getReservationStatus().toString());
+		values.add(Float.toString(reservation.getPrice()));
 		
 		AddRowToTable(preparedStatementString, values);
 		
@@ -1401,9 +1409,11 @@ public class ServerRequestHandler implements Closeable// pLw9Zaqp{ey`2,Ve
     {
 	CPS_Tracer.TraceInformation("Get customer: \n" + customerId);
 	
-	try (PreparedStatement preparedStatement = mySqlConnection
-		.prepareStatement("SELECT * FROM Customers WHERE customerId = ?"))
+	try
 	{
+	    PreparedStatement preparedStatement = mySqlConnection
+		    .prepareStatement("SELECT * FROM Customers WHERE customerId = ?");
+	    
 	    ServerResponse<Customer> serverResponse;
 	    
 	    Customer customer;
@@ -1422,6 +1432,51 @@ public class ServerRequestHandler implements Closeable// pLw9Zaqp{ey`2,Ve
 		
 		customer = new Customer(resultSet.getString(1), resultSet.getString(2),
 			Float.parseFloat(resultSet.getString(3)));
+		
+		// adding lists:
+		
+		ArrayList<String> reservations = new ArrayList<>();
+		
+		preparedStatement = mySqlConnection.prepareStatement("SELECT * FROM Reservations WHERE customerId = ?");
+		
+		preparedStatement.setString(1, customerId);
+		
+		resultSet = preparedStatement.executeQuery();
+		
+		while (resultSet.next())
+		{
+		    reservations.add(resultSet.getString(1));
+		}
+		
+		customer.setReservations(reservations);
+		
+		ArrayList<String> subscriptions = new ArrayList<>();
+		
+		preparedStatement = mySqlConnection
+			.prepareStatement("SELECT * FROM FullMemberships WHERE customerId = ?");
+		
+		preparedStatement.setString(1, customerId);
+		
+		resultSet = preparedStatement.executeQuery();
+		
+		while (resultSet.next())
+		{
+		    subscriptions.add(resultSet.getString(1));
+		}
+		
+		preparedStatement = mySqlConnection
+			.prepareStatement("SELECT * FROM PartialMemberships WHERE customerId = ?");
+		
+		preparedStatement.setString(1, customerId);
+		
+		resultSet = preparedStatement.executeQuery();
+		
+		while (resultSet.next())
+		{
+		    subscriptions.add(resultSet.getString(1));
+		}
+		
+		customer.setSubscriptions(subscriptions);
 		
 		serverResponse = new ServerResponse<>(RequestResult.Succeed, customer, "Found");
 	    }
@@ -1464,7 +1519,8 @@ public class ServerRequestHandler implements Closeable// pLw9Zaqp{ey`2,Ve
 		reservation = new Reservation(ReservationType.valueOf(resultSet.getString(2)), resultSet.getString(3),
 			resultSet.getString(4), resultSet.getString(5), LocalDate.parse(resultSet.getString(6)),
 			LocalDate.parse(resultSet.getString(7)), LocalTime.parse(resultSet.getString(8)),
-			LocalTime.parse(resultSet.getString(9)), ReservationStatus.valueOf(resultSet.getString(10)));
+			LocalTime.parse(resultSet.getString(9)), ReservationStatus.valueOf(resultSet.getString(10)),
+			Float.parseFloat(resultSet.getString(11)));
 		
 		reservation.setOrderId(resultSet.getString(1));
 		
@@ -2071,8 +2127,10 @@ public class ServerRequestHandler implements Closeable// pLw9Zaqp{ey`2,Ve
 			
 			ReservationStatus reservationStatus = ReservationStatus.valueOf(resultSet.getString(10));
 			
+			float price = Float.parseFloat(resultSet.getString(11));
+			
 			Reservation reservation = new Reservation(reservationType, customerId, parkingLot2, carNumber,
-				arrivalDate, leavingDate, arrivalHour, leavingHour, reservationStatus);
+				arrivalDate, leavingDate, arrivalHour, leavingHour, reservationStatus, price);
 			
 			reservation.setOrderId(orderId);
 			
@@ -2104,6 +2162,92 @@ public class ServerRequestHandler implements Closeable// pLw9Zaqp{ey`2,Ve
 	    CPS_Tracer.TraceError("Failed in getting reservation report.", e);
 	    
 	    return new ServerResponse<>(RequestResult.Failed, null, "Failed to get reservation report");
+	}
+    }
+    
+    private ServerResponse<CreditCustomerRequest> CreditCustomer(CreditCustomerRequest request)
+    {
+	CPS_Tracer.TraceInformation("Trying to credit customer: " + request);
+	
+	try
+	{
+	    ServerResponse<CreditCustomerRequest> serverResponse;
+	    
+	    PreparedStatement preparedStatement = mySqlConnection.prepareStatement(
+		    "SELECT * FROM Customers WHERE customerId = ?", ResultSet.TYPE_SCROLL_SENSITIVE,
+		    ResultSet.CONCUR_UPDATABLE);
+	    
+	    preparedStatement.setString(1, request.getCustomerId());
+	    
+	    ResultSet resultSet = preparedStatement.executeQuery();
+	    
+	    if (!resultSet.isBeforeFirst())
+	    {
+		serverResponse = new ServerResponse<>(RequestResult.NotFound, null, "Not found");
+	    }
+	    else
+	    {
+		resultSet.next();
+		
+		resultSet.updateString(3,
+			Float.toString(Float.parseFloat(resultSet.getString(3)) + request.getCredit()));
+		
+		resultSet.updateRow();
+		
+		serverResponse = new ServerResponse<>(RequestResult.Succeed, request, "succeed");
+	    }
+	    CPS_Tracer.TraceInformation("Server response to client after trying add credit: \n" + serverResponse);
+	    
+	    return serverResponse;
+	}
+	catch (Exception e)
+	{
+	    CPS_Tracer.TraceError("Failed to add credit to client", e);
+	    
+	    return new ServerResponse<>(RequestResult.Failed, null, "Failed to close reservation");
+	}
+    }
+    
+    private ServerResponse<String> CloseReservation(String reservationId)
+    {
+	CPS_Tracer.TraceInformation("Trying to close reservation: " + reservationId);
+	
+	try
+	{
+	    ServerResponse<String> serverResponse;
+	    
+	    PreparedStatement preparedStatement = mySqlConnection.prepareStatement(
+		    "SELECT * FROM Reservations WHERE orderId = ?", ResultSet.TYPE_SCROLL_SENSITIVE,
+		    ResultSet.CONCUR_UPDATABLE);
+	    
+	    preparedStatement.setString(1, reservationId);
+	    
+	    ResultSet resultSet = preparedStatement.executeQuery();
+	    
+	    if (!resultSet.isBeforeFirst())
+	    {
+		serverResponse = new ServerResponse<String>(RequestResult.NotFound, null, "Not found");
+	    }
+	    else
+	    {
+		resultSet.next();
+		
+		resultSet.updateString(10, ReservationStatus.NotFullfilled.toString());
+		
+		resultSet.updateRow();
+		
+		serverResponse = new ServerResponse<String>(RequestResult.Succeed, reservationId, "Closed");
+	    }
+	    CPS_Tracer
+		    .TraceInformation("Server response to client after trying close reservation: \n" + serverResponse);
+	    
+	    return serverResponse;
+	}
+	catch (Exception e)
+	{
+	    CPS_Tracer.TraceError("Failed to close reservation", e);
+	    
+	    return new ServerResponse<>(RequestResult.Failed, null, "Failed to close reservation");
 	}
     }
     

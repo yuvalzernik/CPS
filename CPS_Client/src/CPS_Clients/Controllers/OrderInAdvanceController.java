@@ -94,9 +94,7 @@ public class OrderInAdvanceController extends BaseController
 	{
 	    return;
 	}
-	
-	float paymentAmount = AmountToPay();
-	
+		
 	Consumer<Void> afterPayment = Void ->
 	{
 	    ServerResponse<Reservation> OrderInAdvanceResponse = RequestsSender.Reservation(reservation);
@@ -120,7 +118,7 @@ public class OrderInAdvanceController extends BaseController
 	    });
 	};
 	
-	myControllersManager.Payment(reservation, paymentAmount, afterPayment, ConstsWeb.OrderInAdvance);
+	myControllersManager.Payment(reservation, reservation.getPrice(), afterPayment, ConstsWeb.OrderInAdvance);
 	arrivalDate.setValue(LocalDate.now());
 	leavingDate.setValue(LocalDate.now());
 	
@@ -146,7 +144,7 @@ public class OrderInAdvanceController extends BaseController
 	
 	reservation = new Reservation(ReservationType.Web, customerId.getText(), parking_Lot, carNumber.getText(),
 		arrivalDate.getValue(), leavingDate.getValue(), LocalTime.parse(arrivalHour.getText()),
-		LocalTime.parse(leavingHour.getText()), ReservationStatus.NotStarted);
+		LocalTime.parse(leavingHour.getText()), ReservationStatus.NotStarted, AmountToPay());
 	
 	customer = new Customer(customerId.getText(), email.getText(), 0);
 	

@@ -6,8 +6,7 @@ import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-
-import org.omg.CORBA.INITIALIZE;
+import java.time.temporal.ChronoUnit;
 
 import CPS_Utilities.Consts;
 import CPS_Utilities.DialogBuilder;
@@ -17,16 +16,15 @@ import clientServerCPS.RequestsSender;
 import clientServerCPS.ServerResponse;
 import entities.AddRealTimeParkingRequest;
 import entities.Customer;
+import entities.Parkinglot;
 import entities.Reservation;
 import entities.enums.ReservationStatus;
 import entities.enums.ReservationType;
 import javafx.event.ActionEvent;
-
 import javafx.fxml.FXML;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.Background;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 
 public class GuestEntryController extends BaseController
 {
@@ -45,15 +43,19 @@ public class GuestEntryController extends BaseController
     @FXML
     private TextField email;
     
-    private String parkinglot;
+    private String parkinglotName;
+    
+    private Parkinglot parkinglot;
     
     public GuestEntryController() throws IOException
     {
 	super();
 	
-	parkinglot = new BufferedReader(
+	parkinglotName = new BufferedReader(
 		new InputStreamReader(getClass().getResourceAsStream(Consts.ParkinglotNamePathFromController)))
 			.readLine();
+	
+	parkinglot = RequestsSender.GetParkinglot(parkinglotName).GetResponseObject();
     }
     
     @FXML
@@ -76,7 +78,7 @@ public class GuestEntryController extends BaseController
 	
 	RequestsSender.AddCustomerIfNotExists(customer);
 	
-	AddRealTimeParkingRequest request = new AddRealTimeParkingRequest(parkinglot, LocalDateTime.now(),
+	AddRealTimeParkingRequest request = new AddRealTimeParkingRequest(parkinglotName, LocalDateTime.now(),
 		LocalDateTime.of(LocalDate.now(), LocalTime.parse(departureTime.getText())), carNumber.getText(), true);
 	
 	ServerResponse<AddRealTimeParkingRequest> insertCarResponse = RequestsSender.TryInsertCar(request);
@@ -88,10 +90,14 @@ public class GuestEntryController extends BaseController
 	}
 	else if (insertCarResponse.GetRequestResult().equals(RequestResult.Succeed))
 	{
+	    float paymentAmount = LocalDateTime.now().until(
+		    LocalDateTime.of(LocalDate.now(), LocalTime.parse(departureTime.getText())), ChronoUnit.HOURS)
+		    * parkinglot.getGuestRate();
+	    
 	    String reservationId = RequestsSender.Reservation(new Reservation(ReservationType.Local, id.getText(),
-		    parkinglot, carNumber.getText(), LocalDate.now(), LocalDate.now(), LocalTime.now(),
-		    LocalTime.parse(departureTime.getText()), ReservationStatus.Fullfilled)).GetResponseObject()
-		    .getOrderId();
+		    parkinglotName, carNumber.getText(), LocalDate.now(), LocalDate.now(), LocalTime.now(),
+		    LocalTime.parse(departureTime.getText()), ReservationStatus.Fullfilled, paymentAmount))
+		    .GetResponseObject().getOrderId();
 	    
 	    DialogBuilder.AlertDialog(AlertType.INFORMATION, Consts.Approved,
 		    Consts.LeaveTheCarMessage + "\nYour order id is: " + reservationId, null, false);

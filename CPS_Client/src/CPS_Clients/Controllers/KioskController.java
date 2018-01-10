@@ -6,11 +6,8 @@ import CPS_Utilities.Consts;
 import CPS_Utilities.DialogBuilder;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Cursor;
-import javafx.scene.ImageCursor;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 
 public class KioskController extends BaseController {
 	private ArrayList<String> subscriptionTypes = new ArrayList<>();

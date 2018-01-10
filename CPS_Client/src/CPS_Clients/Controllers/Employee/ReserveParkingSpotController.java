@@ -108,7 +108,7 @@ public class ReserveParkingSpotController extends EmployeeBaseController
 	reservation = new Reservation(ReservationType.Employee, customerId.getText(), parkingLot.getText(),
 		carNumber.getText(), arrivalDate.getValue(), leavingDate.getValue(),
 		LocalTime.parse(arrivalHour.getText()), LocalTime.parse(leavingHour.getText()),
-		ReservationStatus.NotStarted);
+		ReservationStatus.NotStarted, 0);
 	
 	customer = new Customer(customerId.getText(), email.getText(), 0);
 	

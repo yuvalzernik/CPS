@@ -41,6 +41,7 @@ public class PaymentController extends BaseController
     void initialize()
     {
 	prgBar.setVisible(false);
+	orderDetails.setEditable(false);
     }
     
     void setPaymentAmount(float paymentAmount)

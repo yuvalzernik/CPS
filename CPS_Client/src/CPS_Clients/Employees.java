@@ -52,7 +52,6 @@ public class Employees extends Application
 		    myClass.getResource(ConstsEmployees.ManagerProduceReportFxmlPath)));
 	    list.add(new Pair<String, URL>(ConstsEmployees.StatusReport,
 		    myClass.getResource(ConstsEmployees.StatusReportControllerFxmlPath)));
-
 	    
 	    controllersManager = new ControllersManager(list, primaryStage, ConstsEmployees.EmployeesLogin);
 	    
