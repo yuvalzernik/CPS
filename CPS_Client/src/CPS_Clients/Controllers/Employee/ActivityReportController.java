@@ -214,7 +214,7 @@ public class ActivityReportController extends EmployeeBaseController{
 	    	int SelectedMonth = 0;
 	    	SelectedYear=Integer.parseInt(yr);
 	    			
-	    	if(mon.equals("january"))
+	    	if(mon.equals("January"))
 	       	 SelectedMonth=1;
 	    	else if(mon.equals("February"))
 	    		SelectedMonth=2;
