@@ -77,6 +77,7 @@ public class PartialMembershipRegisterController extends BaseController
 	    DialogBuilder.AlertDialog(AlertType.ERROR, null, Consts.ServerProblemMessage, null, false);
 	    return;
 	}
+	
 	int length = initListParkinglot.GetResponseObject().size();
 	for (int i = 0; i < length; i++)
 	{
