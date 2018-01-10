@@ -1,7 +1,6 @@
 package CPS_Clients.Controllers.Employee;
 
 import CPS_Clients.ConstsEmployees;
-import CPS_Clients.ConstsMor;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -14,7 +13,7 @@ public class CustomerServiceEnteryController  extends EmployeeBaseController{
     @FXML
     void OnManageComplaints(ActionEvent event) 
     {
-    	myControllersManager.SetScene(ConstsMor.ManageComplaints, ConstsEmployees.CustomerServiceEntery);
+    	myControllersManager.SetScene(ConstsEmployees.ManageComplaints, ConstsEmployees.CustomerServiceEntery);
     }
 
     @FXML

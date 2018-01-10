@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import CPS_Clients.ConstsMor;
+import CPS_Clients.ConstsEmployees;
 import CPS_Utilities.Consts;
 import CPS_Utilities.DialogBuilder;
 import clientServerCPS.RequestResult;
@@ -36,7 +36,7 @@ public class ManageComplaintsController extends EmployeeBaseController{
     
     @FXML
     void OnBack(ActionEvent event) {
-    	myControllersManager.Back(PreviousScene, ConstsMor.ManageComplaints);
+    	myControllersManager.Back(PreviousScene, ConstsEmployees.ManageComplaints);
     }
     
     @FXML
@@ -46,7 +46,7 @@ public class ManageComplaintsController extends EmployeeBaseController{
     	
     	if(currentComplaintId == null)
     	{
-    		DialogBuilder.AlertDialog(AlertType.WARNING, "", ConstsMor.ChooseComplaint,null,false);
+    		DialogBuilder.AlertDialog(AlertType.WARNING, "", ConstsEmployees.ChooseComplaint,null,false);
     		return ;
     	}
     	
@@ -61,7 +61,7 @@ public class ManageComplaintsController extends EmployeeBaseController{
     	if(currentComplaint!=null)
     	{
     		String Details="Complaint ID: " + currentComplaint.getComplaintId() + "\n"+ "Complaint Details: " + currentComplaint.getComplaintDetails() +"\n";
-    		String result=DialogBuilder.AlertDialog(AlertType.NONE, ConstsMor.SelectChoice, Details,myButtons,true);
+    		String result=DialogBuilder.AlertDialog(AlertType.NONE, ConstsEmployees.SelectChoice, Details,myButtons,true);
     		
     		if(result.equals("Compensate Customer")) 
     		{
@@ -72,7 +72,7 @@ public class ManageComplaintsController extends EmployeeBaseController{
     	    		Float compensationAmount= Float.parseFloat(inputs.get(0));
     	    		CloseComplaintRequest myClosedComplaint=new CloseComplaintRequest(currentComplaintId, compensationAmount);
     	    		RequestsSender.CloseComplaint(myClosedComplaint);
-    	    		DialogBuilder.AlertDialog(AlertType.INFORMATION, "", ConstsMor.ComplaintClosed,null,false);
+    	    		DialogBuilder.AlertDialog(AlertType.INFORMATION, "", ConstsEmployees.ComplaintClosed,null,false);
     	    	});
     		}
     		
@@ -81,7 +81,7 @@ public class ManageComplaintsController extends EmployeeBaseController{
     			
     	    		CloseComplaintRequest myClosedComplaint=new CloseComplaintRequest(currentComplaintId,0);
     	    		RequestsSender.CloseComplaint(myClosedComplaint);
-    	    		DialogBuilder.AlertDialog(AlertType.INFORMATION, "", ConstsMor.ComplaintClosed,null,false);
+    	    		DialogBuilder.AlertDialog(AlertType.INFORMATION, "", ConstsEmployees.ComplaintClosed,null,false);
     	    	
     		}
     	}
@@ -98,7 +98,7 @@ public class ManageComplaintsController extends EmployeeBaseController{
     	
     	if(serverResponse.GetRequestResult().equals(RequestResult.Failed))
     	{
-    		DialogBuilder.AlertDialog(AlertType.ERROR, "",ConstsMor.FailToGetActive, null,false);
+    		DialogBuilder.AlertDialog(AlertType.ERROR, "",ConstsEmployees.FailToGetActive, null,false);
     		SetPreviousScene(PreviousScene);
     	}
     	
@@ -113,6 +113,11 @@ public class ManageComplaintsController extends EmployeeBaseController{
     	}
     	
     	complaintsList.setItems(complaintsObservable);
+    	
+    	if(complaints.size()==0)
+    	{
+    		DialogBuilder.AlertDialog(AlertType.INFORMATION, null, ConstsEmployees.NoComplaints, null, false);
+    	}
     	
     }
 

@@ -28,7 +28,7 @@ public class WebController extends BaseController {
 
     @FXML
     void OnRegister(ActionEvent event) {
-    	String buttonResult = DialogBuilder.AlertDialog(AlertType.NONE, "Register", "Please choose subscription type", subscriptionTypes, true);
+    	String buttonResult = DialogBuilder.AlertDialog(AlertType.NONE, "Register", "Please choose a subscription type", subscriptionTypes, true);
 
     	switch (buttonResult)
     	{

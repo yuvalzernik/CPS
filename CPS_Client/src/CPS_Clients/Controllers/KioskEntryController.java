@@ -95,7 +95,7 @@ public class KioskEntryController extends BaseController
 			|| !reservation.getArrivalHour().isAfter(LocalTime.now()))
 		{
 		    DialogBuilder.AlertDialog(AlertType.ERROR, null,
-			    "You have a reservation, but not for now. \nYou can check your reservations details on the main page.",
+			    "You have a reservation, but not for now. \nYou can check your reservation details on the main page.",
 			    null, false);
 		    return;
 		}
@@ -130,7 +130,7 @@ public class KioskEntryController extends BaseController
     @FXML
     void OnMemberEntry(ActionEvent event)
     {
-	String buttonResult = DialogBuilder.AlertDialog(AlertType.NONE, "Register", "Please choose subscription type",
+	String buttonResult = DialogBuilder.AlertDialog(AlertType.NONE, "Register", "Please choose a subscription type",
 		subscriptionTypes, true);
 	
 	switch (buttonResult)
@@ -186,7 +186,7 @@ public class KioskEntryController extends BaseController
 		    && LocalDate.now().isAfter(fullMembership.getExpiryDate()))
 	    {
 		DialogBuilder.AlertDialog(AlertType.ERROR, null,
-			"Your membership is expired. \nYou can renew on the main page -> Monitor and controll.", null,
+			"Your membership has expired. \nYou can renew on the main page -> Monitor and Control.", null,
 			false);
 		return;
 	    }
@@ -262,7 +262,7 @@ public class KioskEntryController extends BaseController
 		    && LocalDate.now().isAfter(partialMembership.getExpiryDate()))
 	    {
 		DialogBuilder.AlertDialog(AlertType.ERROR, null,
-			"Your membership is expired. \nYou can renew on the main page -> Monitor and controll.", null,
+			"Your membership has expired. \nYou can renew on the main page -> Monitor and Control.", null,
 			false);
 		return;
 	    }

@@ -40,8 +40,8 @@ public class Employees extends Application
 		    myClass.getResource(ConstsEmployees.ReserveParkingSpotFxmlPath)));
 	    list.add(new Pair<String, URL>(ConstsEmployees.ReserveParkingSpotInLocalParkingLot,
 		    myClass.getResource(ConstsEmployees.ReserveParkingSpotInLocalParkingLotFxmlPath)));
-	    list.add(new Pair<String, URL>(ConstsMor.ManageComplaints,
-		    myClass.getResource(ConstsMor.ManageComplaintsFxmlPath)));
+	    list.add(new Pair<String, URL>(ConstsEmployees.ManageComplaints,
+		    myClass.getResource(ConstsEmployees.ManageComplaintsFxmlPath)));
 	    list.add(new Pair<String, URL>(ConstsEmployees.ProduceReport,
 		    myClass.getResource(ConstsEmployees.ProduceReportFxmlPath)));
 	    list.add(new Pair<String, URL>(ConstsEmployees.ReservationReport,
@@ -52,6 +52,7 @@ public class Employees extends Application
 		    myClass.getResource(ConstsEmployees.ManagerProduceReportFxmlPath)));
 	    list.add(new Pair<String, URL>(ConstsEmployees.StatusReport,
 		    myClass.getResource(ConstsEmployees.StatusReportControllerFxmlPath)));
+
 	    
 	    controllersManager = new ControllersManager(list, primaryStage, ConstsEmployees.EmployeesLogin);
 	    
