@@ -4,9 +4,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -266,6 +269,17 @@ public class KioskEntryController extends BaseController
 			false);
 		return;
 	    }
+	    
+	
+	    if (partialMembershipResponse.GetRequestResult().equals(RequestResult.Succeed)
+			    &&(LocalDate.now().getDayOfWeek().name().equals("FRIDAY")||(LocalDate.now().getDayOfWeek().name().equals("SATURDAY"))))
+		    {
+	    
+			DialogBuilder.AlertDialog(AlertType.ERROR, null,
+				"You can not enter the parking lot during the weekend.", null,
+				false);
+			return;
+		    }
 	    
 	    if (partialMembershipResponse.GetRequestResult().equals(RequestResult.Succeed))
 	    {

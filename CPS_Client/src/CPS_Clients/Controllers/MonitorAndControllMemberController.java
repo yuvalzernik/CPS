@@ -24,6 +24,7 @@ import clientServerCPS.RequestsSender;
 import clientServerCPS.ServerResponse;
 import entities.Customer;
 import entities.FullMembership;
+import entities.Parkinglot;
 import entities.PartialMembership;
 import entities.Reservation;
 
@@ -31,6 +32,7 @@ public class MonitorAndControllMemberController extends BaseController {
 
 	private ArrayList<String> subscriptionTypes = new ArrayList<>();
 	String fullOrPartialMembership;
+	float rate = 5;
 
 	public MonitorAndControllMemberController() {
 		subscriptionTypes.add(Consts.Payment);
@@ -90,7 +92,8 @@ public class MonitorAndControllMemberController extends BaseController {
 
 	@FXML
 	void OnSubscriptionRenewal(ActionEvent event) {
-		float paymentAmount = 100;
+		float paymentAmount = 0;
+		
 		String newDate = LocalDate.now().plusDays(28).toString();
 		newDate = "The expiration of the new subscription is: " + newDate;
 		String buttonResult = DialogBuilder.AlertDialog(AlertType.NONE, "Renewal Subscription", newDate,
@@ -106,6 +109,7 @@ public class MonitorAndControllMemberController extends BaseController {
 					return;
 				}
 				fullMebershipChanged=getFullMembership.GetResponseObject();
+				paymentAmount=72*rate;
 			}
 			else if (fullOrPartialMembership.equals("partialMembership")) {
 				ServerResponse<PartialMembership> getpartialMembership = RequestsSender.GetPartialMembership(Subscription_ID.getText());
@@ -114,6 +118,7 @@ public class MonitorAndControllMemberController extends BaseController {
 					return;
 				}
 				parialMebershipChanged=getpartialMembership.GetResponseObject();
+				paymentAmount=AmountToPay(parialMebershipChanged);
 			}
 			Consumer<Void> afterPayment = Void -> {
 				if (fullOrPartialMembership.equals("fullMembership")) {
@@ -164,6 +169,17 @@ public class MonitorAndControllMemberController extends BaseController {
 			return;
 
 		}
+	}
+	
+	private float AmountToPay( PartialMembership partialMember) {	
+			float cars=partialMember.GetCarList().size();
+			float hours=0;
+			hours=(cars>1?54:60);
+			String parkinglot=partialMember.GetParkinglot();
+			ServerResponse<Parkinglot>getParkingLot=RequestsSender.GetParkinglot(parkinglot);
+			rate=getParkingLot.GetResponseObject().getInAdvanceRate();
+			return ( cars * hours * rate);
+
 	}
 
 }

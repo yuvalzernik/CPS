@@ -205,5 +205,6 @@ public class PartialMembershipRegisterController extends BaseController {
 		}
 		return ( cars * hours * rate);
 	}
+	
 
 }
