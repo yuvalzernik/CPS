@@ -3,7 +3,6 @@ package CPS_Clients.Controllers.Employee;
 import java.util.ArrayList;
 
 import CPS_Clients.ConstsEmployees;
-import CPS_Clients.ConstsMor;
 import CPS_Utilities.DialogBuilder;
 import clientServerCPS.RequestResult;
 import clientServerCPS.RequestsSender;
@@ -37,7 +36,7 @@ public class ManageRequestRateChangeController extends EmployeeBaseController {
     	
     	if(serverResponse.GetRequestResult().equals(RequestResult.Failed))
     	{
-    		DialogBuilder.AlertDialog(AlertType.ERROR, "",ConstsMor.FailToGetRequest, null,false);
+    		DialogBuilder.AlertDialog(AlertType.ERROR, "",ConstsEmployees.FailToGetRequest, null,false);
     		SetPreviousScene(PreviousScene);
     	}
     	
@@ -52,6 +51,11 @@ public class ManageRequestRateChangeController extends EmployeeBaseController {
     	}
     	
     	RequestsList.setItems(requestObservable);
+    	
+    	if(requests.size()==0)
+    	{
+    		DialogBuilder.AlertDialog(AlertType.INFORMATION, null, ConstsEmployees.NoRateChangeRequests, null, false);
+    	}
     }
 
     
@@ -62,7 +66,7 @@ public class ManageRequestRateChangeController extends EmployeeBaseController {
     	
     	if(currentRequestId == null)
     	{
-    		DialogBuilder.AlertDialog(AlertType.WARNING, "", ConstsMor.ChooseRequest,null,false);
+    		DialogBuilder.AlertDialog(AlertType.WARNING, "", ConstsEmployees.ChooseRequest,null,false);
     		return ;
     	}
     	
@@ -80,20 +84,20 @@ public class ManageRequestRateChangeController extends EmployeeBaseController {
     						 "New guest rate rquest: " + currentRequest.getNewGuestRate() +"\n" +
     						 "New in advance rate request: " + currentRequest.getNewInAdvanceRate() + "\n";
     		
-    		String result=DialogBuilder.AlertDialog(AlertType.NONE, ConstsMor.SelectChoice, Details,myButtons,true);
+    		String result=DialogBuilder.AlertDialog(AlertType.NONE, ConstsEmployees.SelectChoice, Details,myButtons,true);
     		
     		if(result.equals("Approve")) 
     		{
       			ChangeRatesResponse myResponse = new ChangeRatesResponse(currentRequestId, true);
        			RequestsSender.CloseChangeRatesRequest(myResponse);
-       			DialogBuilder.AlertDialog(AlertType.INFORMATION, "", ConstsMor.RequestApproved ,null,false);
+       			DialogBuilder.AlertDialog(AlertType.INFORMATION, "", ConstsEmployees.RequestApproved ,null,false);
     		}
     		
     		else if(result.equals("Decline")) 
     		{	
     			ChangeRatesResponse myResponse = new ChangeRatesResponse(currentRequestId, false);
        			RequestsSender.CloseChangeRatesRequest(myResponse);
-    	    	DialogBuilder.AlertDialog(AlertType.INFORMATION, "", ConstsMor.RequestDeclined,null,false); 	
+    	    	DialogBuilder.AlertDialog(AlertType.INFORMATION, "", ConstsEmployees.RequestDeclined,null,false); 	
     		}
     	}
     	

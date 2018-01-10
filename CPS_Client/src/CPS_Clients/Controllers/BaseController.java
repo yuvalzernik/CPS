@@ -33,7 +33,7 @@ public abstract class BaseController
 	{
 	    e.printStackTrace();
 	    System.out.println(e);
-	    DialogBuilder.AlertDialog(AlertType.ERROR, "Error", "Caught Exception while trying clear fileds", null,
+	    DialogBuilder.AlertDialog(AlertType.ERROR, "Error", "Caught exception while trying to clear fields", null,
 		    false);
 	}
     }

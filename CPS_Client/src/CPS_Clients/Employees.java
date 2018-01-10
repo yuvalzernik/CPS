@@ -27,7 +27,7 @@ public class Employees extends Application
 	    list.add(new Pair<String, URL>(ConstsEmployees.ManageRequestRateChange, myClass.getResource(ConstsEmployees.ManageRequestRateChangeFxmlPath)));
 	    list.add(new Pair<String, URL>(ConstsEmployees.ReserveParkingSpot, myClass.getResource(ConstsEmployees.ReserveParkingSpotFxmlPath)));
 	    list.add(new Pair<String, URL>(ConstsEmployees.ReserveParkingSpotInLocalParkingLot, myClass.getResource(ConstsEmployees.ReserveParkingSpotInLocalParkingLotFxmlPath)));
-	    list.add(new Pair<String, URL>(ConstsMor.ManageComplaints, myClass.getResource(ConstsMor.ManageComplaintsFxmlPath)));
+	    list.add(new Pair<String, URL>(ConstsEmployees.ManageComplaints, myClass.getResource(ConstsEmployees.ManageComplaintsFxmlPath)));
 	    list.add(new Pair<String, URL>(ConstsEmployees.ProduceReport, myClass.getResource(ConstsEmployees.ProduceReportFxmlPath)));
 	    list.add(new Pair<String, URL>(ConstsEmployees.ReservationReport, myClass.getResource(ConstsEmployees.ReservationReportFxmlPath)));
 	    list.add(new Pair<String, URL>(ConstsEmployees.ActivityReport, myClass.getResource(ConstsEmployees.ActivityReportFxmlPath)));

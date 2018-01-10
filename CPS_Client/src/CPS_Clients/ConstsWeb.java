@@ -13,5 +13,5 @@ public class ConstsWeb {
     
     public static final String OrderInAdvanceFxmlPath ="Fxmls/OrderInAdvance.fxml";
     
-    public static final String OrderInAdvance ="Order In Advances";
+    public static final String OrderInAdvance ="Order In Advance";
 }

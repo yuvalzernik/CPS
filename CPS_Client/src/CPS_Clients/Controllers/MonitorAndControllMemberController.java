@@ -77,7 +77,7 @@ public class MonitorAndControllMemberController extends BaseController {
 			}
 			if (monitorAndControllPartialMember.GetRequestResult().equals(RequestResult.NotFound)) {
 
-				DialogBuilder.AlertDialog(AlertType.ERROR, null, "Sorry, your reservation was not found", null, false);
+				DialogBuilder.AlertDialog(AlertType.ERROR, null, "Sorry, your membership was not found", null, false);
 				return;
 			}
 		}
