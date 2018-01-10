@@ -89,7 +89,7 @@ public class DialogBuilder
 	    {
 		alert.getButtonTypes().add(new ButtonType(buttonName));
 	    }
-	}
+	} 
 	if (withCancel)
 	{
 	    alert.getButtonTypes().add(new ButtonType("Cancel", ButtonData.CANCEL_CLOSE));
