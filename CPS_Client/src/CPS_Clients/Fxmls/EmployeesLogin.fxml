@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.effect.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="197.0" prefWidth="478.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CPS_Clients.Controllers.Employee.EmployeesLoginController">
+<AnchorPane prefHeight="197.0" prefWidth="488.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CPS_Clients.Controllers.Employee.EmployeesLoginController">
    <children>
       <Label layoutX="40.0" layoutY="75.0" text="Username">
          <font>
@@ -17,7 +18,8 @@
             <Font size="19.0" />
          </font></Label>
       <TextField fx:id="userName" layoutX="171.0" layoutY="75.0" />
-      <TextField fx:id="password" layoutX="171.0" layoutY="120.0" />
-      <Button layoutX="388.0" layoutY="149.0" mnemonicParsing="false" onAction="#OnLogin" text="Login" />
+      <Button fx:id="login" layoutX="383.0" layoutY="159.0" mnemonicParsing="false" onAction="#OnLogin" prefHeight="28.0" prefWidth="91.0" text="Login" />
+      <ProgressIndicator fx:id="prgBar" layoutX="347.0" layoutY="154.0" prefHeight="38.0" prefWidth="24.0" visible="false" />     
+      <PasswordField fx:id="password" layoutX="171.0" layoutY="120.0" />
    </children>
 </AnchorPane>

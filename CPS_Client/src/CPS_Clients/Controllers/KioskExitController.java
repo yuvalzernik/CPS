@@ -21,6 +21,7 @@ import entities.PartialMembership;
 import entities.RemoveCarRequest;
 import entities.Reservation;
 import entities.enums.ReservationType;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Dialog;
@@ -152,10 +153,13 @@ public class KioskExitController extends BaseController
 		{
 		    Consumer<Void> afterPayment = Void ->
 		    {
-			DialogBuilder.AlertDialog(AlertType.INFORMATION, Consts.Approved,
-				Consts.LeaveTheParkinglotMessage, null, false);
-			
-			myControllersManager.GoToHomePage(Consts.Payment);
+			Platform.runLater(() ->
+			{
+			    DialogBuilder.AlertDialog(AlertType.INFORMATION, Consts.Approved,
+				    Consts.LeaveTheParkinglotMessage, null, false);
+			    
+			    myControllersManager.GoToHomePage(Consts.Payment);
+			});
 		    };
 		    
 		    float paymentAmount = LocalDateTime.of(reservation.getArrivalDate(), reservation.getArrivalHour())

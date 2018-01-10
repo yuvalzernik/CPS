@@ -3,7 +3,6 @@ package CPS_Clients.Controllers.Employee;
 import java.io.File;
 
 import CPS_Clients.ConstsEmployees;
-import CPS_Utilities.CPS_Tracer;
 import CPS_Utilities.DialogBuilder;
 import CPS_Utilities.Pdf_Builder;
 import clientServerCPS.RequestResult;
@@ -12,8 +11,8 @@ import clientServerCPS.ServerResponse;
 import entities.StatusReport;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 
 public class StatusReportController extends EmployeeBaseController {

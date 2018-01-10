@@ -25,7 +25,7 @@
  -fx-text-fill:black; 
  }
 #Headline {
-   -fx-font-size: 55px;
+   -fx-font-size: 40px;
    -fx-font-family: "AR CENA";
    -fx-fill: #818181;
    -fx-effect: innershadow( three-pass-box , #ffd700 , 6, 0.0 , 0 , 2 );

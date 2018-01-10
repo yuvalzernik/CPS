@@ -257,7 +257,7 @@ public class Tests
 	String id = Integer.toString(new Random().nextInt(1000000) + 3000000);
 	
 	Reservation reservation = new Reservation(ReservationType.Web, id, "Test lot", "333333", LocalDate.now(),
-		LocalDate.now().plusDays(1), LocalTime.parse("11:11"), LocalTime.parse("11:11"), ReservationStatus.NotStarted);
+		LocalDate.now().plusDays(1), LocalTime.parse("11:11"), LocalTime.parse("11:11"), ReservationStatus.NotStarted, 55);
 	
 	ServerResponse<Reservation> serverResponse = RequestsSender.Reservation(reservation);
 	

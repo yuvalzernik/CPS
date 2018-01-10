@@ -20,7 +20,12 @@ public class MonitorAndControllController extends BaseController
     void OnNotAMember(ActionEvent event)
     {
     	myControllersManager.SetScene(Consts.MonitorAndControllNotMember, Consts.MonitorAndControll);
-
+    }
+    
+    @FXML
+    void OnCustomerInfo(ActionEvent event)
+    {
+	myControllersManager.SetScene(Consts.MonitorAndControlCustomer, Consts.MonitorAndControll);
     }
     
     @FXML

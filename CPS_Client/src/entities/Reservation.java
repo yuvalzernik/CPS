@@ -20,10 +20,11 @@ public class Reservation implements Serializable
     private LocalTime leavingHour;
     private ReservationType reservationType;
     private ReservationStatus reservationStatus;
+    private float price;
     
     public Reservation(ReservationType reservationType, String customerId, String parkinglot, String carNumber,
 	    LocalDate arrivalDate, LocalDate leavingDate, LocalTime arrivalHour, LocalTime leavingHour,
-	    ReservationStatus reservationStatus)
+	    ReservationStatus reservationStatus, float price)
     {
 	
 	this.customerId = customerId;
@@ -36,6 +37,7 @@ public class Reservation implements Serializable
 	this.reservationType = reservationType;
 	this.reservationStatus = reservationStatus;
 	this.orderId = "Not yet initialized";
+	this.price = price;
     }
     
     public String toString()
@@ -43,12 +45,17 @@ public class Reservation implements Serializable
 	return "order ID: " + orderId + "\nReservation Type: " + reservationType + "\nCustomer ID: " + customerId
 		+ "\nParkinglot: " + parkingLot + "\nCar Number: " + carNumber + "\nArrival Date: " + arrivalDate
 		+ "\nLeaving Date: " + leavingDate + "\nArrival Hour: " + arrivalHour + "\nLeaving Hour: " + leavingHour
-		+ "\nReservation status: " + reservationStatus;
+		+ "\nReservation status: " + reservationStatus + "\nPrice: " + price;
     }
     
     public String getOrderId()
     {
 	return orderId;
+    }
+    
+    public float getPrice()
+    {
+	return price;
     }
     
     public String getParkinglot()
