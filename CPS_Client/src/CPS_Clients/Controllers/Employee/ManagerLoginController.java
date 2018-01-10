@@ -236,6 +236,8 @@ public class ManagerLoginController extends EmployeeBaseController{
     @FXML
     void OnBack(ActionEvent event) 
     {
+	LogOut();
+	
     	myControllersManager.Back(PreviousScene,ConstsEmployees.ManagerLogin );
     }
 

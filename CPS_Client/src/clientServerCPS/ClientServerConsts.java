@@ -69,4 +69,8 @@ public class ClientServerConsts
     public static final String GetActivityReport = "GetActivityReport";
     
     public static final String GetStatusReport = "GetStatusReport";
+    
+    public static final String LoginUser = "LoginUser";
+    
+    public static final String LogoutUser = "LogoutUser";
 }

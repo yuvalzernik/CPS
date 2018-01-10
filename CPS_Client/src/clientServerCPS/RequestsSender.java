@@ -246,4 +246,14 @@ public class RequestsSender
     {
 	return SendRequest(null, ClientServerConsts.GetStatusReport);
     }
+    
+    public static ServerResponse<String> LoginUser(String username)
+    {
+	return SendRequest(username, ClientServerConsts.LoginUser);
+    }
+    
+    public static ServerResponse<String> LogoutUser(String username)
+    {
+	return SendRequest(username, ClientServerConsts.LogoutUser);
+    }
 }

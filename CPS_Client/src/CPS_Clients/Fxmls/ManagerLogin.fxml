@@ -13,7 +13,7 @@
       <Button layoutX="297.0" layoutY="385.0" mnemonicParsing="false" onAction="#OnRigisterDisabledParkingLot" prefHeight="50.0" prefWidth="150.0" text="Disable Parking Lot" />
       <Button layoutX="39.0" layoutY="310.0" mnemonicParsing="false" onAction="#OnRequestUpdatePrices" prefHeight="50.0" prefWidth="150.0" text="Request Update Prices" />
       <Button layoutX="297.0" layoutY="310.0" mnemonicParsing="false" onAction="#OnProduceReport" prefHeight="50.0" prefWidth="150.0" text="Produce Reports" />
-      <Button layoutX="14.0" layoutY="576.0" mnemonicParsing="false" onAction="#OnBack" prefHeight="30.0" prefWidth="50.0" text="back" />
+      <Button layoutX="14.0" layoutY="576.0" mnemonicParsing="false" onAction="#OnBack" prefHeight="39.0" prefWidth="94.0" text="Log Out" />
       <Button layoutX="39.0" layoutY="385.0" mnemonicParsing="false" onAction="#OnUndisableParkingLot" prefHeight="50.0" prefWidth="150.0" text="Enable Parking Lot" />
       <Button layoutX="39.0" layoutY="461.0" mnemonicParsing="false" onAction="#OnUndisableParkingSpot" prefHeight="50.0" prefWidth="150.0" text="Enable Parking Spot" />
       <Label fx:id="Headline" layoutX="90.0" layoutY="128.0" prefHeight="17.0" prefWidth="526.0" text="Parking Lot Manager Menu" />

@@ -7,6 +7,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+import org.omg.CORBA.INITIALIZE;
+
 import CPS_Utilities.Consts;
 import CPS_Utilities.DialogBuilder;
 import CPS_Utilities.InputValidator;
@@ -22,11 +24,12 @@ import javafx.event.ActionEvent;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Background;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
 
 public class GuestEntryController extends BaseController
-{  
+{
     @FXML
     private TextField carNumber;
     
@@ -38,7 +41,6 @@ public class GuestEntryController extends BaseController
     
     @FXML
     private TextField id;
-    
     
     @FXML
     private TextField email;
@@ -63,30 +65,19 @@ public class GuestEntryController extends BaseController
     @FXML
     void OnSubmit(ActionEvent event)
     {
-	Customer customer = new Customer(id.getText(), email.getText(), 0);
 	
-	
-	
-	if (!InputValidator.Customer(customer) || !InputValidator.CarNumber(carNumber.getText())
-		|| !InputValidator.CheckHourFormat(departureTime.getText()))
+	if (!IsInputLegal())
 	{
 	    DialogBuilder.AlertDialog(AlertType.ERROR, null, Consts.InputsAreIncorrect, null, false);
-	    
 	    return;
 	}
+	
+	Customer customer = new Customer(id.getText(), email.getText(), 0);
+	
 	RequestsSender.AddCustomerIfNotExists(customer);
 	
-	LocalTime exiTime = LocalTime.parse(departureTime.getText());
-	
-	if (LocalTime.now().isAfter(exiTime))
-	{
-	    DialogBuilder.AlertDialog(AlertType.ERROR, null, "Please check your departure time", null, false);
-	    
-	    return;
-	}
-	
 	AddRealTimeParkingRequest request = new AddRealTimeParkingRequest(parkinglot, LocalDateTime.now(),
-		LocalDateTime.of(LocalDate.now(), exiTime), carNumber.getText(), true);
+		LocalDateTime.of(LocalDate.now(), LocalTime.parse(departureTime.getText())), carNumber.getText(), true);
 	
 	ServerResponse<AddRealTimeParkingRequest> insertCarResponse = RequestsSender.TryInsertCar(request);
 	
@@ -97,12 +88,13 @@ public class GuestEntryController extends BaseController
 	}
 	else if (insertCarResponse.GetRequestResult().equals(RequestResult.Succeed))
 	{
-	    String reservationId = RequestsSender
-		    .Reservation(new Reservation(ReservationType.Local, id.getText(), parkinglot, carNumber.getText(),
-			    LocalDate.now(), LocalDate.now(), LocalTime.now(), exiTime, ReservationStatus.Fullfilled))
-		    .GetResponseObject().getOrderId();
+	    String reservationId = RequestsSender.Reservation(new Reservation(ReservationType.Local, id.getText(),
+		    parkinglot, carNumber.getText(), LocalDate.now(), LocalDate.now(), LocalTime.now(),
+		    LocalTime.parse(departureTime.getText()), ReservationStatus.Fullfilled)).GetResponseObject()
+		    .getOrderId();
 	    
-	    DialogBuilder.AlertDialog(AlertType.INFORMATION, Consts.Approved, Consts.LeaveTheCarMessage + "\nYour order id is: " + reservationId, null, false);
+	    DialogBuilder.AlertDialog(AlertType.INFORMATION, Consts.Approved,
+		    Consts.LeaveTheCarMessage + "\nYour order id is: " + reservationId, null, false);
 	    
 	    myControllersManager.GoToHomePage(Consts.GuestEntry);
 	}
@@ -118,4 +110,55 @@ public class GuestEntryController extends BaseController
 	}
     }
     
+    private boolean IsInputLegal()
+    {
+	boolean result = true;
+	
+	if (!InputValidator.CarNumber(carNumber.getText()))
+	{
+	    result = false;
+	    carNumber.setStyle("-fx-background-color: tomato;");
+	}
+	else
+	{
+	    carNumber.setStyle("-fx-background-color: white;");
+	}
+	
+	if (!InputValidator.Email(email.getText()))
+	{
+	    result = false;
+	    email.setStyle("-fx-background-color: tomato;");
+	}
+	else
+	{
+	    email.setStyle("-fx-background-color: white;");
+	}
+	
+	if (!InputValidator.Id(id.getText()))
+	{
+	    result = false;
+	    id.setStyle("-fx-background-color: tomato;");
+	}
+	else
+	{
+	    id.setStyle("-fx-background-color: white;");
+	}
+	
+	if (!InputValidator.CheckHourFormat(departureTime.getText()))
+	{
+	    result = false;
+	    departureTime.setStyle("-fx-background-color: tomato;");
+	}
+	else if (LocalTime.now().isAfter(LocalTime.parse(departureTime.getText())))
+	{
+	    result = false;
+	    departureTime.setStyle("-fx-background-color: tomato;");
+	}
+	else
+	{
+	    departureTime.setStyle("-fx-background-color: white;");
+	}
+	
+	return result;
+    }
 }

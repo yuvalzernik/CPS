@@ -50,6 +50,7 @@ import entities.ReservationReport;
 import entities.StatusReport;
 import entities.enums.ComplaintStatus;
 import entities.enums.EmployeeType;
+import entities.enums.LogedStatus;
 import entities.enums.ParkingSpotCondition;
 import entities.enums.ParkingSpotStatus;
 import entities.enums.ParkinglotStatus;
@@ -213,6 +214,12 @@ public class ServerRequestHandler implements Closeable// pLw9Zaqp{ey`2,Ve
 	
 	case ClientServerConsts.GetStatusReport:
 	    return GetStatusReport();
+	
+	case ClientServerConsts.LoginUser:
+	    return LoginUser((String) clientRequest.GetSentObject());
+	
+	case ClientServerConsts.LogoutUser:
+	    return LogoutUser((String) clientRequest.GetSentObject());
 	
 	default:
 	    CPS_Tracer.TraceError(
@@ -495,10 +502,9 @@ public class ServerRequestHandler implements Closeable// pLw9Zaqp{ey`2,Ve
 		    LocalDateTime endingTime = LocalDateTime.of(LocalDate.parse(resultSet.getString(7)),
 			    LocalTime.parse(resultSet.getString(9)));
 		    
-		    if(LocalDateTime.now().isAfter(endingTime))
+		    if (LocalDateTime.now().isAfter(endingTime))
 		    {
-			CPS_Tracer.TraceInformation("Reservation number: "+ resultSet.getString(1) +" has closed");
-
+			CPS_Tracer.TraceInformation("Reservation number: " + resultSet.getString(1) + " has closed");
 			
 			resultSet.updateString(10, ReservationStatus.NotFullfilled.toString());
 			resultSet.updateRow();
@@ -507,12 +513,76 @@ public class ServerRequestHandler implements Closeable// pLw9Zaqp{ey`2,Ve
 		}
 	    }
 	    
+	    CPS_Tracer.TraceInformation("Finished reservations's update  ");
+	    
 	}
 	catch (Exception e)
 	{
 	    CPS_Tracer.TraceError("Failed to update reservations");
 	}
+    }
+    
+    private ServerResponse<String> LogoutUser(String username)
+    {
+	CPS_Tracer.TraceInformation("Trying to logout " + username);
 	
+	return ChangeLogedStatus(username, false);
+    }
+    
+    private ServerResponse<String> LoginUser(String username)
+    {
+	CPS_Tracer.TraceInformation("Trying to login " + username);
+	
+	return ChangeLogedStatus(username, true);
+    }
+    
+    private ServerResponse<String> ChangeLogedStatus(String username, boolean login)
+    {
+	try
+	{
+	    ServerResponse<String> serverResponse;
+	    
+	    String preparedStatementString = "SELECT * FROM Employees WHERE username = ?";
+	    
+	    PreparedStatement preparedStatement = mySqlConnection.prepareStatement(preparedStatementString,
+		    ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+	    
+	    preparedStatement.setString(1, username);
+	    
+	    ResultSet resultSet = preparedStatement.executeQuery();
+	    
+	    if (!resultSet.isBeforeFirst())
+	    {
+		CPS_Tracer.TraceInformation(username + " not found");
+		
+		serverResponse = new ServerResponse<String>(RequestResult.NotFound, username, "Not found");
+	    }
+	    else
+	    {
+		resultSet.next();
+		
+		resultSet.updateString(9,
+			login == true ? LogedStatus.LogedIn.toString() : LogedStatus.LogedOut.toString());
+		
+		resultSet.updateRow();
+		
+		serverResponse = new ServerResponse<String>(RequestResult.Succeed, username, "changed");
+	    }
+	    
+	    CPS_Tracer.TraceInformation("Server response to client after changing loged status: \n" + serverResponse);
+	    
+	    return serverResponse;
+	    
+	}
+	catch (Exception e)
+	{
+	    ServerResponse<String> serverResponse = new ServerResponse<>(RequestResult.Failed, null,
+		    "Failed to change login\\out status for " + username);
+	    
+	    CPS_Tracer.TraceError("Failed to change login\\out status for " + username);
+	    
+	    return serverResponse;
+	}
     }
     
     private ServerResponse<CloseComplaintRequest> CloseComplaint(CloseComplaintRequest closeComplaintRequest)
@@ -1444,7 +1514,7 @@ public class ServerRequestHandler implements Closeable// pLw9Zaqp{ey`2,Ve
 		    Employee employee = new Employee(resultSet.getString(1), resultSet.getString(2),
 			    resultSet.getString(3), resultSet.getString(4), resultSet.getString(5),
 			    resultSet.getString(6), resultSet.getString(7),
-			    EmployeeType.valueOf(resultSet.getString(8)));
+			    EmployeeType.valueOf(resultSet.getString(8)), LogedStatus.valueOf(resultSet.getString(9)));
 		    
 		    serverResponse = new ServerResponse<>(RequestResult.Succeed, employee, "Found");
 		}

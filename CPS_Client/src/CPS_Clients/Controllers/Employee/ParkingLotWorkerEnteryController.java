@@ -206,6 +206,8 @@ public class ParkingLotWorkerEnteryController extends EmployeeBaseController {
     @FXML
     void onBack(ActionEvent event) 
     {
+	LogOut();
+	
     	myControllersManager.Back(PreviousScene,ConstsEmployees.ParkingLotWorkerEntery );
     }
 
