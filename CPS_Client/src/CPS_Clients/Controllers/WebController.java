@@ -114,7 +114,7 @@ public class WebController extends BaseController
 		if (reservationDateTime.isAfter(LocalDateTime.now().plusHours(3)))
 		{
 		    DialogBuilder.AlertDialog(AlertType.INFORMATION, null,
-			    "Your reservation has succesfully canceled.\nYour account got credited with 90% of the order's fee.\n"
+			    "Your reservation has been successfully cancelled.\nYour account got credited with 90% of the order's fee.\n"
 				    + (reservation.getPrice() / 10) * 9 + "$",
 			    null, false);
 		    
@@ -130,7 +130,7 @@ public class WebController extends BaseController
 		if (reservationDateTime.isAfter(LocalDateTime.now().plusHours(1)))
 		{
 		    DialogBuilder.AlertDialog(AlertType.INFORMATION, null,
-			    "Your reservation has succesfully canceled.\nYour account got credited with 50% of the order's fee.\n"
+			    "Your reservation has been successfully cancelled.\nYour account got credited with 50% of the order's fee.\n"
 				    + reservation.getPrice() / 2 + "$",
 			    null, false);
 		    
@@ -146,7 +146,7 @@ public class WebController extends BaseController
 		else
 		{
 		    DialogBuilder.AlertDialog(AlertType.INFORMATION, null,
-			    "We canceled your reservation.\nUnfortunately we cant credit your account."
+			    "We cancelled your reservation.\nUnfortunately we cant credit your account."
 				    + reservation.getPrice() / 10 + "$",
 			    null, false);
 		    

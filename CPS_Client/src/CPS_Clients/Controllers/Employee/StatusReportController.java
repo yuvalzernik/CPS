@@ -24,13 +24,13 @@ public class StatusReportController extends EmployeeBaseController {
     void OnBrowse(ActionEvent event) 
     {
     	  DirectoryChooser chooser =new DirectoryChooser();
-    	    File libDirectory = chooser.showDialog(null);
-    	    if (libDirectory == null)
-    	        return;
-    	    directory.setText(libDirectory.getAbsolutePath());
-    	    //Library library = getController().getLibraryManager().loadLibrary(libDirectory.getName());
-    	    ///getController().getLibraryManager().setSelectedLibrary(library);
-    	
+    	  
+    	  File libDirectory = chooser.showDialog(null);
+    	  
+    	  if (libDirectory == null)
+    		  return;
+    	  
+    	  directory.setText(libDirectory.getAbsolutePath()); 	
     }
 
     @FXML
@@ -50,8 +50,10 @@ public class StatusReportController extends EmployeeBaseController {
     	}
     	else
     	{
-	    	Pdf_Builder pdf = new Pdf_Builder(directory.getText());	    	
+	    	Pdf_Builder pdf = new Pdf_Builder(directory.getText());	
+	    	
 	    	pdf.build(serverResponse.GetResponseObject());
+	    	
 	    	if (serverResponse.GetRequestResult().equals(RequestResult.Succeed))
 	    	{
 	        	DialogBuilder.AlertDialog(AlertType.INFORMATION, "", ConstsEmployees.StatusReportSaved, null,false);

@@ -71,4 +71,6 @@ public class ConstsEmployees {
 	 public static final String ChooseRequest = "Please choose a request";
 	 public static final String RequestApproved = "The request has been approved";
 	 public static final String RequestDeclined = "The request has been declined";
+	 public static final String ManageCustomer = "Manage Customer";
+	 public static final String ManageCustomerFxmlPath = "Fxmls/CustomerServiceManageCustomers.fxml";
 }

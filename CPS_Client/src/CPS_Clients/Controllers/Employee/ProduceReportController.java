@@ -37,7 +37,7 @@ public class ProduceReportController extends EmployeeBaseController
       	ServerResponse<DisabledReport>Res= RequestsSender.GetDisabledReport("all");
     	DisabledReport Disabledreport=Res.GetResponseObject();
     	int actice= Disabledreport.getActiveList().size();
-    	String out="Number of disabled parking Spots during the quarter: " + Disabledreport.getDisabledAmount()+"\n"+ "Number of parking spots that have already been activized: "+ actice;
+    	String out="Number of disabled parking spots during the quarterly: " + Disabledreport.getDisabledAmount()+"\n"+ "Number of parking spots that have already been activized: "+ actice;
     	DialogBuilder.AlertDialog(AlertType.INFORMATION, "", out, null,false);
     }
 

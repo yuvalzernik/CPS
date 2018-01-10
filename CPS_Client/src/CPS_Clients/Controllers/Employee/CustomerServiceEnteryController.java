@@ -22,6 +22,7 @@ public class CustomerServiceEnteryController  extends EmployeeBaseController{
     	myControllersManager.SetScene(ConstsEmployees.ReserveParkingSpot, ConstsEmployees.CustomerServiceEntery);
 
     }
+    
     @FXML
     void OnBack(ActionEvent event) 
     {
@@ -29,4 +30,12 @@ public class CustomerServiceEnteryController  extends EmployeeBaseController{
 	
     	myControllersManager.Back(PreviousScene,ConstsEmployees.ParkingLotWorkerEntery );
     }
+    
+    @FXML
+    void OnManageCustomer(ActionEvent event) 
+    {
+    	myControllersManager.SetScene(ConstsEmployees.ManageCustomer, ConstsEmployees.CustomerServiceEntery);
+
+    }
+    
 }

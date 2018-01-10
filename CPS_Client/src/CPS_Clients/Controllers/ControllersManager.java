@@ -40,7 +40,7 @@ public class ControllersManager
 	    
 	    Scene scene = new Scene(loader.load());
 	    
-	    scene.getStylesheets().add(getClass().getResource("..\\style.css").toExternalForm());
+	    scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
 	    
 	    BaseController controller = loader.getController();
 	    
