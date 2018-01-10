@@ -53,7 +53,7 @@ public class ClientServerConsts
     public static final String ChangeExpireFullMembership = "ChangeExpireFullMembership";
     
     public static final String ChangeExpirePartialMembership = "ChangeExpirePartialMembership";
-
+    
     public static final String TryInsertGuestCar = "TryInsertGuestCar";
     
     public static final String RemoveCar = "RemoveCar";
@@ -61,12 +61,20 @@ public class ClientServerConsts
     public static final String GetComplaintsReport = "GetComplaintsReport";
     
     public static final String GetPerformanceReport = "GetPerformanceReport";
-        
+    
     public static final String GetReservationReport = "GetReservationReport";
-        
+    
     public static final String GetDisabledReport = "GetDisabledReport";
     
     public static final String GetActivityReport = "GetActivityReport";
     
     public static final String GetStatusReport = "GetStatusReport";
+    
+    public static final String LoginUser = "LoginUser";
+    
+    public static final String LogoutUser = "LogoutUser";
+    
+    public static final String CloseReservation = "CloseReservation";
+    
+    public static final String AddCreditToCustomer = "AddCreditToCustomer";
 }

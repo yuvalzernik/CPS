@@ -27,7 +27,7 @@ public abstract class MembershipBase implements Serializable
     @Override
     public String toString()
     {
-	return "subscriptionId: " + subscriptionId + "\nCustomer ID: " + customerId + "\nStar date: " + startDate + "\nExpiry date: " + expiryDate + "\n";
+	return "subscriptionId: " + subscriptionId + "\nCustomer ID: " + customerId + "\nStart date: " + startDate + "\nExpiry date: " + expiryDate + "\n";
     }
     
     public String GetCustomerId()

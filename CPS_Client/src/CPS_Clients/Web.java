@@ -29,7 +29,7 @@ public class Web extends Application
 	    list.add(new Pair<String, URL>(Consts.Payment, myClass.getResource(Consts.PaymentFxmlPath)));
 	    list.add(new Pair<String, URL>(Consts.MonitorAndControllNotMember, myClass.getResource(Consts.MonitorAndControllNotMemberFxmlPath)));
 	    list.add(new Pair<String, URL>(Consts.MonitorAndControllMember, myClass.getResource(Consts.MonitorAndControllMemberFxmlPath)));
-
+	    list.add(new Pair<String, URL>(Consts.MonitorAndControlCustomer, myClass.getResource(Consts.MonitorAndControlCustomerFxmlPath)));
 
 	    ControllersManager controllersManager = new ControllersManager(list, primaryStage,ConstsWeb.Web);
 	    

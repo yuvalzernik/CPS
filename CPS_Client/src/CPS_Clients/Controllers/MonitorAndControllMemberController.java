@@ -1,32 +1,25 @@
 package CPS_Clients.Controllers;
 
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.shape.Ellipse;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-import javax.imageio.ImageTypeSpecifier;
-
-import CPS_Clients.ConstsWeb;
 import CPS_Utilities.Consts;
 import CPS_Utilities.DialogBuilder;
 import CPS_Utilities.InputValidator;
 import clientServerCPS.RequestResult;
 import clientServerCPS.RequestsSender;
 import clientServerCPS.ServerResponse;
-import entities.Customer;
 import entities.FullMembership;
 import entities.Parkinglot;
 import entities.PartialMembership;
-import entities.Reservation;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 
 public class MonitorAndControllMemberController extends BaseController {
 
@@ -79,7 +72,7 @@ public class MonitorAndControllMemberController extends BaseController {
 			}
 			if (monitorAndControllPartialMember.GetRequestResult().equals(RequestResult.NotFound)) {
 
-				DialogBuilder.AlertDialog(AlertType.ERROR, null, "Sorry, your reservation was not found", null, false);
+				DialogBuilder.AlertDialog(AlertType.ERROR, null, "Sorry, your membership was not found", null, false);
 				return;
 			}
 		}

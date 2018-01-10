@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class PartialMembership extends MembershipBase
 {
     private static final long serialVersionUID = 1L;
-
+    
     private String parkinglot;
     
     private ArrayList<String> carList;
@@ -42,21 +42,21 @@ public class PartialMembership extends MembershipBase
     @Override
     public String toString()
     {
-	return super.toString() + "Parkinglot: " + parkinglot + "\nExit time: "
-		+ exitTime + "\n" + CarListString();
+	return "                          Partial Membership: \n\n"+super.toString() + "Parkinglot: " + parkinglot + "\nExit time: "
+		+ exitTime + "\n" +"Cars: "+ CarListString();
     }
     
     public String CarListString()
     {
 	String carListString = "";
-	for(String  car : carList)
+	for (String car : carList)
 	{
-	    carListString += (car +" ,");
+	    carListString += (car + " ,");
 	}
 	
-	// trick : 
+	// trick :
 	
-	if(carListString != "")
+	if (carListString != "")
 	{
 	    carListString += '$';
 	    carListString = carListString.replace(" ,$", "");

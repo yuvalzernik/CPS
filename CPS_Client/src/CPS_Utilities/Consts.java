@@ -1,7 +1,7 @@
 package CPS_Utilities;
 
 public class Consts
-{    
+{
     public static final String ServerProblemMessage = "We are sorry but we had a problem with the server. \nPlease try again or come back later.";
     
     public static final String InputsAreIncorrect = "Please fill in all fields as required";
@@ -34,6 +34,10 @@ public class Consts
     
     public static final String KioskEntryFxmlPath = "Fxmls/KioskEntry.fxml";
     
+    public static final String MonitorAndControlCustomer = "Monitor And Control-Customer";
+    
+    public static final String MonitorAndControlCustomerFxmlPath = "Fxmls/MonitorAndControlCustomer.fxml";
+    
     public static final String KioskEntry = "Kiosk Entry";
     
     public static final String MonitorAndControllFxmlPath = "Fxmls/MonitorAndControll.fxml";
@@ -60,16 +64,16 @@ public class Consts
     
     public static final String Payment = "Payment";
     
-    public static final String MonitorAndControllMember ="Monitor And Controll Member";
+    public static final String MonitorAndControllMember = "Monitor And Controll Member";
     
-    public static final String MonitorAndControllMemberFxmlPath ="Fxmls/MonitorAndControllMember.fxml";
+    public static final String MonitorAndControllMemberFxmlPath = "Fxmls/MonitorAndControllMember.fxml";
     
-    public static final String MonitorAndControllNotMember ="Monitor And Controll Not Member";
+    public static final String MonitorAndControllNotMember = "Monitor And Controll Not Member";
     
-    public static final String MonitorAndControllNotMemberFxmlPath ="Fxmls/MonitorAndControllNotMember.fxml";
+    public static final String MonitorAndControllNotMemberFxmlPath = "Fxmls/MonitorAndControllNotMember.fxml";
     
     public static final String ComplaintRegistered = "Your complaint has been successfully recorded";
     
-    public static final String SubscriptionRenewal  = "Thank you for renewal your subscription";
-
+    public static final String SubscriptionRenewal = "Thank you for renewal your subscription";
+    
 }

@@ -2,6 +2,7 @@ package entities;
 
 import java.io.Serializable;
 import entities.enums.EmployeeType;
+import entities.enums.LogedStatus;
 
 public class Employee implements Serializable
 {
@@ -23,8 +24,10 @@ public class Employee implements Serializable
     
     EmployeeType employeeType;
     
+    LogedStatus logedStatus;
+    
     public Employee(String employeeId, String firstName, String lastName, String email, String orgAffiliation,
-	    String username, String password, EmployeeType employeeType)
+	    String username, String password, EmployeeType employeeType, LogedStatus logedStatus)
     {
 	this.employeeId = employeeId;
 	this.firstName = firstName;
@@ -34,7 +37,13 @@ public class Employee implements Serializable
 	this.username = username;
 	this.password = password;
 	this.employeeType = employeeType;
+	this.logedStatus = logedStatus;
 	
+    }
+    
+    public LogedStatus getLogedStatus()
+    {
+	return logedStatus;
     }
     
     public String getEmployeeId()

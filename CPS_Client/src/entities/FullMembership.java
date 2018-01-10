@@ -17,7 +17,7 @@ public class FullMembership extends MembershipBase
     @Override
     public String toString()
     {
-	return super.toString() + "Car number: " + carNumber;
+	return "                          Full Membership: \n\n" + super.toString() + "Car number: " + carNumber;
     }
     
     public String GetCarNumber()
