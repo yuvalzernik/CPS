@@ -11,5 +11,6 @@
 	<classpathentry kind="lib" path="src/Pdf_Lib/preflight-2.0.8.jar"/>
 	<classpathentry kind="lib" path="src/Pdf_Lib/preflight-app-2.0.8.jar"/>
 	<classpathentry kind="lib" path="src/Pdf_Lib/xmpbox-2.0.8.jar"/>
+	<classpathentry kind="lib" path="src/juint/junit-4.12.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
