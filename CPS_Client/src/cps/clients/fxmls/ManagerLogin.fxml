@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="620.0" prefWidth="620.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cps.clients.controllers.employee.ManagerLoginController">
+   <children>
+      <Button layoutX="22.0" layoutY="172.0" mnemonicParsing="false" onAction="#OnInitializeParkingLot" prefHeight="80.0" prefWidth="263.0" text="Initialize Parking Lot" />
+      <Button layoutX="335.0" layoutY="471.0" mnemonicParsing="false" onAction="#OnRegisterDisabeledParkingSpot" prefHeight="80.0" prefWidth="263.0" text="Disable Parking Spot" />
+      <Button layoutX="335.0" layoutY="172.0" mnemonicParsing="false" onAction="#OnReserveParkingSpot" prefHeight="80.0" prefWidth="263.0" text="Reserve Parking spot" />
+      <Button layoutX="335.0" layoutY="370.0" mnemonicParsing="false" onAction="#OnRigisterDisabledParkingLot" prefHeight="80.0" prefWidth="263.0" text="Disable Parking Lot" />
+      <Button layoutX="22.0" layoutY="270.0" mnemonicParsing="false" onAction="#OnRequestUpdatePrices" prefHeight="80.0" prefWidth="263.0" text="Request Update Prices" />
+      <Button layoutX="335.0" layoutY="270.0" mnemonicParsing="false" onAction="#OnProduceReport" prefHeight="80.0" prefWidth="263.0" text="Produce Reports" />
+      <Button layoutX="14.0" layoutY="576.0" mnemonicParsing="false" onAction="#OnBack" prefHeight="39.0" prefWidth="94.0" text="Log Out" />
+      <Button layoutX="22.0" layoutY="370.0" mnemonicParsing="false" onAction="#OnUndisableParkingLot" prefHeight="80.0" prefWidth="263.0" text="Enable Parking Lot" />
+      <Button layoutX="22.0" layoutY="471.0" mnemonicParsing="false" onAction="#OnUndisableParkingSpot" prefHeight="80.0" prefWidth="263.0" text="Enable Parking Spot" />
+      <Label fx:id="Headline" layoutX="5.0" layoutY="88.0" prefHeight="17.0" prefWidth="611.0" text="Parking Lot Manager Menu" />
+   </children>
+</AnchorPane>

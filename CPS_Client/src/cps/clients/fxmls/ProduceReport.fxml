@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="620.0" prefWidth="620.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cps.clients.controllers.employee.ProduceReportController">
+   <children>
+      <Button layoutX="23.0" layoutY="166.0" mnemonicParsing="false" onAction="#OnReservationReport" prefHeight="80.0" prefWidth="263.0" text="Reservation Report" />
+      <Button layoutX="330.0" layoutY="166.0" mnemonicParsing="false" onAction="#OnComaplaintsReport" prefHeight="80.0" prefWidth="263.0" text="Complaints Report" />
+      <Button layoutX="23.0" layoutY="262.0" mnemonicParsing="false" onAction="#OnDisabledParkingSpotReport" prefHeight="80.0" prefWidth="263.0" text="Disabled Parking Spots Report" />
+      <Button layoutX="330.0" layoutY="262.0" mnemonicParsing="false" onAction="#OnPerformanceReport" prefHeight="80.0" prefWidth="263.0" text="Performance Report" />
+      <Button layoutX="23.0" layoutY="359.0" mnemonicParsing="false" onAction="#OnActivityReport" prefHeight="80.0" prefWidth="263.0" text="Activity Report" />
+      <Button layoutX="14.0" layoutY="567.0" mnemonicParsing="false" onAction="#OnBack" prefHeight="39.0" prefWidth="107.0" text="Back" />
+      <Button layoutX="330.0" layoutY="359.0" mnemonicParsing="false" onAction="#OnStatusReport" prefHeight="80.0" prefWidth="263.0" text="Status Report" />
+      <Label fx:id="Headline" layoutX="220.0" layoutY="90.0" prefHeight="31.0" prefWidth="180.0" text="Reports" />
+   </children>
+</AnchorPane>

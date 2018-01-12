@@ -1,0 +1,41 @@
+package cps.clients.controllers.employee;
+
+import cps.utilities.ConstsEmployees;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.Label;
+
+public class CustomerServiceEnteryController  extends EmployeeBaseController{
+
+	@FXML
+    private Label Headline;
+	
+    @FXML
+    void OnManageComplaints(ActionEvent event) 
+    {
+    	myControllersManager.SetScene(ConstsEmployees.ManageComplaints, ConstsEmployees.CustomerServiceEntery);
+    }
+
+    @FXML
+    void OnSaveParkingSpot(ActionEvent event) 
+    {
+    	myControllersManager.SetScene(ConstsEmployees.ReserveParkingSpot, ConstsEmployees.CustomerServiceEntery);
+
+    }
+    
+    @FXML
+    void OnBack(ActionEvent event) 
+    {
+	LogOut();
+	
+    	myControllersManager.Back(PreviousScene,ConstsEmployees.ParkingLotWorkerEntery );
+    }
+    
+    @FXML
+    void OnManageCustomer(ActionEvent event) 
+    {
+    	myControllersManager.SetScene(ConstsEmployees.ManageCustomer, ConstsEmployees.CustomerServiceEntery);
+
+    }
+    
+}
