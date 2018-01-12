@@ -10,15 +10,29 @@ import cps.utilities.DialogBuilder;
 import javafx.application.Platform;
 import javafx.scene.control.Alert.AlertType;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class EmployeeBaseController.
+ */
 public class EmployeeBaseController extends BaseController
 {
+    
+    /** The My employee. */
     protected static Employee MyEmployee;
     
+    /**
+     * Gets the my employee.
+     *
+     * @return the my employee
+     */
     public static Employee getMyEmployee()
     {
 	return MyEmployee;
     }
     
+    /**
+     * Log out.
+     */
     protected void LogOut()
     {
 	try

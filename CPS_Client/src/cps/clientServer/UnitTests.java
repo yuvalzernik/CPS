@@ -21,13 +21,23 @@ import cps.entities.enums.ReservationType;
 import junit.framework.TestCase;
 
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class UnitTests.
+ */
 public class UnitTests  extends TestCase{
 
+	/* (non-Javadoc)
+	 * @see junit.framework.TestCase#setUp()
+	 */
 	@Before
 	public void setUp() throws Exception {
 		new RequestsSender("127.0.0.1");
 	}
 	
+	/**
+	 * Test real time parking.
+	 */
 	@Test
 	public void testRealTimeParking() {
 		ServerResponse<AddRealTimeParkingRequest> serverResponse = null;
@@ -61,6 +71,9 @@ public class UnitTests  extends TestCase{
 		}
 	}
 	
+	/**
+	 * Test one time reservation.
+	 */
 	@Test
 	public void testOneTimeReservation() {
 		String id = Integer.toString(new Random().nextInt(1000000) + 3000000);
@@ -77,6 +90,10 @@ public class UnitTests  extends TestCase{
 		
 		Assert.assertEquals(serverGetResponse.GetRequestResult(), RequestResult.Succeed);
 	}
+	
+	/**
+	 * Test partial membership.
+	 */
 	@Test
 	public void testPartialMembership(){
 		String id = Integer.toString(new Random().nextInt(1000000) + 3000000);
@@ -99,6 +116,10 @@ public class UnitTests  extends TestCase{
 		
 		Assert.assertEquals(serverGetRespone.GetRequestResult(), RequestResult.Succeed);		
 	    }
+	
+	/**
+	 * Test full membership.
+	 */
 	@Test
 	public void testFullMembership() {
 		String id = Integer.toString(new Random().nextInt(1000000) + 3000000);

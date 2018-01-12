@@ -21,14 +21,38 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ActivityReportController.
+ */
 public class ActivityReportController extends EmployeeBaseController{
+	
+	/**
+	 * The Class MyRow.
+	 */
 	public class MyRow
 	{
+		
+		/** The daynum. */
 		String daynum;
+		
+		/** The numofex. */
 		String numofex;
+		
+		/** The numofcanc. */
 		String numofcanc;
+		
+		/** The numofdis. */
 		String numofdis;
 		
+		/**
+		 * Instantiates a new my row.
+		 *
+		 * @param a the a
+		 * @param b the b
+		 * @param c the c
+		 * @param d the d
+		 */
 		public MyRow(String a, String b, String c, String d) 
 		{
 			daynum=a;
@@ -36,56 +60,96 @@ public class ActivityReportController extends EmployeeBaseController{
 			numofcanc=c;
 			numofdis=d;
 		}
+		
+		/**
+		 * Gets the daynum.
+		 *
+		 * @return the daynum
+		 */
 		public String getDaynum() {
 			return daynum;
 		}
+		
+		/**
+		 * Gets the numofcanc.
+		 *
+		 * @return the numofcanc
+		 */
 		public String getNumofcanc() {
 			return numofcanc;
 		}
+		
+		/**
+		 * Gets the numofdis.
+		 *
+		 * @return the numofdis
+		 */
 		public String getNumofdis() {
 			return numofdis;
 		}
+		
+		/**
+		 * Gets the numofex.
+		 *
+		 * @return the numofex
+		 */
 		public String getNumofex() {
 			return numofex;
 		}
 	}
 	
+	/** The My table. */
 	private ObservableList<MyRow> MyTable = FXCollections.observableArrayList();
 	
+    /** The month. */
     @FXML
     private MenuButton month;
     
+    /** The year. */
     @FXML
     private MenuButton year;
     
+    /** The deviation exercised. */
     @FXML
     private TextField deviationExercised;
 
+    /** The Data table. */
     @FXML
     private TableView<MyRow> DataTable;
 
+    /** The deviation cancelled. */
     @FXML
     private TextField deviationCancelled;
 
+    /** The median disabled. */
     @FXML
     private TextField medianDisabled;
 
+    /** The deviation disabled. */
     @FXML
     private TextField deviationDisabled;
 
+    /** The median exercised. */
     @FXML
     private TextField medianExercised;
 
+    /** The median cancelled. */
     @FXML
     private TextField medianCancelled;
     
+    /** The Test. */
     @FXML
     private Label Test;
     
+    /** The mon. */
     String mon;
     
+    /** The yr. */
     String yr;
     
+    /**
+     * Initialize.
+     */
     @FXML
     void initialize() 
     {
@@ -190,6 +254,11 @@ public class ActivityReportController extends EmployeeBaseController{
 		}	
 	}
 
+    /**
+     * On back.
+     *
+     * @param event the event
+     */
     @FXML
     void OnBack(ActionEvent event)
     {
@@ -197,6 +266,11 @@ public class ActivityReportController extends EmployeeBaseController{
     	myControllersManager.Back(PreviousScene, ConstsEmployees.ActivityReport);
     }
 
+    /**
+     * On show.
+     *
+     * @param event the event
+     */
     @FXML
     void OnShow(ActionEvent event)
     {

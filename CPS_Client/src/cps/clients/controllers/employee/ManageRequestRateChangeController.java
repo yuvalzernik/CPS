@@ -18,15 +18,30 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ListView;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ManageRequestRateChangeController.
+ */
 public class ManageRequestRateChangeController extends EmployeeBaseController {
 
+	/** The my buttons. */
 	ArrayList<String> myButtons = new ArrayList<String>();
+	
+	/** The my requests. */
 	ArrayList<ChangeRatesRequest> myRequests;
 	
+	/** The Requests list. */
 	@FXML
     private ListView<String> RequestsList;
+	
+	/** The current request id. */
 	private String currentRequestId = null;
 
+    /**
+     * On load requests.
+     *
+     * @param event the event
+     */
     @FXML
     void OnLoadRequests(ActionEvent event) 
     {
@@ -59,6 +74,11 @@ public class ManageRequestRateChangeController extends EmployeeBaseController {
     }
 
     
+    /**
+     * On handle requests.
+     *
+     * @param event the event
+     */
     @FXML
     void OnHandleRequests(ActionEvent event)
     {
@@ -106,12 +126,20 @@ public class ManageRequestRateChangeController extends EmployeeBaseController {
     }
 
 
+    /**
+     * On back.
+     *
+     * @param event the event
+     */
     @FXML
     void OnBack(ActionEvent event) 
     {
     	myControllersManager.Back(PreviousScene, ConstsEmployees.ManageRequestRateChange);
     }
 
+    /**
+     * Initialize.
+     */
     @FXML
     void initialize() 
     {

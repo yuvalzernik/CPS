@@ -10,14 +10,28 @@ import cps.utilities.ConstsEmployees;
 import cps.utilities.DialogBuilder;
 import javafx.event.ActionEvent;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ManagerProduceReportController.
+ */
 public class ManagerProduceReportController  extends EmployeeBaseController {
 
+    /**
+     * On back.
+     *
+     * @param event the event
+     */
     @FXML
     void OnBack(ActionEvent event) 
     {
     	myControllersManager.Back(PreviousScene,ConstsEmployees.ManagerProduceReport );
     }
 
+    /**
+     * On reservation report.
+     *
+     * @param event the event
+     */
     @FXML
     void OnReservationReport(ActionEvent event) 
     {
@@ -25,6 +39,11 @@ public class ManagerProduceReportController  extends EmployeeBaseController {
 
     }
 
+    /**
+     * On comaplaints report.
+     *
+     * @param event the event
+     */
     @FXML
     void OnComaplaintsReport(ActionEvent event) 
     {
@@ -34,6 +53,11 @@ public class ManagerProduceReportController  extends EmployeeBaseController {
     	DialogBuilder.AlertDialog(AlertType.INFORMATION, "", out, null,false);
     }
 
+    /**
+     * On disabled parking spot report.
+     *
+     * @param event the event
+     */
     @FXML
     void OnDisabledParkingSpotReport(ActionEvent event) 
     {

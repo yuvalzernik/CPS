@@ -11,9 +11,18 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert.AlertType;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ProduceReportController.
+ */
 public class ProduceReportController extends EmployeeBaseController 
 {
 
+    /**
+     * On reservation report.
+     *
+     * @param event the event
+     */
     @FXML
     void OnReservationReport(ActionEvent event) 
     {
@@ -21,6 +30,11 @@ public class ProduceReportController extends EmployeeBaseController
 
     }
 
+    /**
+     * On comaplaints report.
+     *
+     * @param event the event
+     */
     @FXML
     void OnComaplaintsReport(ActionEvent event) 
     {
@@ -31,6 +45,11 @@ public class ProduceReportController extends EmployeeBaseController
 
     }
 
+    /**
+     * On disabled parking spot report.
+     *
+     * @param event the event
+     */
     @FXML
     void OnDisabledParkingSpotReport(ActionEvent event) 
     {
@@ -41,6 +60,11 @@ public class ProduceReportController extends EmployeeBaseController
     	DialogBuilder.AlertDialog(AlertType.INFORMATION, "", out, null,false);
     }
 
+    /**
+     * On performance report.
+     *
+     * @param event the event
+     */
     @FXML
     void OnPerformanceReport(ActionEvent event) 
     {
@@ -50,6 +74,11 @@ public class ProduceReportController extends EmployeeBaseController
     	DialogBuilder.AlertDialog(AlertType.INFORMATION, "", out, null,false);
     }
 
+    /**
+     * On activity report.
+     *
+     * @param event the event
+     */
     @FXML
     void OnActivityReport(ActionEvent event) 
     {
@@ -57,6 +86,11 @@ public class ProduceReportController extends EmployeeBaseController
 
     }
 
+    /**
+     * On back.
+     *
+     * @param event the event
+     */
     @FXML
     void OnBack(ActionEvent event) 
     {
@@ -65,6 +99,11 @@ public class ProduceReportController extends EmployeeBaseController
 
     }
 
+    /**
+     * On status report.
+     *
+     * @param event the event
+     */
     @FXML
     void OnStatusReport(ActionEvent event) 
     {	

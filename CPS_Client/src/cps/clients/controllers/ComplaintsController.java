@@ -19,23 +19,37 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ComplaintsController.
+ */
 public class ComplaintsController extends BaseController
 {
     
+    /** The complaint deatils. */
     @FXML
     private TextArea complaintDeatils;
     
+    /** The Headline. */
     @FXML
     private Label Headline;
     
+    /** The member ID. */
     @FXML
     private TextField memberID;
     
+    /** The prg bar. */
     @FXML
     private ProgressBar prgBar;
     
+    /** The complaint. */
     Complaint complaint;
     
+    /**
+     * On submit.
+     *
+     * @param event the event
+     */
     @FXML
     void OnSubmit(ActionEvent event)
     {
@@ -92,6 +106,11 @@ public class ComplaintsController extends BaseController
 	}
     }
     
+    /**
+     * On back.
+     *
+     * @param event the event
+     */
     @FXML
     void OnBack(ActionEvent event)
     {

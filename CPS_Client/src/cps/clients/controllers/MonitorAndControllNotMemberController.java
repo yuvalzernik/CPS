@@ -22,21 +22,34 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class MonitorAndControllNotMemberController.
+ */
 public class MonitorAndControllNotMemberController extends BaseController
 {
     
+    /** The Headline. */
     @FXML
     private Label Headline;
     
+    /** The Order ID. */
     @FXML // fx:id="Order_ID"
     private TextField Order_ID; // Value injected by FXMLLoader
     
+    /** The Text order deatiles. */
     @FXML // fx:id="TextOrderDeatiles"
     private TextArea TextOrderDeatiles; // Value injected by FXMLLoader
     
+    /** The prg bar. */
     @FXML
     private ProgressBar prgBar;
     
+    /**
+     * On submit.
+     *
+     * @param event the event
+     */
     @FXML
     void OnSubmit(ActionEvent event)
     {
@@ -77,6 +90,11 @@ public class MonitorAndControllNotMemberController extends BaseController
 	
     }
     
+    /**
+     * On back.
+     *
+     * @param event the event
+     */
     @FXML
     void OnBack(ActionEvent event)
     {

@@ -23,10 +23,24 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.Alert.AlertType;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ManagerLoginController.
+ */
 public class ManagerLoginController extends EmployeeBaseController{
+	
+	/** The Disable parking spot inputs. */
 	private ArrayList<String> DisableParkingSpotInputs = new ArrayList<>();
+	
+	/** The Request update prices inputs. */
 	private ArrayList<String> RequestUpdatePricesInputs = new ArrayList<>();
+	
+	/** The Initialize parking spot inputs. */
 	private ArrayList<String> InitializeParkingSpotInputs = new ArrayList<>();
+	
+	/**
+	 * Instantiates a new manager login controller.
+	 */
 	public ManagerLoginController()
 	{
 		super();
@@ -40,9 +54,15 @@ public class ManagerLoginController extends EmployeeBaseController{
 		RequestUpdatePricesInputs.add("New in-advance rate:");
 	}
 
+    /** The Headline. */
     @FXML
     private Label Headline;
     
+    /**
+     * On initialize parking lot.
+     *
+     * @param event the event
+     */
     @FXML
     void OnInitializeParkingLot(ActionEvent event)
     {
@@ -69,6 +89,11 @@ public class ManagerLoginController extends EmployeeBaseController{
     	});
     }
 
+    /**
+     * On rigister disabled parking lot.
+     *
+     * @param event the event
+     */
     @FXML
     void OnRigisterDisabledParkingLot(ActionEvent event) 
     {
@@ -100,12 +125,22 @@ public class ManagerLoginController extends EmployeeBaseController{
     	}
     }
 
+    /**
+     * On reserve parking spot.
+     *
+     * @param event the event
+     */
     @FXML
     void OnReserveParkingSpot(ActionEvent event) 
     {
     	myControllersManager.SetScene(ConstsEmployees.ReserveParkingSpotInLocalParkingLot, ConstsEmployees.ManagerLogin);
     }
     
+    /**
+     * On register disabeled parking spot.
+     *
+     * @param event the event
+     */
     @FXML
     void OnRegisterDisabeledParkingSpot(ActionEvent event) 
     {
@@ -143,6 +178,11 @@ public class ManagerLoginController extends EmployeeBaseController{
     	});
     }
 
+    /**
+     * On request update prices.
+     *
+     * @param event the event
+     */
     @FXML
     void OnRequestUpdatePrices(ActionEvent event) 
     {
@@ -160,11 +200,22 @@ public class ManagerLoginController extends EmployeeBaseController{
     	});
     }
 
+    /**
+     * On produce report.
+     *
+     * @param event the event
+     */
     @FXML
     void OnProduceReport(ActionEvent event) 
     {
     	myControllersManager.SetScene(ConstsEmployees.ManagerProduceReport, ConstsEmployees.ManagerLogin);
     }
+    
+    /**
+     * On undisable parking lot.
+     *
+     * @param event the event
+     */
     @FXML
     void OnUndisableParkingLot(ActionEvent event)
     {
@@ -196,6 +247,11 @@ public class ManagerLoginController extends EmployeeBaseController{
     	}
     }
     
+    /**
+     * On undisable parking spot.
+     *
+     * @param event the event
+     */
     @FXML
     void OnUndisableParkingSpot(ActionEvent event)
     {
@@ -233,6 +289,11 @@ public class ManagerLoginController extends EmployeeBaseController{
     	});
     }
 
+    /**
+     * On back.
+     *
+     * @param event the event
+     */
     @FXML
     void OnBack(ActionEvent event) 
     {

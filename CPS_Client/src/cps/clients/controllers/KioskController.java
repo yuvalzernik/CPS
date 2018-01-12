@@ -9,27 +9,52 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class KioskController.
+ */
 public class KioskController extends BaseController {
+	
+	/** The subscription types. */
 	private ArrayList<String> subscriptionTypes = new ArrayList<>();
 
+	/**
+	 * Instantiates a new kiosk controller.
+	 */
 	public KioskController() {
 		subscriptionTypes.add(Consts.FullMembership);
 		subscriptionTypes.add(Consts.PartialMembership);
 	}
 	
+    /** The Headline. */
     @FXML
     private Label Headline;
     
+	/**
+	 * On enter.
+	 *
+	 * @param event the event
+	 */
 	@FXML
 	void OnEnter(ActionEvent event) {
 		myControllersManager.SetScene(Consts.KioskEntry, Consts.Kiosk);
 	}
 
+	/**
+	 * On exit.
+	 *
+	 * @param event the event
+	 */
 	@FXML
 	void OnExit(ActionEvent event) {
 		myControllersManager.SetScene(Consts.KioskExit, Consts.Kiosk);
 	}
 
+	/**
+	 * On register.
+	 *
+	 * @param event the event
+	 */
 	@FXML
 	void OnRegister(ActionEvent event) {
 		String buttonResult = DialogBuilder.AlertDialog(AlertType.NONE, "Register", "Please choose a subscription type",
@@ -49,6 +74,12 @@ public class KioskController extends BaseController {
 		}
 	}
 
+	/**
+	 * On monitor and controll.
+	 *
+	 * @param event the event
+	 * @throws InterruptedException the interrupted exception
+	 */
 	@FXML
 	void OnMonitorAndControll(ActionEvent event) throws InterruptedException {
 

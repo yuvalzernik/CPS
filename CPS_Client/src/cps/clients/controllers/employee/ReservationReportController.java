@@ -16,13 +16,34 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ReservationReportController.
+ */
 public class ReservationReportController extends EmployeeBaseController {
+	
+	/**
+	 * The Class MyRow.
+	 */
 	public class MyRow 
 	{
+		
+		/** The Reservation id. */
 		String ReservationId;
+		
+		/** The Parking lot name. */
 		String ParkingLotName;
+		
+		/** The Status. */
 		ReservationStatus Status;
 		
+		/**
+		 * Instantiates a new my row.
+		 *
+		 * @param a the a
+		 * @param b the b
+		 * @param c the c
+		 */
 		public MyRow(String a, String b, ReservationStatus c) 
 		{
 			ReservationId=a;
@@ -30,33 +51,61 @@ public class ReservationReportController extends EmployeeBaseController {
 			Status=c;
 		}
 		
+		/**
+		 * Gets the reservation id.
+		 *
+		 * @return the reservation id
+		 */
 		public String getReservationId() {return ReservationId;}
+		
+		/**
+		 * Gets the status.
+		 *
+		 * @return the status
+		 */
 		public ReservationStatus getStatus() {return Status;}
+		
+		/**
+		 * Gets the parking lot name.
+		 *
+		 * @return the parking lot name
+		 */
 		public String getParkingLotName() {return ParkingLotName;}
 	}
 	
+	/** The In advancelist. */
 	private ObservableList<MyRow> InAdvancelist = FXCollections.observableArrayList();
+	
+	/** The Guestlist. */
 	private ObservableList<MyRow> Guestlist = FXCollections.observableArrayList();
 
 	
 	
 
 	
+    /** The excersized reservations. */
     @FXML
     private TextField excersizedReservations;
 
+    /** The reservation amount. */
     @FXML
     private TextField reservationAmount;
 
+    /** The guest reservation table. */
     @FXML
     private TableView<MyRow> guestReservationTable;
 
+    /** The cancelled reservations. */
     @FXML
     private TextField cancelledReservations;
 
+    /** The in advance reservation tablr. */
     @FXML
     private TableView<MyRow> inAdvanceReservationTablr;
     
+    /**
+     * Initialize.
+     */
     @FXML
     void initialize() 
     {
@@ -76,6 +125,11 @@ public class ReservationReportController extends EmployeeBaseController {
     }
 		
 
+    /**
+     * On show 2.
+     *
+     * @param event the event
+     */
     @FXML
     void OnShow2(ActionEvent event) 
     {	
@@ -108,6 +162,11 @@ public class ReservationReportController extends EmployeeBaseController {
     	inAdvanceReservationTablr.setItems(InAdvancelist);
     }
 
+    /**
+     * On back.
+     *
+     * @param event the event
+     */
     @FXML
     void OnBack(ActionEvent event) 
     {

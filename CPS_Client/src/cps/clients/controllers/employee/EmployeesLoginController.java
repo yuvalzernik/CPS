@@ -22,21 +22,36 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.scene.control.PasswordField;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class EmployeesLoginController.
+ */
 public class EmployeesLoginController extends EmployeeBaseController
 {
     
+    /** The password. */
     @FXML
     private PasswordField password;
     
+    /** The user name. */
     @FXML
     private TextField userName;
     
+    /** The login. */
     @FXML
     private Button login;
     
+    /** The prg bar. */
     @FXML
     private ProgressIndicator prgBar;
     
+    /**
+     * On login.
+     *
+     * @param event the event
+     * @throws InterruptedException the interrupted exception
+     * @throws ExecutionException the execution exception
+     */
     @FXML
     void OnLogin(ActionEvent event) throws InterruptedException, ExecutionException
     {

@@ -19,15 +19,26 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class StatusReportController.
+ */
 public class StatusReportController extends EmployeeBaseController
 {
     
+    /** The directory. */
     @FXML
     private TextField directory;
     
+    /** The prg bar. */
     @FXML
     private ProgressBar prgBar;
     
+    /**
+     * On browse.
+     *
+     * @param event the event
+     */
     @FXML
     void OnBrowse(ActionEvent event)
     {
@@ -40,12 +51,22 @@ public class StatusReportController extends EmployeeBaseController
 	directory.setText(libDirectory.getAbsolutePath());
     }
     
+    /**
+     * On back.
+     *
+     * @param event the event
+     */
     @FXML
     void OnBack(ActionEvent event)
     {
 	myControllersManager.Back(PreviousScene, ConstsEmployees.StatusReport);
     }
     
+    /**
+     * On save.
+     *
+     * @param event the event
+     */
     @FXML
     void OnSave(ActionEvent event)
     {

@@ -28,19 +28,34 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.Alert.AlertType;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class KioskExitController.
+ */
 public class KioskExitController extends BaseController
 {
+    
+    /** The Headline. */
     @FXML
     private Label Headline;
     
+    /** The Pre order inputs. */
     private ArrayList<String> PreOrderInputs = new ArrayList<>();
     
+    /** The Member inputs. */
     private ArrayList<String> MemberInputs = new ArrayList<>();
     
+    /** The parkinglot name. */
     private String parkinglotName;
     
+    /** The parkinglot. */
     private Parkinglot parkinglot;
     
+    /**
+     * Instantiates a new kiosk exit controller.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     public KioskExitController() throws IOException
     {
 	super();
@@ -58,6 +73,11 @@ public class KioskExitController extends BaseController
 	parkinglot = RequestsSender.GetParkinglot(parkinglotName).GetResponseObject();
     }
     
+    /**
+     * On member exit.
+     *
+     * @param event the event
+     */
     @FXML
     void OnMemberExit(ActionEvent event)
     {
@@ -108,6 +128,11 @@ public class KioskExitController extends BaseController
 	});
     }
     
+    /**
+     * On guest exit.
+     *
+     * @param event the event
+     */
     @FXML
     void OnGuestExit(ActionEvent event)
     {
@@ -184,6 +209,11 @@ public class KioskExitController extends BaseController
 	});
     }
     
+    /**
+     * On back.
+     *
+     * @param event the event
+     */
     @FXML
     void OnBack(ActionEvent event)
     {

@@ -20,26 +20,45 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class WebController.
+ */
 public class WebController extends BaseController
 {
     
+    /** The subscription types. */
     private ArrayList<String> subscriptionTypes = new ArrayList<>();
     
+    /**
+     * Instantiates a new web controller.
+     */
     public WebController()
     {
 	subscriptionTypes.add(Consts.FullMembership);
 	subscriptionTypes.add(Consts.PartialMembership);
     }
     
+    /** The Headline. */
     @FXML
     private Label Headline;
     
+    /**
+     * On complaines.
+     *
+     * @param event the event
+     */
     @FXML
     void OnComplaines(ActionEvent event)
     {
 	myControllersManager.SetScene(ConstsWeb.Complaints, ConstsWeb.Web);
     }
     
+    /**
+     * On register.
+     *
+     * @param event the event
+     */
     @FXML
     void OnRegister(ActionEvent event)
     {
@@ -62,12 +81,22 @@ public class WebController extends BaseController
 	
     }
     
+    /**
+     * On monitor and controll.
+     *
+     * @param event the event
+     */
     @FXML
     void OnMonitorAndControll(ActionEvent event)
     {
 	myControllersManager.SetScene(Consts.MonitorAndControll, ConstsWeb.Web);
     }
     
+    /**
+     * On order in advance.
+     *
+     * @param event the event
+     */
     @FXML
     void OnOrderInAdvance(ActionEvent event)
     {
@@ -75,6 +104,11 @@ public class WebController extends BaseController
 	
     }
     
+    /**
+     * On cancel order.
+     *
+     * @param event the event
+     */
     @FXML
     void OnCancelOrder(ActionEvent event)
     {

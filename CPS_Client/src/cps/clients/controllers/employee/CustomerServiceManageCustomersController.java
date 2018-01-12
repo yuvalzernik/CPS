@@ -21,25 +21,41 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class CustomerServiceManageCustomersController.
+ */
 public class CustomerServiceManageCustomersController extends EmployeeBaseController
 {
+    
+    /** The Headline. */
     @FXML
     private Label Headline;
     
+    /** The text box. */
     @FXML
     private TextArea textBox;
     
+    /** The customer ID. */
     @FXML
     private TextField customerID;
     
+    /** The refund. */
     @FXML
     private Button refund;
     
+    /** The prg bar. */
     @FXML
     private ProgressBar prgBar;
     
+    /** The customer. */
     private Customer customer;
     
+    /**
+     * On submit.
+     *
+     * @param event the event
+     */
     @FXML
     void OnSubmit(ActionEvent event)
     {
@@ -84,12 +100,22 @@ public class CustomerServiceManageCustomersController extends EmployeeBaseContro
 	
     }
     
+    /**
+     * On back.
+     *
+     * @param event the event
+     */
     @FXML
     void OnBack(ActionEvent event)
     {
 	myControllersManager.Back(PreviousScene, ConstsEmployees.ManageCustomer);
     }
     
+    /**
+     * On refund.
+     *
+     * @param event the event
+     */
     @FXML
     void OnRefund(ActionEvent event)
     {

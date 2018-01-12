@@ -24,37 +24,61 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class MonitorAndControllMemberController.
+ */
 public class MonitorAndControllMemberController extends BaseController
 {
     
+    /** The subscription types. */
     private ArrayList<String> subscriptionTypes = new ArrayList<>();
+    
+    /** The full or partial membership. */
     String fullOrPartialMembership;
+    
+    /** The rate. */
     float rate = 5;
     
+    /**
+     * Instantiates a new monitor and controll member controller.
+     */
     public MonitorAndControllMemberController()
     {
 	subscriptionTypes.add(Consts.Payment);
     }
     
+    /** The Headline. */
     @FXML
     private Label Headline;
     
+    /** The prg bar. */
     @FXML
     private ProgressBar prgBar;
     
+    /** The Subscription renewal. */
     @FXML
     private Button SubscriptionRenewal;
     
+    /** The Text member deatil. */
     @FXML
     private TextArea TextMemberDeatil;
     
+    /** The Subscription ID. */
     @FXML
     private TextField Subscription_ID;
     
+    /** The full mebership changed. */
     FullMembership fullMebershipChanged = null;
     
+    /** The parial mebership changed. */
     PartialMembership parialMebershipChanged = null;
     
+    /**
+     * On submit.
+     *
+     * @param event the event
+     */
     @FXML
     void OnSubmit(ActionEvent event)
     {
@@ -111,6 +135,11 @@ public class MonitorAndControllMemberController extends BaseController
 	
     }
     
+    /**
+     * On subscription renewal.
+     *
+     * @param event the event
+     */
     @FXML
     void OnSubscriptionRenewal(ActionEvent event)
     {
@@ -194,6 +223,11 @@ public class MonitorAndControllMemberController extends BaseController
 	
     }
     
+    /**
+     * On back.
+     *
+     * @param event the event
+     */
     @FXML
     void OnBack(ActionEvent event)
     {
@@ -201,6 +235,9 @@ public class MonitorAndControllMemberController extends BaseController
 	myControllersManager.Back(PreviousScene, Consts.MonitorAndControllMember);
     }
     
+    /**
+     * Setfull or partial membership.
+     */
     void SetfullOrPartialMembership()
     {
 	int savedValue = Integer.parseInt(Subscription_ID.getText());
@@ -217,6 +254,12 @@ public class MonitorAndControllMemberController extends BaseController
 	}
     }
     
+    /**
+     * Amount to pay.
+     *
+     * @param partialMember the partial member
+     * @return the float
+     */
     private float AmountToPay(PartialMembership partialMember)
     {
 	float cars = partialMember.GetCarList().size();

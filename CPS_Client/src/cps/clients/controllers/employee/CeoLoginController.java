@@ -23,12 +23,25 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.Alert.AlertType;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class CeoLoginController.
+ */
 public class CeoLoginController extends EmployeeBaseController
 {
+    
+    /** The Disable parking spot inputs. */
     private ArrayList<String> DisableParkingSpotInputs = new ArrayList<>();
+    
+    /** The Initialize parking spot inputs. */
     private ArrayList<String> InitializeParkingSpotInputs = new ArrayList<>();
+    
+    /** The Disable parking lot inputs. */
     private ArrayList<String> DisableParkingLotInputs = new ArrayList<>();
     
+    /**
+     * Instantiates a new ceo login controller.
+     */
     public CeoLoginController()
     {
 	super();
@@ -43,9 +56,15 @@ public class CeoLoginController extends EmployeeBaseController
 	DisableParkingLotInputs.add("Parking lot name:");
     }
     
+    /** The Headline. */
     @FXML
     private Label Headline;
     
+    /**
+     * On initialize parking lot.
+     *
+     * @param event the event
+     */
     @FXML
     void OnInitializeParkingLot(ActionEvent event)
     {
@@ -79,6 +98,11 @@ public class CeoLoginController extends EmployeeBaseController
 	
     }
     
+    /**
+     * On rigister disabled parking lot.
+     *
+     * @param event the event
+     */
     @FXML
     void OnRigisterDisabledParkingLot(ActionEvent event)
     {
@@ -121,12 +145,22 @@ public class CeoLoginController extends EmployeeBaseController
 	});
     }
     
+    /**
+     * On reserve parking spot.
+     *
+     * @param event the event
+     */
     @FXML
     void OnReserveParkingSpot(ActionEvent event)
     {
 	myControllersManager.SetScene(ConstsEmployees.ReserveParkingSpot, ConstsEmployees.CeoLogin);
     }
     
+    /**
+     * On register disabeled parking spot.
+     *
+     * @param event the event
+     */
     @FXML
     void OnRegisterDisabeledParkingSpot(ActionEvent event)
     {
@@ -183,18 +217,33 @@ public class CeoLoginController extends EmployeeBaseController
 	});
     }
     
+    /**
+     * On update prices.
+     *
+     * @param event the event
+     */
     @FXML
     void OnUpdatePrices(ActionEvent event)
     {
 	myControllersManager.SetScene(ConstsEmployees.ManageRequestRateChange, ConstsEmployees.CeoLogin);
     }
     
+    /**
+     * On produce report.
+     *
+     * @param event the event
+     */
     @FXML
     void OnProduceReport(ActionEvent event)
     {
 	myControllersManager.SetScene(ConstsEmployees.ProduceReport, ConstsEmployees.CeoLogin);
     }
     
+    /**
+     * On undisable parking lot.
+     *
+     * @param event the event
+     */
     @FXML
     void OnUndisableParkingLot(ActionEvent event)
     {
@@ -236,6 +285,11 @@ public class CeoLoginController extends EmployeeBaseController
 	});
     }
     
+    /**
+     * On undisable parking spot.
+     *
+     * @param event the event
+     */
     @FXML
     void OnUndisableParkingSpot(ActionEvent event)
     {
@@ -292,6 +346,11 @@ public class CeoLoginController extends EmployeeBaseController
 	});
     }
     
+    /**
+     * On back.
+     *
+     * @param event the event
+     */
     @FXML
     void OnBack(ActionEvent event)
     {

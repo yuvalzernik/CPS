@@ -13,8 +13,19 @@ import java.util.regex.Pattern;
 import cps.entities.Customer;
 import cps.entities.FullMembership;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class InputValidator.
+ */
 public class InputValidator
 {
+    
+    /**
+     * Car number.
+     *
+     * @param carNumber the car number
+     * @return true, if successful
+     */
     public static boolean CarNumber(String carNumber)
     {
 	if (!Pattern.matches("[0-9]+", carNumber) || carNumber.length() < 5 || carNumber.length() > 8)
@@ -24,6 +35,12 @@ public class InputValidator
 	return true;
     }
     
+    /**
+     * Credit card number.
+     *
+     * @param creditcard the creditcard
+     * @return true, if successful
+     */
     public static boolean CreditCardNumber(String creditcard)
     {
 	if (!Pattern.matches("[0-9]+", creditcard))
@@ -33,12 +50,24 @@ public class InputValidator
 	return true;
     }
     
+    /**
+     * Ccv.
+     *
+     * @param ccv the ccv
+     * @return true, if successful
+     */
     public static boolean Ccv(String ccv)
     {
 	if ((!Pattern.matches("[0-9]+", ccv)) || (ccv.length() != 3)) return false;
 	return true;
     }
     
+    /**
+     * Expiration date.
+     *
+     * @param date the date
+     * @return true, if successful
+     */
     public static boolean ExpirationDate(YearMonth date)
     {
 	if (date.isBefore(YearMonth.now()))
@@ -48,6 +77,12 @@ public class InputValidator
 	return true;
     }
     
+    /**
+     * Starting date.
+     *
+     * @param startingDate the starting date
+     * @return true, if successful
+     */
     public static boolean StartingDate(LocalDate startingDate)
     {
 	if (startingDate.isBefore(LocalDate.now()))
@@ -57,6 +92,13 @@ public class InputValidator
 	return true;
     }
     
+    /**
+     * Check leaving date.
+     *
+     * @param startingDate the starting date
+     * @param leavingDate the leaving date
+     * @return true, if successful
+     */
     public static boolean CheckLeavingDate(LocalDate startingDate, LocalDate leavingDate)
     {
 	
@@ -70,6 +112,12 @@ public class InputValidator
 	return true;
     }
     
+    /**
+     * Email.
+     *
+     * @param email the email
+     * @return true, if successful
+     */
     public static boolean Email(String email)
     {
 	if (!Pattern.matches("^.+@.+\\..+$", email))
@@ -79,6 +127,12 @@ public class InputValidator
 	return true;
     }
     
+    /**
+     * Id.
+     *
+     * @param id the id
+     * @return true, if successful
+     */
     public static boolean Id(String id)
     {
 	if (!Pattern.matches("[0-9]+", id) || id.length() != 9)
@@ -89,6 +143,12 @@ public class InputValidator
 	
     }
     
+    /**
+     * Check visa date.
+     *
+     * @param date the date
+     * @return true, if successful
+     */
     public static boolean CheckVisaDate(String date)
     {
 	try
@@ -102,6 +162,12 @@ public class InputValidator
 	}
     }
     
+    /**
+     * Check hour format.
+     *
+     * @param hour the hour
+     * @return true, if successful
+     */
     public static boolean CheckHourFormat(String hour)
     {
 	
@@ -119,6 +185,15 @@ public class InputValidator
 	return true;
     }
     
+    /**
+     * Check leaving hour.
+     *
+     * @param startingHour the starting hour
+     * @param leavingHour the leaving hour
+     * @param startingDate the starting date
+     * @param leavingDate the leaving date
+     * @return true, if successful
+     */
     public static boolean CheckLeavingHour(String startingHour, String leavingHour, LocalDate startingDate,
 	    LocalDate leavingDate)
     {
@@ -127,6 +202,12 @@ public class InputValidator
 	return true;
     }
     
+    /**
+     * Full membership.
+     *
+     * @param fullMembership the full membership
+     * @return true, if successful
+     */
     public static boolean FullMembership(FullMembership fullMembership)
     {
 	if (CarNumber(fullMembership.GetCarNumber()) && StartingDate(fullMembership.GetStartDate())
@@ -137,6 +218,12 @@ public class InputValidator
 	return false;
     }
     
+    /**
+     * Customer.
+     *
+     * @param customer the customer
+     * @return true, if successful
+     */
     public static boolean Customer(Customer customer)
     {
 	if (Email(customer.GetEmail()) && Id(customer.GetId()))
@@ -146,6 +233,16 @@ public class InputValidator
 	return false;
     }
     
+    /**
+     * Order in advance.
+     *
+     * @param carNumber the car number
+     * @param arrivalDate the arrival date
+     * @param leavingDate the leaving date
+     * @param arrivalHour the arrival hour
+     * @param leavingHour the leaving hour
+     * @return true, if successful
+     */
     public static boolean OrderInAdvance(String carNumber, LocalDate arrivalDate, LocalDate leavingDate,
 	    String arrivalHour, String leavingHour)
     {
@@ -159,6 +256,14 @@ public class InputValidator
 	return false;
     }
     
+    /**
+     * Partial membership.
+     *
+     * @param carlist the carlist
+     * @param email the email
+     * @param arrivalDate the arrival date
+     * @return true, if successful
+     */
     public static boolean PartialMembership(ArrayList<String> carlist, String email, LocalDate arrivalDate)
     {
 	
@@ -169,6 +274,12 @@ public class InputValidator
 	return false;
     }
     
+    /**
+     * Check car list.
+     *
+     * @param carlist the carlist
+     * @return true, if successful
+     */
     public static boolean CheckCarList(ArrayList<String> carlist)
     {
 	if (carlist.isEmpty()) return false;
@@ -180,6 +291,12 @@ public class InputValidator
 	
     }
     
+    /**
+     * Text is empty.
+     *
+     * @param text the text
+     * @return true, if successful
+     */
     public static boolean TextIsEmpty(String text)
     {
 	if (text.length() > 0) return true;
@@ -187,6 +304,12 @@ public class InputValidator
 	
     }
     
+    /**
+     * Order id.
+     *
+     * @param orderid the orderid
+     * @return true, if successful
+     */
     public static boolean OrderId(String orderid)
     {
 	if (!Pattern.matches("[0-9]+", orderid)) return false;

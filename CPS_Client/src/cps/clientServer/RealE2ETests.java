@@ -36,9 +36,19 @@ import cps.entities.enums.ReservationType;
 import cps.utilities.CPS_Tracer;
 import cps.utilities.Pdf_Builder;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class RealE2ETests.
+ */
 @SuppressWarnings("unused")
 public class RealE2ETests
 {
+    
+    /**
+     * The main method.
+     *
+     * @param args the arguments
+     */
     public static void main(String[] args)
     {
 	try
@@ -75,6 +85,11 @@ public class RealE2ETests
 	}
     }
     
+    /**
+     * Entry and remove dynamic test.
+     *
+     * @return true, if successful
+     */
     private static boolean EntryAndRemoveDynamicTest()
     {
 	ServerResponse<AddRealTimeParkingRequest> serverResponse = null;
@@ -96,6 +111,11 @@ public class RealE2ETests
 	return true;
     }
     
+    /**
+     * Disabled parking spots test.
+     *
+     * @return true, if successful
+     */
     private static boolean DisabledParkingSpotsTest()
     {
 	ChangeParkingSpotStatusRequest request = new ChangeParkingSpotStatusRequest(new ParkingSpot(1, 1, 2),
@@ -130,6 +150,11 @@ public class RealE2ETests
 	return true;
     }
     
+    /**
+     * Change rates test.
+     *
+     * @return true, if successful
+     */
     private static boolean ChangeRatesTest()
     {
 	ChangeRatesRequest changeRatesRequest = new ChangeRatesRequest("Test lot", 55, 55);
@@ -154,6 +179,11 @@ public class RealE2ETests
 	return true;
     }
     
+    /**
+     * Complaint test.
+     *
+     * @return true, if successful
+     */
     private static boolean ComplaintTest()
     {
 	Complaint complaint = new Complaint("301731469",
@@ -194,6 +224,11 @@ public class RealE2ETests
 	return true;
     }
     
+    /**
+     * Parkinglot test.
+     *
+     * @return true, if successful
+     */
     private static boolean ParkinglotTest()
     {
 	String seed = Integer.toString(new Random().nextInt(1000000) + 3000000);
@@ -225,6 +260,11 @@ public class RealE2ETests
 	return true;
     }
     
+    /**
+     * Employee test.
+     *
+     * @return true, if successful
+     */
     private static boolean EmployeeTest()
     {
 	LoginIdentification creds = new LoginIdentification("benalfasi", "notrealpw");
@@ -252,6 +292,11 @@ public class RealE2ETests
 	return true;
     }
     
+    /**
+     * Reservation test.
+     *
+     * @return true, if successful
+     */
     private static boolean ReservationTest()
     {
 	String id = Integer.toString(new Random().nextInt(1000000) + 3000000);
@@ -276,6 +321,11 @@ public class RealE2ETests
 	return true;
     }
     
+    /**
+     * Full membership test.
+     *
+     * @return true, if successful
+     */
     private static boolean FullMembershipTest()
     {
 	String id = Integer.toString(new Random().nextInt(1000000) + 3000000);
@@ -299,6 +349,11 @@ public class RealE2ETests
 	return true;
     }
     
+    /**
+     * Partial membership test.
+     *
+     * @return true, if successful
+     */
     private static boolean PartialMembershipTest()
     {
 	String id = Integer.toString(new Random().nextInt(1000000) + 3000000);
@@ -327,6 +382,11 @@ public class RealE2ETests
 	return true;
     }
     
+    /**
+     * Customer test.
+     *
+     * @return true, if successful
+     */
     private static boolean CustomerTest()
     {
 	String id = Integer.toString(new Random().nextInt(1000000) + 3000000);
@@ -350,6 +410,11 @@ public class RealE2ETests
 	return true;
     }
     
+    /**
+     * Complaints report test.
+     *
+     * @return true, if successful
+     */
     private static boolean ComplaintsReportTest()
     {
 	String id = Integer.toString(new Random().nextInt(1000000) + 3000000);
@@ -368,6 +433,11 @@ public class RealE2ETests
 	return true;
     }
     
+    /**
+     * Disabled report test.
+     *
+     * @return true, if successful
+     */
     private static boolean DisabledReportTest()
     {
 	String id = Integer.toString(new Random().nextInt(1000000) + 3000000);
@@ -386,6 +456,11 @@ public class RealE2ETests
 	return true;
     }
     
+    /**
+     * Performance report test.
+     *
+     * @return true, if successful
+     */
     private static boolean PerformanceReportTest()
     {
 	ServerResponse<PerformanceReport> serverResponse = RequestsSender.GetPerformanceReport();
@@ -402,6 +477,11 @@ public class RealE2ETests
 	return true;
     }
     
+    /**
+     * Reservation report test.
+     *
+     * @return true, if successful
+     */
     private static boolean ReservationReportTest()
     {
 	ServerResponse<ReservationReport> serverResponse = RequestsSender.GetReservationReport("all");
@@ -418,6 +498,11 @@ public class RealE2ETests
 	return true;
     }
     
+    /**
+     * Activity report test.
+     *
+     * @return true, if successful
+     */
     private static boolean ActivityReportTest()
     {
     LocalDate date = LocalDate.of(2017, 4, 1);
@@ -436,6 +521,11 @@ public class RealE2ETests
 	return true;
     }
     
+    /**
+     * Status report test.
+     *
+     * @return true, if successful
+     */
     private static boolean StatusReportTest()
     {
 	ServerResponse<StatusReport> serverResponse = RequestsSender.GetStatusReport();

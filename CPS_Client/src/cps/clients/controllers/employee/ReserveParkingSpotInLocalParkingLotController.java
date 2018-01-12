@@ -22,34 +22,54 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ReserveParkingSpotInLocalParkingLotController.
+ */
 public class ReserveParkingSpotInLocalParkingLotController extends EmployeeBaseController
 {
+    
+    /** The car number. */
     @FXML // fx:id="carNumber"
     private TextField carNumber; // Value injected by FXMLLoader
     
+    /** The arrival hour. */
     @FXML // fx:id="arrivalHour"
     private TextField arrivalHour; // Value injected by FXMLLoader
     
+    /** The leaving hour. */
     @FXML // fx:id="leavingHour"
     private TextField leavingHour; // Value injected by FXMLLoader
     
+    /** The customer id. */
     @FXML // fx:id="customerId"
     private TextField customerId; // Value injected by FXMLLoader
     
+    /** The email. */
     @FXML // fx:id="email"
     private TextField email; // Value injected by FXMLLoader
     
+    /** The arrival date. */
     @FXML // fx:id="arrivalDate"
     private DatePicker arrivalDate; // Value injected by FXMLLoader
     
+    /** The leaving date. */
     @FXML // fx:id="leavingDate"
     private DatePicker leavingDate; // Value injected by FXMLLoader
+    
+    /** The Headline. */
     @FXML
     private Label Headline;
+    
+    /** The reservation. */
     Reservation reservation;
     
+    /** The customer. */
     Customer customer;
     
+    /**
+     * Initialize.
+     */
     @FXML
     void initialize()
     {
@@ -59,6 +79,11 @@ public class ReserveParkingSpotInLocalParkingLotController extends EmployeeBaseC
 	leavingDate.setValue(LocalDate.now());
     }
     
+    /**
+     * On submit.
+     *
+     * @param event the event
+     */
     @FXML
     void OnSubmit(ActionEvent event)
     {
@@ -82,12 +107,22 @@ public class ReserveParkingSpotInLocalParkingLotController extends EmployeeBaseC
 	
     }
     
+    /**
+     * On back.
+     *
+     * @param event the event
+     */
     @FXML
     void OnBack(ActionEvent event)
     {
 	myControllersManager.Back(PreviousScene, ConstsEmployees.ReserveParkingSpot);
     }
     
+    /**
+     * Try construct order in advance.
+     *
+     * @return true, if successful
+     */
     private boolean TryConstructOrderInAdvance()
     {
 	if (IsInputLegal())
@@ -107,6 +142,11 @@ public class ReserveParkingSpotInLocalParkingLotController extends EmployeeBaseC
 	return true;
     }
     
+    /**
+     * Checks if is input legal.
+     *
+     * @return true, if successful
+     */
     private boolean IsInputLegal()
     {
 	boolean result = true;

@@ -11,9 +11,18 @@ import java.util.TimerTask;
 import cps.clientServer.ClientServerConsts;
 import cps.utilities.CPS_Tracer;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ServerController.
+ */
 public class ServerController
 {
     
+    /**
+     * Listen and response.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     private void ListenAndResponse() throws IOException
     {	
 	try (ServerSocket serverSocket = new ServerSocket(ClientServerConsts.PORT))
@@ -45,6 +54,9 @@ public class ServerController
 	CPS_Tracer.TraceInformation("Server is shutting down.");
     }
     
+    /**
+     * Register timers.
+     */
     private void RegisterTimers()
     {
 	Timer timer = new Timer ();
@@ -65,6 +77,12 @@ public class ServerController
 	timer.schedule(hourlyTask, 0, 1000*60*60);
     }
     
+    /**
+     * The main method.
+     *
+     * @param args the arguments
+     * @throws Exception the exception
+     */
     public static void main(String[] args) throws Exception
     {
 	ServerController serverController = new ServerController();

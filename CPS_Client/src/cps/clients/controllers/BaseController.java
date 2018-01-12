@@ -7,11 +7,22 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class BaseController.
+ */
 public abstract class BaseController
 {
+    
+    /** The my controllers manager. */
     protected ControllersManager myControllersManager;
+    
+    /** The Previous scene. */
     protected String PreviousScene;
     
+    /**
+     * Clear text fields.
+     */
     void ClearTextFields()
     {
 	try
@@ -39,11 +50,21 @@ public abstract class BaseController
 	}
     }
     
+    /**
+     * Sets the controller manager.
+     *
+     * @param controllersManager the controllers manager
+     */
     public void SetControllerManager(ControllersManager controllersManager)
     {
 	myControllersManager = controllersManager;
     }
     
+    /**
+     * Sets the previous scene.
+     *
+     * @param scene the scene
+     */
     public void SetPreviousScene(String scene)
     {
 	PreviousScene = scene;

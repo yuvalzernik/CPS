@@ -29,30 +29,48 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class GuestEntryController.
+ */
 public class GuestEntryController extends BaseController
 {
+    
+    /** The car number. */
     @FXML
     private TextField carNumber;
     
+    /** The departure time. */
     @FXML
     private TextField departureTime;
     
+    /** The Headline. */
     @FXML
     private Label Headline;
     
+    /** The id. */
     @FXML
     private TextField id;
     
+    /** The email. */
     @FXML
     private TextField email;
     
+    /** The prg bar. */
     @FXML
     private ProgressBar prgBar;
     
+    /** The parkinglot name. */
     private String parkinglotName;
     
+    /** The parkinglot. */
     private Parkinglot parkinglot;
     
+    /**
+     * Instantiates a new guest entry controller.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     public GuestEntryController() throws IOException
     {
 	super();
@@ -64,12 +82,22 @@ public class GuestEntryController extends BaseController
 	parkinglot = RequestsSender.GetParkinglot(parkinglotName).GetResponseObject();
     }
     
+    /**
+     * On back.
+     *
+     * @param event the event
+     */
     @FXML
     void OnBack(ActionEvent event)
     {
 	myControllersManager.Back(PreviousScene, Consts.GuestEntry);
     }
     
+    /**
+     * On submit.
+     *
+     * @param event the event
+     */
     @FXML
     void OnSubmit(ActionEvent event)
     {
@@ -142,6 +170,11 @@ public class GuestEntryController extends BaseController
 	
     }
     
+    /**
+     * Checks if is input legal.
+     *
+     * @return true, if successful
+     */
     private boolean IsInputLegal()
     {
 	boolean result = true;

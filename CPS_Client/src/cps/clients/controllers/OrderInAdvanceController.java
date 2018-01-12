@@ -29,42 +29,64 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.control.MenuButton;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class OrderInAdvanceController.
+ */
 public class OrderInAdvanceController extends BaseController
 {
+    
+    /** The car number. */
     @FXML // fx:id="carNumber"
     private TextField carNumber; // Value injected by FXMLLoader
     
+    /** The parking lot. */
     @FXML // fx:id="parkingLot"
     private MenuButton parkingLot; // Value injected by FXMLLoader
     
+    /** The Headline. */
     @FXML
     private Label Headline;
     
+    /** The arrival hour. */
     @FXML // fx:id="arrivalHour"
     private TextField arrivalHour; // Value injected by FXMLLoader
     
+    /** The leaving hour. */
     @FXML // fx:id="leavingHour"
     private TextField leavingHour; // Value injected by FXMLLoader
     
+    /** The customer id. */
     @FXML // fx:id="customerId"
     private TextField customerId; // Value injected by FXMLLoader
     
+    /** The email. */
     @FXML // fx:id="email"
     private TextField email; // Value injected by FXMLLoader
     
+    /** The arrival date. */
     @FXML // fx:id="arrivalDate"
     private DatePicker arrivalDate; // Value injected by FXMLLoader
     
+    /** The leaving date. */
     @FXML // fx:id="leavingDate"
     private DatePicker leavingDate; // Value injected by FXMLLoader
     
+    /** The parkinglist. */
     ArrayList<Parkinglot> parkinglist = new ArrayList<Parkinglot>();
+    
+    /** The parking lot. */
     String parking_Lot;
     
+    /** The reservation. */
     Reservation reservation;
     
+    /** The customer. */
     Customer customer;
     
+    /**
+     * Initialize.
+     */
     @FXML
     void initialize()
     {
@@ -87,6 +109,11 @@ public class OrderInAdvanceController extends BaseController
 	}
     }
     
+    /**
+     * On payment.
+     *
+     * @param event the event
+     */
     @FXML
     void OnPayment(ActionEvent event)
     {
@@ -125,6 +152,11 @@ public class OrderInAdvanceController extends BaseController
 	
     }
     
+    /**
+     * On back.
+     *
+     * @param event the event
+     */
     @FXML
     void OnBack(ActionEvent event)
     {
@@ -133,6 +165,11 @@ public class OrderInAdvanceController extends BaseController
 	myControllersManager.Back(PreviousScene, ConstsWeb.OrderInAdvance);
     }
     
+    /**
+     * Try construct order in advance.
+     *
+     * @return true, if successful
+     */
     private boolean TryConstructOrderInAdvance()
     {
 	
@@ -152,6 +189,11 @@ public class OrderInAdvanceController extends BaseController
 	return true;
     }
     
+    /**
+     * Amount to pay.
+     *
+     * @return the float
+     */
     private float AmountToPay()
     {
 	float rate = 0;
@@ -165,6 +207,11 @@ public class OrderInAdvanceController extends BaseController
 	return ((hours + days * 24) * rate);
     }
     
+    /**
+     * Checks if is input legal.
+     *
+     * @return true, if successful
+     */
     private boolean IsInputLegal()
     {
 	boolean result = true;

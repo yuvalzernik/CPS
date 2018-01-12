@@ -19,29 +19,45 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class FullMembershipRegisterController.
+ */
 public class FullMembershipRegisterController extends BaseController
 {
+    
+    /** The starting date picker. */
     @FXML
     private DatePicker startingDatePicker;
     
+    /** The car number. */
     @FXML
     private TextField carNumber;
     
+    /** The Headline. */
     @FXML
     private Label Headline;
     
+    /** The id. */
     @FXML
     private TextField id;
     
+    /** The email. */
     @FXML
     private TextField email;
     
+    /** The full membership. */
     FullMembership fullMembership;
     
+    /** The customer. */
     Customer customer;
     
+    /** The rate. */
     private final int rate = 5;
     
+    /**
+     * Initialize.
+     */
     @FXML
     void initialize()
     {
@@ -49,6 +65,11 @@ public class FullMembershipRegisterController extends BaseController
 	startingDatePicker.setValue(LocalDate.now());
     }
     
+    /**
+     * On back.
+     *
+     * @param event the event
+     */
     @FXML
     void OnBack(ActionEvent event)
     {
@@ -56,6 +77,11 @@ public class FullMembershipRegisterController extends BaseController
 	
     }
     
+    /**
+     * On submit and pay.
+     *
+     * @param event the event
+     */
     @FXML
     void OnSubmitAndPay(ActionEvent event)
     {
@@ -104,6 +130,11 @@ public class FullMembershipRegisterController extends BaseController
 	myControllersManager.Payment(fullMembership, paymentAmount, afterPayment, Consts.FullMembershipRegister);
     }
     
+    /**
+     * Checks if is input legal.
+     *
+     * @return true, if successful
+     */
     private boolean IsInputLegal()
     {
 	boolean result = true;

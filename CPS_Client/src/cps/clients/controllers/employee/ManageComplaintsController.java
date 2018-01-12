@@ -25,20 +25,38 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressBar;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ManageComplaintsController.
+ */
 public class ManageComplaintsController extends EmployeeBaseController
 {
     
+    /** The my complaints. */
     ArrayList<Complaint> myComplaints;
+    
+    /** The my buttons. */
     ArrayList<String> myButtons = new ArrayList<String>();
+    
+    /** The Compensate. */
     private ArrayList<String> Compensate = new ArrayList<>();
+    
+    /** The current complaint id. */
     private String currentComplaintId = null;
     
+    /** The complaints list. */
     @FXML
     private ListView<String> complaintsList;
     
+    /** The prg bar. */
     @FXML
     private ProgressBar prgBar;
     
+    /**
+     * On back.
+     *
+     * @param event the event
+     */
     @FXML
     void OnBack(ActionEvent event)
     {
@@ -51,6 +69,11 @@ public class ManageComplaintsController extends EmployeeBaseController
 	myControllersManager.Back(PreviousScene, ConstsEmployees.ManageComplaints);
     }
     
+    /**
+     * On handle complaint.
+     *
+     * @param event the event
+     */
     @FXML
     void OnHandleComplaint(ActionEvent event)
     {
@@ -118,6 +141,11 @@ public class ManageComplaintsController extends EmployeeBaseController
 	OnLoad(null);
     }
     
+    /**
+     * On load.
+     *
+     * @param event the event
+     */
     @FXML
     void OnLoad(ActionEvent event)
     {
@@ -161,6 +189,9 @@ public class ManageComplaintsController extends EmployeeBaseController
 	
     }
     
+    /**
+     * Initialize.
+     */
     @FXML
     void initialize()
     {

@@ -15,10 +15,22 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DialogBuilder.
+ */
 public class DialogBuilder
 {
+    
+    /** The password. */
     PasswordField password = new PasswordField();
     
+    /**
+     * Text extractor.
+     *
+     * @param textList the text list
+     * @return the list
+     */
     private static List<String> TextExtractor(List<TextField> textList)
     {
 	List<String> extractedList = new ArrayList<>();
@@ -31,6 +43,14 @@ public class DialogBuilder
 	return extractedList;
     }
     
+    /**
+     * Inputs dialog.
+     *
+     * @param dialogTitle the dialog title
+     * @param inputLabels the input labels
+     * @param buttonLabel the button label
+     * @return the dialog
+     */
     static public Dialog<List<String>> InputsDialog(String dialogTitle, List<String> inputLabels, String buttonLabel)
     {
 	Dialog<List<String>> dialog = new Dialog<>();
@@ -73,6 +93,16 @@ public class DialogBuilder
 	return dialog;
     }
     
+    /**
+     * Alert dialog.
+     *
+     * @param alertType the alert type
+     * @param title the title
+     * @param header the header
+     * @param buttonNames the button names
+     * @param withCancel the with cancel
+     * @return the string
+     */
     static public String AlertDialog(AlertType alertType, String title, String header, List<String> buttonNames,
 	    boolean withCancel)
     {

@@ -24,10 +24,21 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.Alert.AlertType;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ParkingLotWorkerEnteryController.
+ */
 public class ParkingLotWorkerEnteryController extends EmployeeBaseController {
 	
+	/** The Initialize parking spot inputs. */
 	private ArrayList<String> InitializeParkingSpotInputs = new ArrayList<>();
+	
+	/** The Disable parking spot inputs. */
 	private ArrayList<String> DisableParkingSpotInputs = new ArrayList<>();
+	
+	/**
+	 * Instantiates a new parking lot worker entery controller.
+	 */
 	public ParkingLotWorkerEnteryController()
 	{
 		super();
@@ -36,8 +47,16 @@ public class ParkingLotWorkerEnteryController extends EmployeeBaseController {
 		DisableParkingSpotInputs.add("Parking spot depth:");
 		InitializeParkingSpotInputs.add("Parking lot width:");
 	}
+    
+    /** The Headline. */
     @FXML
     private Label Headline;
+    
+    /**
+     * On initialize parking lot.
+     *
+     * @param event the event
+     */
     @FXML
     void OnInitializeParkingLot(ActionEvent event) 
     {
@@ -64,6 +83,11 @@ public class ParkingLotWorkerEnteryController extends EmployeeBaseController {
     	});
     }
 
+    /**
+     * On register disabeled parking lot.
+     *
+     * @param event the event
+     */
     @FXML
     void OnRegisterDisabeledParkingLot(ActionEvent event) 
     {
@@ -94,12 +118,22 @@ public class ParkingLotWorkerEnteryController extends EmployeeBaseController {
     	}
     }
 
+    /**
+     * On reserve parking spot.
+     *
+     * @param event the event
+     */
     @FXML
     void OnReserveParkingSpot(ActionEvent event) 
     {
     	myControllersManager.SetScene(ConstsEmployees.ReserveParkingSpotInLocalParkingLot, ConstsEmployees.ParkingLotWorkerEntery);
     }
 
+    /**
+     * On register disabeled parking spot.
+     *
+     * @param event the event
+     */
     @FXML
     void OnRegisterDisabeledParkingSpot(ActionEvent event) 
     {
@@ -134,6 +168,12 @@ public class ParkingLotWorkerEnteryController extends EmployeeBaseController {
     		}
     	});
     }
+    
+    /**
+     * On undisable parking lot.
+     *
+     * @param event the event
+     */
     @FXML
     void OnUndisableParkingLot(ActionEvent event)
     {
@@ -163,6 +203,12 @@ public class ParkingLotWorkerEnteryController extends EmployeeBaseController {
     		}
     	}
     }
+    
+    /**
+     * On undisable parking spot.
+     *
+     * @param event the event
+     */
     @FXML
     void OnUndisableParkingSpot(ActionEvent event)
     {
@@ -199,6 +245,11 @@ public class ParkingLotWorkerEnteryController extends EmployeeBaseController {
     	});
     }
 
+    /**
+     * On back.
+     *
+     * @param event the event
+     */
     @FXML
     void onBack(ActionEvent event) 
     {

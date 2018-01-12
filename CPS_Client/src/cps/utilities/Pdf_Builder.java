@@ -19,15 +19,31 @@ import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import cps.entities.StatusReport;
 import cps.entities.enums.ParkingSpotCondition;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Pdf_Builder.
+ */
 public class Pdf_Builder {
 	
+	/** The path. */
 	private String path;
 	
+	/**
+	 * Instantiates a new pdf builder.
+	 *
+	 * @param path the path
+	 */
 	public Pdf_Builder(String path)
 	{
 		this.path=path;
 	}
 	
+	/**
+	 * Builds the.
+	 *
+	 * @param statusReport the status report
+	 * @return true, if successful
+	 */
 	public boolean build(StatusReport statusReport)
 	{
 		try

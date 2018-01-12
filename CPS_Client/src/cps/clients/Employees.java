@@ -12,9 +12,18 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Employees.
+ */
 public class Employees extends Application {
+	
+	/** The controllers manager. */
 	ControllersManager controllersManager;
 
+	/* (non-Javadoc)
+	 * @see javafx.application.Application#start(javafx.stage.Stage)
+	 */
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		try {
@@ -62,6 +71,9 @@ public class Employees extends Application {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see javafx.application.Application#stop()
+	 */
 	@Override
 	public void stop() {
 		if (EmployeeBaseController.getMyEmployee() != null) {
@@ -72,6 +84,11 @@ public class Employees extends Application {
 		}
 	}
 
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args) {
 		launch(args);
 	}

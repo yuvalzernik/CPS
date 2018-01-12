@@ -18,21 +18,34 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class MonitorAndControlCustomerController.
+ */
 public class MonitorAndControlCustomerController extends BaseController
 {
     
+    /** The Headline. */
     @FXML
     private Label Headline;
     
+    /** The text box. */
     @FXML
     private TextArea textBox;
     
+    /** The customer ID. */
     @FXML
     private TextField customerID;
     
+    /** The prg bar. */
     @FXML
     private ProgressBar prgBar;
     
+    /**
+     * On submit.
+     *
+     * @param event the event
+     */
     @FXML
     void OnSubmit(ActionEvent event)
     {
@@ -75,6 +88,11 @@ public class MonitorAndControlCustomerController extends BaseController
 	});
     }
     
+    /**
+     * On back.
+     *
+     * @param event the event
+     */
     @FXML
     void OnBack(ActionEvent event)
     {

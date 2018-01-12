@@ -27,44 +27,66 @@ import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class PartialMembershipRegisterController.
+ */
 public class PartialMembershipRegisterController extends BaseController
 {
+    
+    /** The car number. */
     @FXML
     private TextField carNumber;
     
+    /** The parking lot. */
     @FXML
     private MenuButton parkingLot;
     
+    /** The Headline. */
     @FXML
     private Label Headline;
     
+    /** The exit hour. */
     @FXML
     private TextField exitHour;
     
+    /** The car list view. */
     @FXML
     private ListView<String> carListView;
     
+    /** The id. */
     @FXML
     private TextField id;
     
+    /** The starting date picker. */
     @FXML
     private DatePicker startingDatePicker;
     
+    /** The email. */
     @FXML
     private TextField email;
     
+    /** The partial membership. */
     private PartialMembership partialMembership;
     
+    /** The customer. */
     private Customer customer;
     
+    /** The parking lot. */
     private String parking_Lot;
     
+    /** The cars. */
     private ObservableList<String> cars = FXCollections.observableArrayList();
     
+    /** The parkinglist. */
     private ArrayList<Parkinglot> parkinglist = new ArrayList<Parkinglot>();
     
+    /** The car list. */
     private ArrayList<String> carList = new ArrayList<String>();
     
+    /**
+     * Initialize.
+     */
     @FXML
     void initialize()
     {
@@ -93,6 +115,11 @@ public class PartialMembershipRegisterController extends BaseController
 	}
     }
     
+    /**
+     * On back.
+     *
+     * @param event the event
+     */
     @FXML
     void OnBack(ActionEvent event)
     {
@@ -103,6 +130,11 @@ public class PartialMembershipRegisterController extends BaseController
 	exitHour.clear();
     }
     
+    /**
+     * On submit and pay.
+     *
+     * @param event the event
+     */
     @FXML
     void OnSubmitAndPay(ActionEvent event)
     {
@@ -147,6 +179,11 @@ public class PartialMembershipRegisterController extends BaseController
 	carList = new ArrayList<>();
     }
     
+    /**
+     * Try construct partial membership.
+     *
+     * @return true, if successful
+     */
     private boolean TryConstructPartialMembership()
     {
 	
@@ -169,6 +206,11 @@ public class PartialMembershipRegisterController extends BaseController
 	return true;
     }
     
+    /**
+     * On add car.
+     *
+     * @param event the event
+     */
     @FXML
     void OnAddCar(ActionEvent event)
     {
@@ -181,6 +223,11 @@ public class PartialMembershipRegisterController extends BaseController
 	carListView.setItems(cars);
     }
     
+    /**
+     * On remove selected.
+     *
+     * @param event the event
+     */
     @FXML
     void OnRemoveSelected(ActionEvent event)
     {
@@ -203,6 +250,11 @@ public class PartialMembershipRegisterController extends BaseController
 	
     }
     
+    /**
+     * Amount to pay.
+     *
+     * @return the float
+     */
     private float AmountToPay()
     {
 	float rate = 0;
@@ -219,6 +271,11 @@ public class PartialMembershipRegisterController extends BaseController
 	return (cars * hours * rate);
     }
     
+    /**
+     * Checks if is input legal.
+     *
+     * @return true, if successful
+     */
     private boolean IsInputLegal()
     {
 	boolean result = true;
