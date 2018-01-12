@@ -3,7 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="con" path="org.eclipse.fx.ide.jdt.core.JAVAFX_CONTAINER"/>
-	<classpathentry kind="lib" path="C:/Users/t-bealfa/git/CPS/CPS_Client/src/cps/server/mysql-connector-java-3.1.11-bin.jar"/>
 	<classpathentry kind="lib" path="src/Pdf_Lib/fontbox-2.0.8.jar"/>
 	<classpathentry kind="lib" path="src/Pdf_Lib/pdfbox-2.0.8.jar"/>
 	<classpathentry kind="lib" path="src/Pdf_Lib/pdfbox-app-2.0.8.jar"/>
@@ -12,5 +11,6 @@
 	<classpathentry kind="lib" path="src/Pdf_Lib/preflight-app-2.0.8.jar"/>
 	<classpathentry kind="lib" path="src/Pdf_Lib/xmpbox-2.0.8.jar"/>
 	<classpathentry kind="lib" path="src/juint/junit-4.12.jar"/>
+	<classpathentry kind="lib" path="src/cps/server/mysql-connector-java-3.1.11-bin.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
