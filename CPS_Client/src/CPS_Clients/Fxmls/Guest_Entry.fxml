@@ -8,8 +8,8 @@
 
 <AnchorPane prefHeight="620.0" prefWidth="620.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CPS_Clients.Controllers.GuestEntryController">
    <children>
-      <Button layoutX="28.0" layoutY="575.0" mnemonicParsing="false" onAction="#OnBack" text="Back" />
-      <Button layoutX="424.0" layoutY="500.0" mnemonicParsing="false" onAction="#OnSubmit" prefHeight="57.0" prefWidth="100.0" text="Submit" />
+      <Button layoutX="14.0" layoutY="566.0" mnemonicParsing="false" onAction="#OnBack" prefHeight="40.0" prefWidth="74.0" text="Back" />
+      <Button layoutX="174.0" layoutY="451.0" mnemonicParsing="false" onAction="#OnSubmit" prefHeight="40.0" prefWidth="135.0" text="Submit" />
       <TextField fx:id="id" layoutX="167.0" layoutY="176.0" promptText="9 Digits" />
       <TextField fx:id="carNumber" layoutX="167.0" layoutY="246.0" promptText="6-8 Digits" />
       <TextField fx:id="departureTime" layoutX="167.0" layoutY="316.0" promptText="HH:MM" />

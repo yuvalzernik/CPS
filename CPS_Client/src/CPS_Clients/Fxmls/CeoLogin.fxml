@@ -8,18 +8,18 @@
 
 <AnchorPane prefHeight="620.0" prefWidth="620.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CPS_Clients.Controllers.Employee.CeoLoginController">
    <children>
-      <Button layoutX="82.0" layoutY="190.0" mnemonicParsing="false" onAction="#OnInitializeParkingLot" prefHeight="50.0" prefWidth="150.0" text="Initialize Parking Lot" />
-      <Button layoutX="82.0" layoutY="466.0" mnemonicParsing="false" onAction="#OnUndisableParkingSpot" prefHeight="50.0" prefWidth="150.0" text="Enable Parking Spot" />
-      <Button layoutX="349.0" layoutY="190.0" mnemonicParsing="false" onAction="#OnReserveParkingSpot" prefHeight="50.0" prefWidth="150.0" text="Reserve Parking Spot" />
-      <Button layoutX="82.0" layoutY="368.0" mnemonicParsing="false" onAction="#OnUndisableParkingLot" prefHeight="50.0" prefWidth="150.0" text="Enable Parking Lot" />
-      <Button layoutX="82.0" layoutY="269.0" mnemonicParsing="false" onAction="#OnUpdatePrices" prefHeight="50.0" prefWidth="150.0" text="Update Prices" />
-      <Button layoutX="349.0" layoutY="269.0" mnemonicParsing="false" onAction="#OnProduceReport" prefHeight="50.0" prefWidth="150.0" text="Produce Reports" />
-      <Button layoutX="14.0" layoutY="581.0" mnemonicParsing="false" onAction="#OnBack" prefHeight="39.0" prefWidth="103.0" text="Log Out" />
-      <Button layoutX="349.0" layoutY="466.0" mnemonicParsing="false" onAction="#OnRegisterDisabeledParkingSpot" prefHeight="50.0" prefWidth="150.0" text="Disable Parking Spot" />
-      <Button layoutX="349.0" layoutY="368.0" mnemonicParsing="false" onAction="#OnRigisterDisabledParkingLot" prefHeight="50.0" prefWidth="150.0" text="Disable Parking Lot" />
-      <Label fx:id="Headline" layoutX="203.0" layoutY="79.0" prefHeight="75.0" prefWidth="215.0" text="CEO Menu">
+      <Button layoutX="39.0" layoutY="157.0" mnemonicParsing="false" onAction="#OnInitializeParkingLot" prefHeight="80.0" prefWidth="263.0" text="Initialize Parking Lot" />
+      <Button layoutX="39.0" layoutY="465.0" mnemonicParsing="false" onAction="#OnUndisableParkingSpot" prefHeight="80.0" prefWidth="263.0" text="Enable Parking Spot" />
+      <Button layoutX="324.0" layoutY="157.0" mnemonicParsing="false" onAction="#OnReserveParkingSpot" prefHeight="80.0" prefWidth="263.0" text="Reserve Parking Spot" />
+      <Button layoutX="39.0" layoutY="362.0" mnemonicParsing="false" onAction="#OnUndisableParkingLot" prefHeight="80.0" prefWidth="263.0" text="Enable Parking Lot" />
+      <Button layoutX="39.0" layoutY="259.0" mnemonicParsing="false" onAction="#OnUpdatePrices" prefHeight="80.0" prefWidth="263.0" text="Update Prices" />
+      <Button layoutX="324.0" layoutY="259.0" mnemonicParsing="false" onAction="#OnProduceReport" prefHeight="80.0" prefWidth="263.0" text="Produce Reports" />
+      <Button layoutX="14.0" layoutY="567.0" mnemonicParsing="false" onAction="#OnBack" prefHeight="39.0" prefWidth="103.0" text="Log Out" />
+      <Button layoutX="324.0" layoutY="465.0" mnemonicParsing="false" onAction="#OnRegisterDisabeledParkingSpot" prefHeight="80.0" prefWidth="263.0" text="Disable Parking Spot" />
+      <Button layoutX="324.0" layoutY="362.0" mnemonicParsing="false" onAction="#OnRigisterDisabledParkingLot" prefHeight="80.0" prefWidth="263.0" text="Disable Parking Lot" />
+      <Label fx:id="Headline" layoutX="228.0" layoutY="56.0" prefHeight="51.0" prefWidth="248.0" text="CEO Menu">
          <font>
-            <Font name="AR CENA" size="55.0" />
+            <Font size="24.0" />
          </font>
       </Label>
    </children>

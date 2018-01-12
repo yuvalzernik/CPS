@@ -17,11 +17,12 @@
             <Label layoutX="19.0" layoutY="228.0" prefHeight="40.0" prefWidth="123.0" text="Order's Detailes:" />
             <TextArea fx:id="TextOrderDeatiles" editable="false" layoutX="154.0" layoutY="239.0" prefHeight="347.0" prefWidth="386.0" />
             <Button layoutX="23.0" layoutY="573.0" mnemonicParsing="false" onAction="#OnBack" text="Back" />
-            <Label fx:id="Headline" layoutX="14.0" layoutY="74.0" prefHeight="75.0" prefWidth="692.0" text="Monitor and Control - Non Member">
+            <Label fx:id="Headline" layoutX="14.0" layoutY="74.0" prefHeight="81.0" prefWidth="606.0" text="Monitor and Control - Oreders">
                <font>
                   <Font name="AR CENA" size="55.0" />
                </font>
             </Label>
+            <ProgressBar fx:id="prgBar" layoutX="405.0" layoutY="172.0" prefHeight="18.0" prefWidth="123.0" visible="false" />
          </children>
       </AnchorPane>
    </children>

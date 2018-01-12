@@ -87,7 +87,7 @@ public class RequestsSender
 	}
 	catch (Exception e)
 	{
-	    e.printStackTrace();
+	    System.out.println(e);
 	    return new ServerResponse<T>(RequestResult.Failed, null, "Internal server error");
 	}
     }

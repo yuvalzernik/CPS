@@ -55,18 +55,18 @@ public class EmployeesLoginController extends EmployeeBaseController
 	    
 	    Platform.runLater(() ->
 	    {
-		Platform.runLater(() -> prgBar.setVisible(false));
-		
 		if (employeeRes.GetRequestResult().equals(RequestResult.WrongCredentials))
 		{
 		    DialogBuilder.AlertDialog(AlertType.ERROR, null, ConstsEmployees.IncorrectUsernameOrPassword, null,
 			    false);
+		    Platform.runLater(() -> prgBar.setVisible(false));
 		    return;
 		}
 		
 		if (employeeRes.GetRequestResult().equals(RequestResult.Failed))
 		{
 		    DialogBuilder.AlertDialog(AlertType.ERROR, null, Consts.ServerProblemMessage, null, false);
+		    Platform.runLater(() -> prgBar.setVisible(false));
 		    return;
 		}
 		
@@ -76,6 +76,7 @@ public class EmployeesLoginController extends EmployeeBaseController
 		    {
 			DialogBuilder.AlertDialog(AlertType.ERROR, null,
 				"You are already logged in.\nPlease log out first.", null, false);
+			Platform.runLater(() -> prgBar.setVisible(false));
 			return;
 		    }
 		    
@@ -85,6 +86,7 @@ public class EmployeesLoginController extends EmployeeBaseController
 			    .equals(RequestResult.Succeed))
 		    {
 			DialogBuilder.AlertDialog(AlertType.ERROR, null, Consts.ServerProblemMessage, null, false);
+			Platform.runLater(() -> prgBar.setVisible(false));
 			return;
 		    }
 		    
@@ -100,6 +102,8 @@ public class EmployeesLoginController extends EmployeeBaseController
 			myControllersManager.SetScene(ConstsEmployees.ManagerLogin, ConstsEmployees.EmployeesLogin);
 		    
 		}
+		
+		Platform.runLater(() -> prgBar.setVisible(false));
 	    });
 	});
 	

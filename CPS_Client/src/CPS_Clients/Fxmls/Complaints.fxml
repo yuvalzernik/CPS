@@ -15,11 +15,12 @@
             <Font name="AR CENA" size="60.0" />
          </font>
       </Label>
-      <Label layoutX="114.0" layoutY="150.0" prefHeight="17.0" prefWidth="92.0" text="Member ID" />
+      <Label layoutX="114.0" layoutY="150.0" prefHeight="17.0" prefWidth="92.0" text="Customer ID" />
       <TextField fx:id="memberID" layoutX="234.0" layoutY="146.0" />
       <Label layoutX="244.0" layoutY="186.0" prefHeight="25.0" prefWidth="155.0" text="Complaint Deatils" />
       <TextArea fx:id="complaintDeatils" layoutX="14.0" layoutY="218.0" prefHeight="260.0" prefWidth="597.0" />
       <Button layoutX="239.0" layoutY="495.0" mnemonicParsing="false" onAction="#OnSubmit" prefHeight="53.0" prefWidth="114.0" text="Sumbit" />
       <Button layoutX="26.0" layoutY="573.0" mnemonicParsing="false" onAction="#OnBack" text="Back" />
+      <ProgressBar fx:id="prgBar" layoutX="239.0" layoutY="548.0" prefHeight="18.0" prefWidth="114.0" visible="false" />
    </children>
 </AnchorPane>

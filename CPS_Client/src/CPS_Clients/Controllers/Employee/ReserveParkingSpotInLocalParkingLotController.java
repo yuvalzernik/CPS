@@ -1,6 +1,7 @@
 package CPS_Clients.Controllers.Employee;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import CPS_Clients.ConstsEmployees;
 import CPS_Utilities.Consts;
@@ -48,6 +49,7 @@ public class ReserveParkingSpotInLocalParkingLotController extends EmployeeBaseC
     
     Customer customer;
     
+    @FXML
     void initialize()
     {
 	arrivalDate.setEditable(true);
@@ -59,9 +61,6 @@ public class ReserveParkingSpotInLocalParkingLotController extends EmployeeBaseC
     @FXML
     void OnSubmit(ActionEvent event)
     {
-	
-	// float paymentAmount = 0;
-	
 	if (!TryConstructOrderInAdvance())
 	{
 	    return;
@@ -76,8 +75,8 @@ public class ReserveParkingSpotInLocalParkingLotController extends EmployeeBaseC
 	    return;
 	}
 	
-	DialogBuilder.AlertDialog(AlertType.INFORMATION, Consts.Approved, ConstsEmployees.ReservationSubmitted, null,
-		false);
+	DialogBuilder.AlertDialog(AlertType.INFORMATION, Consts.Approved, ConstsEmployees.ReservationSubmitted
+		+ "\nYour reservation id: " + OrderInAdvanceResponse.GetResponseObject().getOrderId(), null, false);
 	myControllersManager.Back(PreviousScene, ConstsEmployees.ReserveParkingSpot);
 	
     }
@@ -90,11 +89,7 @@ public class ReserveParkingSpotInLocalParkingLotController extends EmployeeBaseC
     
     private boolean TryConstructOrderInAdvance()
     {
-	
-	customer = new Customer(customerId.getText(), email.getText(), 0);
-	
-	if (!InputValidator.OrderInAdvance(carNumber.getText(), arrivalDate.getValue(), leavingDate.getValue(),
-		arrivalHour.getText(), leavingHour.getText()) || !InputValidator.Customer(customer))
+	if (IsInputLegal())
 	{
 	    DialogBuilder.AlertDialog(AlertType.ERROR, null, Consts.InputsAreIncorrect, null, false);
 	    
@@ -109,6 +104,103 @@ public class ReserveParkingSpotInLocalParkingLotController extends EmployeeBaseC
 	customer = new Customer(customerId.getText(), email.getText(), 0);
 	
 	return true;
+    }
+    
+    private boolean IsInputLegal()
+    {
+	boolean result = true;
+	
+	if (!InputValidator.CarNumber(carNumber.getText()))
+	{
+	    result = false;
+	    carNumber.setStyle("-fx-background-color: tomato;");
+	}
+	else
+	{
+	    carNumber.setStyle("-fx-background-color: white;");
+	}
+	
+	if (!InputValidator.Email(email.getText()))
+	{
+	    result = false;
+	    email.setStyle("-fx-background-color: tomato;");
+	}
+	else
+	{
+	    email.setStyle("-fx-background-color: white;");
+	}
+	
+	if (!InputValidator.Id(customerId.getText()))
+	{
+	    result = false;
+	    customerId.setStyle("-fx-background-color: tomato;");
+	}
+	else
+	{
+	    customerId.setStyle("-fx-background-color: white;");
+	}
+	
+	if (!InputValidator.StartingDate(arrivalDate.getValue()))
+	{
+	    result = false;
+	    arrivalDate.setStyle("-fx-background-color: tomato;");
+	}
+	else
+	{
+	    arrivalDate.setStyle("-fx-background-color: white;");
+	}
+	
+	if (!InputValidator.CheckHourFormat(arrivalHour.getText()))
+	{
+	    result = false;
+	    arrivalHour.setStyle("-fx-background-color: tomato;");
+	}
+	else
+	{
+	    arrivalHour.setStyle("-fx-background-color: white;");
+	}
+	
+	if (!InputValidator.StartingDate(leavingDate.getValue()))
+	{
+	    result = false;
+	    leavingDate.setStyle("-fx-background-color: tomato;");
+	}
+	else
+	{
+	    leavingDate.setStyle("-fx-background-color: white;");
+	}
+	
+	if (!InputValidator.CheckHourFormat(leavingHour.getText()))
+	{
+	    result = false;
+	    leavingHour.setStyle("-fx-background-color: tomato;");
+	}
+	else
+	{
+	    leavingHour.setStyle("-fx-background-color: white;");
+	}
+	
+	if (InputValidator.CheckHourFormat(leavingHour.getText()) && InputValidator.StartingDate(leavingDate.getValue())
+		&& InputValidator.CheckHourFormat(arrivalHour.getText())
+		&& InputValidator.StartingDate(arrivalDate.getValue()))
+	{
+	    LocalDateTime arrival = LocalDateTime.of(arrivalDate.getValue(), LocalTime.parse(arrivalHour.getText()));
+	    LocalDateTime leaving = LocalDateTime.of(leavingDate.getValue(), LocalTime.parse(leavingHour.getText()));
+	    
+	    if (arrival.isAfter(leaving))
+	    {
+		result = false;
+		leavingHour.setStyle("-fx-background-color: tomato;");
+		leavingDate.setStyle("-fx-background-color: tomato;");
+	    }
+	    else
+	    {
+		leavingHour.setStyle("-fx-background-color: white;");
+		leavingDate.setStyle("-fx-background-color: white;");
+	    }
+	}
+	
+	return result;
     }
     
 }

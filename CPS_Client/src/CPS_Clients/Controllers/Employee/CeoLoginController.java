@@ -32,9 +32,9 @@ public class CeoLoginController extends EmployeeBaseController
     public CeoLoginController()
     {
 	super();
-	DisableParkingSpotInputs.add("Parking spot width:");
-	DisableParkingSpotInputs.add("Parking spot height:");
-	DisableParkingSpotInputs.add("Parking spot depth:");
+	DisableParkingSpotInputs.add("Parking spot column:");
+	DisableParkingSpotInputs.add("Parking spot floor:");
+	DisableParkingSpotInputs.add("Parking spot row:");
 	DisableParkingSpotInputs.add("Parking lot name:");
 	
 	InitializeParkingSpotInputs.add("Parking lot name:");

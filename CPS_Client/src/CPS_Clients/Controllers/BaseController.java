@@ -23,6 +23,7 @@ public abstract class BaseController
 		if (f.getType().equals(TextField.class))
 		{
 		    ((TextField) f.get(this)).clear();
+		    ((TextField) f.get(this)).setStyle("-fx-background-color: white;");
 		}
 		else if(f.getType().equals(TextArea.class)) {
 			((TextArea) f.get(this)).clear();

@@ -8,14 +8,16 @@
 
 <AnchorPane prefHeight="620.0" prefWidth="620.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CPS_Clients.Controllers.Employee.StatusReportController">
    <children>
-      <TextField fx:id="directory" layoutX="175.0" layoutY="225.0" />
-      <Button layoutX="350.0" layoutY="225.0" mnemonicParsing="false" onAction="#OnBrowse" text="Browse" />
-      <Button layoutX="24.0" layoutY="574.0" mnemonicParsing="false" onAction="#OnBack" prefHeight="10.0" prefWidth="47.0" text="Back" />
-      <Button layoutX="197.0" layoutY="270.0" mnemonicParsing="false" onAction="#OnSave" text="Save In Directory" />
-      <Label layoutX="175.0" layoutY="177.0" prefHeight="26.0" prefWidth="195.0" text="Please select a directory">
+      <TextField fx:id="directory" layoutX="29.0" layoutY="226.0" prefHeight="25.0" prefWidth="179.0" />
+      <Button layoutX="208.0" layoutY="226.0" mnemonicParsing="false" onAction="#OnBrowse" prefHeight="26.0" prefWidth="55.0" text="Browse" />
+      <Button layoutX="16.0" layoutY="574.0" mnemonicParsing="false" onAction="#OnBack" prefHeight="33.0" prefWidth="63.0" text="Back" />
+      <Button layoutX="29.0" layoutY="268.0" mnemonicParsing="false" onAction="#OnSave" prefHeight="33.0" prefWidth="106.0" text="Save In Directory" />
+      <Label layoutX="29.0" layoutY="193.0" prefHeight="26.0" prefWidth="195.0" text="Please select a directory">
          <font>
             <Font size="17.0" />
          </font>
       </Label>
+      <Label fx:id="Headline" layoutX="140.0" layoutY="97.0" prefHeight="17.0" prefWidth="340.0" text="Status Report" />
+      <ProgressBar fx:id="prgBar" layoutX="29.0" layoutY="301.0" prefHeight="18.0" prefWidth="106.0" visible="false" />
    </children>
 </AnchorPane>
