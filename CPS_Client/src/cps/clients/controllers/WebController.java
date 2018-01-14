@@ -44,7 +44,7 @@ public class WebController extends BaseController
     private Label Headline;
     
     /**
-     * On complaines.
+     * Client clicks on complaines button.
      *
      * @param event the event
      */
@@ -55,7 +55,7 @@ public class WebController extends BaseController
     }
     
     /**
-     * On register.
+     * Client clicks on register button.
      *
      * @param event the event
      */
@@ -82,7 +82,7 @@ public class WebController extends BaseController
     }
     
     /**
-     * On monitor and controll.
+     * Client clicks on monitor and control button.
      *
      * @param event the event
      */
@@ -93,7 +93,7 @@ public class WebController extends BaseController
     }
     
     /**
-     * On order in advance.
+     * Client clicks on order in advance button.
      *
      * @param event the event
      */
@@ -105,7 +105,7 @@ public class WebController extends BaseController
     }
     
     /**
-     * On cancel order.
+     * Client clicks on cancel order button.
      *
      * @param event the event
      */

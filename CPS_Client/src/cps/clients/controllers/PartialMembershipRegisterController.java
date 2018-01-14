@@ -78,7 +78,7 @@ public class PartialMembershipRegisterController extends BaseController
     /** The cars. */
     private ObservableList<String> cars = FXCollections.observableArrayList();
     
-    /** The parkinglist. */
+    /** list of parking lots.. */
     private ArrayList<Parkinglot> parkinglist = new ArrayList<Parkinglot>();
     
     /** The car list. */
@@ -116,7 +116,7 @@ public class PartialMembershipRegisterController extends BaseController
     }
     
     /**
-     * On back.
+     * Client clicks on back button.
      *
      * @param event the event
      */
@@ -131,7 +131,7 @@ public class PartialMembershipRegisterController extends BaseController
     }
     
     /**
-     * On submit and pay.
+     * Client clicks on submit and pay button.
      *
      * @param event the event
      */
@@ -207,7 +207,7 @@ public class PartialMembershipRegisterController extends BaseController
     }
     
     /**
-     * On add car.
+     * Client clicks on add car button.
      *
      * @param event the event
      */
@@ -224,7 +224,7 @@ public class PartialMembershipRegisterController extends BaseController
     }
     
     /**
-     * On remove selected.
+     * Client clicks on remove selected button.
      *
      * @param event the event
      */
@@ -251,7 +251,7 @@ public class PartialMembershipRegisterController extends BaseController
     }
     
     /**
-     * Amount to pay.
+     *Sets the payment amount.
      *
      * @return the float
      */

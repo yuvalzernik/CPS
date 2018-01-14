@@ -90,7 +90,7 @@ public class PaymentController extends BaseController
     }
     
     /**
-     * On back.
+     * Client clicks on back button.
      *
      * @param event the event
      */
@@ -101,7 +101,7 @@ public class PaymentController extends BaseController
     }
     
     /**
-     * On submit.
+     *Client clicks on submit button.
      *
      * @param event the event
      */

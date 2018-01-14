@@ -75,7 +75,7 @@ public class MonitorAndControllMemberController extends BaseController
     PartialMembership parialMebershipChanged = null;
     
     /**
-     * On submit.
+     * Client clicks on submit button.
      *
      * @param event the event
      */
@@ -136,7 +136,7 @@ public class MonitorAndControllMemberController extends BaseController
     }
     
     /**
-     * On subscription renewal.
+     * Client clicks on subscription renewal button.
      *
      * @param event the event
      */
@@ -224,7 +224,7 @@ public class MonitorAndControllMemberController extends BaseController
     }
     
     /**
-     * On back.
+     *Client clicks on back button.
      *
      * @param event the event
      */
@@ -236,7 +236,7 @@ public class MonitorAndControllMemberController extends BaseController
     }
     
     /**
-     * Setfull or partial membership.
+     * Set full or partial membership.
      */
     void SetfullOrPartialMembership()
     {
@@ -255,7 +255,7 @@ public class MonitorAndControllMemberController extends BaseController
     }
     
     /**
-     * Amount to pay.
+     * Set amount to pay.
      *
      * @param partialMember the partial member
      * @return the float

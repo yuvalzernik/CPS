@@ -14,7 +14,7 @@ public class PartialMembership extends MembershipBase
     /** The Constant serialVersionUID. */
     private static final long serialVersionUID = 1L;
     
-    /** The parkinglot. */
+    /** The parking lot. */
     private String parkinglot;
     
     /** The car list. */
@@ -44,7 +44,7 @@ public class PartialMembership extends MembershipBase
     }
     
     /**
-     * Gets the parkinglot.
+     * Gets the parking lot.
      *
      * @return the string
      */

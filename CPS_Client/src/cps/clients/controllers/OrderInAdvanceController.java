@@ -72,7 +72,7 @@ public class OrderInAdvanceController extends BaseController
     @FXML // fx:id="leavingDate"
     private DatePicker leavingDate; // Value injected by FXMLLoader
     
-    /** The parkinglist. */
+    /**list of parking lots. */
     ArrayList<Parkinglot> parkinglist = new ArrayList<Parkinglot>();
     
     /** The parking lot. */
@@ -110,7 +110,7 @@ public class OrderInAdvanceController extends BaseController
     }
     
     /**
-     * On payment.
+     * Client clicks on payment button.
      *
      * @param event the event
      */
@@ -153,7 +153,7 @@ public class OrderInAdvanceController extends BaseController
     }
     
     /**
-     * On back.
+     * Client clicks on back button.
      *
      * @param event the event
      */
@@ -190,7 +190,7 @@ public class OrderInAdvanceController extends BaseController
     }
     
     /**
-     * Amount to pay.
+     *Sets the payment amount.
      *
      * @return the float
      */

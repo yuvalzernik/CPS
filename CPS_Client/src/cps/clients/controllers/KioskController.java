@@ -31,7 +31,7 @@ public class KioskController extends BaseController {
     private Label Headline;
     
 	/**
-	 * On enter.
+	 * Client clicks on enter button.
 	 *
 	 * @param event the event
 	 */
@@ -41,7 +41,7 @@ public class KioskController extends BaseController {
 	}
 
 	/**
-	 * On exit.
+	 *  Client clicks on exit button.
 	 *
 	 * @param event the event
 	 */
@@ -51,7 +51,7 @@ public class KioskController extends BaseController {
 	}
 
 	/**
-	 * On register.
+	 * Client clicks on register button .
 	 *
 	 * @param event the event
 	 */
@@ -75,7 +75,7 @@ public class KioskController extends BaseController {
 	}
 
 	/**
-	 * On monitor and controll.
+	 * Client clicks on monitor and control button.
 	 *
 	 * @param event the event
 	 * @throws InterruptedException the interrupted exception

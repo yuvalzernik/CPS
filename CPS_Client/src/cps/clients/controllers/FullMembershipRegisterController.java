@@ -66,7 +66,7 @@ public class FullMembershipRegisterController extends BaseController
     }
     
     /**
-     * On back.
+     * Client clicks on back button.
      *
      * @param event the event
      */
@@ -78,7 +78,7 @@ public class FullMembershipRegisterController extends BaseController
     }
     
     /**
-     * On submit and pay.
+     *Client clicks on submit and pay button.
      *
      * @param event the event
      */

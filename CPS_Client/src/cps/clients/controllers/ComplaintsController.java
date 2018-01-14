@@ -38,7 +38,7 @@ public class ComplaintsController extends BaseController
     @FXML
     private TextField memberID;
     
-    /** The prg bar. */
+    /** The Progress bar. */
     @FXML
     private ProgressBar prgBar;
     

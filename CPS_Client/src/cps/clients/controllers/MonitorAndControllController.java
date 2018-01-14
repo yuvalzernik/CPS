@@ -17,7 +17,7 @@ public class MonitorAndControllController extends BaseController
     private Label Headline;
     
     /**
-     * On member.
+     * Client clicks on member button.
      *
      * @param event the event
      */
@@ -28,7 +28,7 @@ public class MonitorAndControllController extends BaseController
     }
     
     /**
-     * On not A member.
+     *Client clicks on not a member button.
      *
      * @param event the event
      */
@@ -39,7 +39,7 @@ public class MonitorAndControllController extends BaseController
     }
     
     /**
-     * On customer info.
+     * Client clicks on customer info button.
      *
      * @param event the event
      */
@@ -50,7 +50,7 @@ public class MonitorAndControllController extends BaseController
     }
     
     /**
-     * On back.
+     * Client clicks on back button.
      *
      * @param event the event
      */

@@ -45,10 +45,10 @@ public class KioskExitController extends BaseController
     /** The Member inputs. */
     private ArrayList<String> MemberInputs = new ArrayList<>();
     
-    /** The parkinglot name. */
+    /** The parking lot name. */
     private String parkinglotName;
     
-    /** The parkinglot. */
+    /** The parking lot. */
     private Parkinglot parkinglot;
     
     /**
@@ -129,7 +129,7 @@ public class KioskExitController extends BaseController
     }
     
     /**
-     * On guest exit.
+     * Client clicks on guest exit button.
      *
      * @param event the event
      */
@@ -210,7 +210,7 @@ public class KioskExitController extends BaseController
     }
     
     /**
-     * On back.
+     * Client clicks on back button .
      *
      * @param event the event
      */

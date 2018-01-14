@@ -46,7 +46,7 @@ public class MonitorAndControllNotMemberController extends BaseController
     private ProgressBar prgBar;
     
     /**
-     * On submit.
+     * Client clicks on back button.
      *
      * @param event the event
      */
@@ -91,7 +91,7 @@ public class MonitorAndControllNotMemberController extends BaseController
     }
     
     /**
-     * On back.
+     * Client clicks on back button.
      *
      * @param event the event
      */
