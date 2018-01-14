@@ -12,7 +12,7 @@ import javafx.util.Pair;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class Web.
+ * The Web entry.
  */
 public class Web extends Application
 {
