@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="620.0" prefWidth="620.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cps.clients.controllers.employee.ManageRequestRateChangeController">
+   <children>
+      <ListView fx:id="RequestsList" layoutX="149.0" layoutY="164.0" prefHeight="360.0" prefWidth="310.0" />
+      <Button layoutX="149.0" layoutY="537.0" mnemonicParsing="false" onAction="#OnLoadRequests" prefHeight="40.0" prefWidth="146.0" text="Load Requests" />
+      <Button layoutX="318.0" layoutY="537.0" mnemonicParsing="false" onAction="#OnHandleRequests" prefHeight="40.0" prefWidth="141.0" text="Handle Request" />
+      <Button layoutX="10.0" layoutY="576.0" mnemonicParsing="false" onAction="#OnBack" prefHeight="34.0" prefWidth="66.0" text="Back" />
+      <Label fx:id="Headline" layoutX="135.0" layoutY="71.0" prefHeight="57.0" prefWidth="351.0" text="Rate Changes" />
+   </children>
+</AnchorPane>

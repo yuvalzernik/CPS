@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="620.0" prefWidth="620.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cps.clients.controllers.employee.ManageComplaintsController">
+   <children>
+      <ListView fx:id="complaintsList" layoutX="155.0" layoutY="152.0" prefHeight="360.0" prefWidth="310.0" />
+      <Button layoutX="13.0" layoutY="574.0" mnemonicParsing="false" onAction="#OnBack" prefHeight="35.0" prefWidth="72.0" text="Back" />
+      <Button layoutX="155.0" layoutY="521.0" mnemonicParsing="false" onAction="#OnLoad" prefHeight="35.0" prefWidth="146.0" text="Load Complaints" />
+      <Button layoutX="336.0" layoutY="521.0" mnemonicParsing="false" onAction="#OnHandleComplaint" prefHeight="35.0" prefWidth="129.0" text="Handle Complaint" />
+      <Label fx:id="Headline" layoutX="134.0" layoutY="81.0" prefHeight="58.0" prefWidth="458.0" text="Mange Complaints" />
+      <ProgressBar fx:id="prgBar" layoutX="252.0" layoutY="565.0" prefHeight="18.0" prefWidth="129.0" visible="false" />
+   </children>
+</AnchorPane>
